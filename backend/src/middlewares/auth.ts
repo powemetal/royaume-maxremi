@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-export type JwtPayload = {sub:number, role: "USER" | "ADMIN"}
+export type JwtPayload = {sub:number, role: "JOUEUR" | "MAITRE_DU_JEU"}
 
 // verifie le token JWT et attache l'utilisateur a req.user
 export function authentifier(req: Request, res: Response, next: NextFunction){
@@ -26,7 +26,7 @@ export function authentifier(req: Request, res: Response, next: NextFunction){
 }
 
 // fonction pour exiger un role pour acceder a une route, a brancher apres authentifier
-export function exigerRole(role: "ADMIN" | "USER"){
+export function exigerRole(role: "MAITRE_DU_JEU" | "JOUEUR"){
     return (req: Request, res:Response, next:NextFunction) => {
         if((req as any).user.role !== role) {
             return res.status(403).json({erreur: "Accès refusé! Vous n'avez pas les droits."})
