@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from "express"
 import dotenv from "dotenv"
-//import authRoutes from "./routes/auth.routes.js"
+import authRoutes from "./routes/auth.routes.js"
 dotenv.config()
 
 
@@ -12,7 +12,7 @@ app.get("/", (req: Request, res: Response) => {
     res.json({message: "API du Royaume de Maxremi!"})
 })
 
-//app.use("/auth", authRoutes)
+app.use("/auth", authRoutes)
 
 
 const PORT = process.env.PORT || 3000
