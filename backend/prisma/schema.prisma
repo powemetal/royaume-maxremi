@@ -87,8 +87,8 @@ model Personnage{
 model Quete{
   id                 String         @id @default(uuid()) @db.Uuid
   nom                String         @unique
-  difficulte         Difficulte
-  statut             Statut
+  difficulte         Difficulte   
+  statut             Statut         @default(DISPONIBLE)
   recompense         Int
   journalQuetes      JournalQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de JournalQuete
 }
