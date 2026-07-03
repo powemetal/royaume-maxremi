@@ -33,11 +33,11 @@ routerUtilisateur.post(
 
 // Récupérer l'information d'un utilisateur
 routerUtilisateur.get(
-  "recuperer/:id",
+  "/recuperer/:id",
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = req.params.id as string;
     if (!estUuidValide(id)) {
       return res.status(400).json({ message: "Erreur : UUID invalide" });
     }
@@ -59,11 +59,11 @@ routerUtilisateur.get(
 
 // Mettre à jour un utilisateur
 routerUtilisateur.patch(
-  "modifier/:id",
+  "/modifier/:id",
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = req.params.id as string;
     if (!estUuidValide(id)) {
       return res.status(400).json({ message: "Erreur : UUID invalide" });
     }
@@ -87,11 +87,11 @@ routerUtilisateur.patch(
 
 // Supprimer un utilisateur
 routerUtilisateur.delete(
-  "supprimer/:id",
+  "/supprimer/:id",
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = req.params.id as string;
     if (!estUuidValide(id)) {
       return res.status(400).json({ message: "Erreur : UUID invalide" });
     }
