@@ -1,12 +1,19 @@
+######### REQUETES MONSTRES SANS TOKEN ###################
+
+### Afficher tous les monstres
+GET http://localhost:3000/monstre/
+
+### afficher 1 monstre par son nom
+GET http://localhost:3000/monstre/goblin
 
 ### Ajout de monstre (sans token pour le moment)
-POST http://localhost:3000/monstre/ajouter/goblin
+POST http://localhost:3000/monstre/ajouter/orc
 
-### Suppression de monstre (sans token pour le moment)
-DELETE http://localhost:3000/monstre/supprimer/goblin
+### Suppression de monstre par nom (sans token pour le moment)
+DELETE http://localhost:3000/monstre/supprimer/orc
 
 
-### Modification du monstre (changement de nom et changement stat attaque
+### Modification du monstre par nom (changement de nom et changement de la stat attaque)
 PATCH HTTP://localhost:3000/monstre/goblin
 Content-Type: application/json
 
@@ -17,3 +24,5 @@ Content-Type: application/json
 
 ### Suppression du nouveau monstre cree lors de la modification
 DELETE http://localhost:3000/monstre/supprimer/goblin ++
+
+###########################################################

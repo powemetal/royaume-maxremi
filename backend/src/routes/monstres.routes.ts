@@ -91,4 +91,38 @@ routeurMonstres.delete("/monstre/supprimer/:nom", async (req: Request, res: Resp
     }
 });
 
+
+//Liste des monstres dans la table
+routeurMonstres.get("/monstre/", async(req: Request, res: Response)=>{
+    const monstres = await prisma.monstre.findMany({
+        orderBy : { id : "asc" }
+    });
+    res.json(monstres)
+})
+
+//recuprer 1 monstre dans la table
+routeurMonstres.get("/monstre/:nom", async(req: Request, res: Response)=>{
+    const nom = req.params.nom as string
+    try {
+        const monstre = await prisma.monstre.findFirst({
+                where : {
+                    nom: {
+                        equals: nom,
+                        mode: "insensitive",    
+                    }
+                }
+        });
+
+        if (!monstre) {
+            return res.status(404).json({erreur: `Monstre introuvable dans la table`})
+        }
+        res.json(monstre)
+    } catch (e) {
+        res.status(500).json({erreur: `Erreur serveur : ${e}`})
+    }
+
+})
+
+
+
 export default routeurMonstres
