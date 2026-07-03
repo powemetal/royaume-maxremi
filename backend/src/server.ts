@@ -1,6 +1,12 @@
 import express, { type Request, type Response } from "express"
 import dotenv from "dotenv"
 //import authRoutes from "./routes/auth.routes.js"
+
+import routeurMonstres from "./routes/monstres.routes.js"
+
+
+
+
 dotenv.config()
 
 
@@ -11,6 +17,8 @@ app.use(express.json())
 app.get("/", (req: Request, res: Response) => {
     res.json({message: "API du Royaume de Maxremi!"})
 })
+
+app.use("/", routeurMonstres)
 
 //app.use("/auth", authRoutes)
 
