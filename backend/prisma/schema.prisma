@@ -12,8 +12,99 @@ datasource db {
   provider = "postgresql"
 }
 
-// Juste un test pour voir la connexion à la BD, delete me lors de la création du vrai schema
-model Test {
-  id Int @id @default(autoincrement())
-  nom String
+
+enum Role{
+  JOUEUR
+  MAITRE_DU_JEU
+}
+
+enum Rarete{
+  COMMUN
+  PEU_COMMUN
+  RARE
+  LEGENDAIRE
+}
+
+enum Difficulte{
+  FACILE
+  MOYEN
+  DIFFICILE
+  LEGENDAIRE
+}
+
+enum Statut{
+  DISPONIBLE
+  EN_COURS
+  TERMINE
+  ECHOUE
+}
+
+enum Classe{
+  GUERRIER
+  MAGE
+  VOLEUR
+  CLERC
+}
+
+model Monstre {
+  id                String          @id @default(uuid()) @db.Uuid
+  nom               String          @unique
+  pointsDeVie       Int
+  attaque           Int
+}
+
+model Objet{
+  id                String          @id @default(uuid()) @db.Uuid
+  nom               String          @unique
+  rarete            Rarete
+  inventaire        Inventaire[]
+}
+
+
+
+model Utilisateur{
+  id                 String         @id @default(uuid()) @db.Uuid
+  email              String         @unique
+  pseudo             String
+  mdp                String
+  role               Role           @default(JOUEUR)
+  personnages        Personnage[]
+}
+
+model Personnage{
+  id                 String         @id @default(uuid()) @db.Uuid
+  nom                String         @unique
+  classe             Classe
+  niveau             Int            @default(1)
+  piecesDOr          Int            @default(0)
+  pointsDeVie        Int
+  idUtilisateur      String         @db.Uuid
+  utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id])
+  journalQuetes      JournalQuete[]
+  inventaire         Inventaire[]
+}
+
+model Quete{
+  id                 String         @id @default(uuid()) @db.Uuid
+  nom                String         @unique
+  difficulte         Difficulte   
+  statut             Statut         @default(DISPONIBLE)
+  recompense         Int
+  journalQuetes      JournalQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de JournalQuete
+}
+
+model JournalQuete{
+  id                 String         @id @default(uuid()) @db.Uuid
+  idQuete            String         @db.Uuid
+  quete              Quete          @relation(fields: [idQuete], references: [id])
+  idPersonnage       String         @db.Uuid
+  personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
+}
+
+model Inventaire{
+  id                 String         @id @default(uuid()) @db.Uuid
+  idObjet            String         @db.Uuid
+  objet              Objet          @relation(fields: [idObjet], references: [id])
+  idPersonnage       String         @db.Uuid
+  personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
 }

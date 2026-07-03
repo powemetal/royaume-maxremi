@@ -1,2 +1,100 @@
-POST http://localhost:3000/ajouterMonstre/goblin
+######### REQUETES MONSTRES SANS TOKEN ###################
 
+### Afficher tous les monstres
+GET http://localhost:3000/monstre/
+
+### afficher 1 monstre par son nom
+GET http://localhost:3000/monstre/goblin
+
+### Ajout de monstre (sans token pour le moment)
+POST http://localhost:3000/monstre/ajouter/orc
+
+### Suppression de monstre par nom (sans token pour le moment)
+DELETE http://localhost:3000/monstre/supprimer/orc
+
+
+### Modification du monstre par nom (changement de nom et changement de la stat attaque)
+PATCH HTTP://localhost:3000/monstre/goblin
+Content-Type: application/json
+
+{
+    "nom":"Goblin ++",
+    "attaque": 50
+}
+
+### Suppression du nouveau monstre cree lors de la modification
+DELETE http://localhost:3000/monstre/supprimer/goblin%20++
+
+###########################################################
+
+
+######### REQUETES OBJETS SANS TOKEN ###################
+
+### Creer 1 objet (sans token pour le moment)
+POST http://localhost:3000/objet/creer
+Content-Type: application/json
+
+{
+    "nom": "Baton",
+    "rarete": "RARE"
+}
+
+### Afficher tous les objets
+GET http://localhost:3000/objet/
+
+### afficher 1 objet par son nom
+GET http://localhost:3000/objet/baton
+
+
+### Suppression de objet par nom (sans token pour le moment)
+DELETE http://localhost:3000/objet/supprimer/baton
+
+
+### Modification du objet par nom (changement de nom et changement de la rarete)
+PATCH HTTP://localhost:3000/objet/baton
+Content-Type: application/json
+
+{
+    "nom":"Baton Legendaire",
+    "rarete": "LEGENDAIRE"
+}
+
+### Suppression de l'objet modifié par son nouveau nom
+DELETE http://localhost:3000/objet/supprimer/baton%20Legendaire
+
+###########################################################
+
+######### REQUETES OBJETS SANS TOKEN ###################
+
+### Creer 1 quete (sans token pour le moment)
+POST http://localhost:3000/quete/creer
+Content-Type: application/json
+
+{
+    "nom": "Aller chercher le baton",
+    "difficulte": "FACILE",
+    "recompense" : 100
+}
+
+### Afficher tous les quetes
+GET http://localhost:3000/quete/
+
+### afficher 1 quete par son nom
+GET http://localhost:3000/quete/Aller chercher le baton
+
+
+### Suppression de quete par nom (sans token pour le moment)
+DELETE http://localhost:3000/quete/supprimer/Aller%20chercher%20le%20baton
+
+
+### Modification du quete par nom (changement de difficultee et changement de la recompense)
+PATCH HTTP://localhost:3000/quete/Aller%20chercher%20le%20baton
+Content-Type: application/json
+
+{
+    "nom": "Aller chercher le baton",
+    "difficulte": "DIFFICILE",
+    "recompense" : 1000
+}
+
+###########################################################
