@@ -1,8 +1,9 @@
 import express, { type Request, type Response } from "express"
 import dotenv from "dotenv"
 import routerUtilisateur from "./routes/utilisateur.routes.js"
-//import authRoutes from "./routes/auth.routes.js"
+import routeurMonstres from "./routes/monstres.routes.js"
 import authRoutes from "./routes/auth.routes.js"
+
 dotenv.config()
 
 

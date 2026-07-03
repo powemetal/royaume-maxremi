@@ -85,7 +85,7 @@ routerUtilisateur.patch(
   },
 );
 
-// Mettre à jour un utilisateur
+// Supprimer un utilisateur
 routerUtilisateur.delete(
   "supprimer/:id",
   authentifier,

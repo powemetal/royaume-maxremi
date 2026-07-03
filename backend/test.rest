@@ -1,2 +1,19 @@
-POST http://localhost:3000/ajouterMonstre/goblin
 
+### Ajout de monstre (sans token pour le moment)
+POST http://localhost:3000/monstre/ajouter/goblin
+
+### Suppression de monstre (sans token pour le moment)
+DELETE http://localhost:3000/monstre/supprimer/goblin
+
+
+### Modification du monstre (changement de nom et changement stat attaque
+PATCH HTTP://localhost:3000/monstre/goblin
+Content-Type: application/json
+
+{
+    "nom":"Goblin ++",
+    "attaque": 50
+}
+
+### Suppression du nouveau monstre cree lors de la modification
+DELETE http://localhost:3000/monstre/supprimer/goblin ++
