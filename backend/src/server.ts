@@ -15,6 +15,8 @@ app.get("/", (req: Request, res: Response) => {
     res.json({message: "API du Royaume de Maxremi!"})
 })
 
+app.use("/", routeurMonstres)
+
 //app.use("/auth", authRoutes)
 app.use("/utilisateur", routerUtilisateur)
 app.use("/auth", authRoutes)
