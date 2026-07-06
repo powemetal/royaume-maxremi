@@ -19,7 +19,7 @@ routerUtilisateur.post(
       });
     }
     try {
-      const hash = bcrypt.hash(mdp, 10);
+      const hash = await bcrypt.hash(mdp, 10);
       const utilisateur = await prisma.utilisateur.create({
         data: { email, pseudo, mdp: hash },
       });
@@ -71,11 +71,22 @@ routerUtilisateur.patch(
       return res.status(400).json({ message: "Erreur : UUID invalide" });
     }
 
+    const { email, pseudo, mdp } = req.body
+
+    const data: any = {}
+
+    if (email) data.email = email
+    if (pseudo) data.pseudo = pseudo
+    if (mdp) data.mdp = await bcrypt.hash(mdp, 10)
+
     try {
       const utilisateur = await prisma.utilisateur.update({
         where: { id },
-        data: req.body,
+        data: data,
       });
+
+      utilisateur.mdp = "" //attribuer une nouvelle valeur a mdp sinon la reponse contiendra le mdp hashé
+      
       return res.status(200).json({
         message: `Utilisateur mis à jour`,
         data: utilisateur,
