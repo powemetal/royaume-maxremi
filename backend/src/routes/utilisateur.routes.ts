@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
 import { validate as estUuidValide } from "uuid";
+import bcrypt from "bcryptjs";
 
 const routerUtilisateur = Router();
 
@@ -9,6 +10,7 @@ const routerUtilisateur = Router();
 routerUtilisateur.post(
   "/creer",
   authentifier,
+  exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
     const { email, pseudo, mdp } = req.body;
     if (!email || !pseudo || !mdp) {
@@ -17,8 +19,9 @@ routerUtilisateur.post(
       });
     }
     try {
+      const hash = bcrypt.hash(mdp, 10);
       const utilisateur = await prisma.utilisateur.create({
-        data: { email, pseudo, mdp },
+        data: { email, pseudo, mdp: hash },
       });
       return res.status(201).json({
         message: `Utilisateur créé avec succès ! Email : ${email}, pseudo : ${pseudo}`,
