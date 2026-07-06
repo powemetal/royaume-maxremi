@@ -19,7 +19,7 @@ routerUtilisateur.post(
       });
     }
     try {
-      const hash = bcrypt.hash(mdp, 10);
+      const hash = await bcrypt.hash(mdp, 10);
       const utilisateur = await prisma.utilisateur.create({
         data: { email, pseudo, mdp: hash },
       });
