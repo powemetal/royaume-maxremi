@@ -80,7 +80,7 @@ model Personnage{
   pointsDeVie        Int            @default(100)
   idUtilisateur      String         @db.Uuid
   utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id])
-  journalQuetes      JournalQuete[]
+  PersoQuetes      PersoQuete[]
   inventaire         Inventaire[]
 }
 
@@ -88,17 +88,18 @@ model Quete{
   id                 String         @id @default(uuid()) @db.Uuid
   nom                String         @unique
   difficulte         Difficulte   
-  statut             Statut         @default(DISPONIBLE)
   recompense         Int
-  journalQuetes      JournalQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de JournalQuete
+  PersoQuetes      PersoQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de PersoQuete
 }
 
-model JournalQuete{
+model PersoQuete{
   id                 String         @id @default(uuid()) @db.Uuid
   idQuete            String         @db.Uuid
+  statut             Statut         @default(DISPONIBLE)
   quete              Quete          @relation(fields: [idQuete], references: [id])
   idPersonnage       String         @db.Uuid
   personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
+  @@unique([idPersonnage, idQuete])
 }
 
 model Inventaire{
@@ -107,4 +108,5 @@ model Inventaire{
   objet              Objet          @relation(fields: [idObjet], references: [id])
   idPersonnage       String         @db.Uuid
   personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
+  @@unique([idPersonnage, idObjet])
 }
