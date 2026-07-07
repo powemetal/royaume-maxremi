@@ -77,10 +77,14 @@ Content-Type: application/json
 }
 
 ### Afficher tous les quetes
-GET http://localhost:3000/quete/
+GET http://localhost:3000/quete
+
+### Afficher tous les quetes par difficulte
+GET http://localhost:3000/quete?difficulte=difficile
+
 
 ### afficher 1 quete par son nom
-GET http://localhost:3000/quete/Aller chercher le baton
+GET http://localhost:3000/quete/Aller%20chercher%20le%20baton
 
 
 ### Suppression de quete par nom (sans token pour le moment)
@@ -92,7 +96,7 @@ PATCH HTTP://localhost:3000/quete/Aller%20chercher%20le%20baton
 Content-Type: application/json
 
 {
-    "nom": "Aller chercher le baton",
+    "nom": "Aller chercher le baton ++",
     "difficulte": "DIFFICILE",
     "recompense" : 1000
 }
