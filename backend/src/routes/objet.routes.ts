@@ -82,7 +82,7 @@ routeurObjets.get("/objet/", async(req: Request, res: Response)=>{
     res.json(objets)
 })
 
-//recuprer 1 objet dans la table
+//recuperer 1 objet dans la table
 routeurObjets.get("/objet/:nom", async(req: Request, res: Response)=>{
     const nom = req.params.nom as string
     try {
