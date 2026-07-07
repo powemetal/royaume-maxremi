@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Quete" ALTER COLUMN "statut" SET DEFAULT 'DISPONIBLE';
