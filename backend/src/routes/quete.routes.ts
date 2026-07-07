@@ -1,5 +1,10 @@
 import { Router , type Request , type Response } from "express"
 import prisma from "../utils/prisma.js"
+import { Statut, Difficulte } from "../../generated/prisma/client.js"
+
+
+
+
 
 const routeurQuetes = Router ()
 
@@ -11,7 +16,6 @@ routeurQuetes.post("/quete/creer", async (req: Request, res: Response) => {
     if (!nom) {
         return res.status(400).json({ erreur: "Le nom de l'quete est manquant" });
     }
-    
     if (!difficulteValides.includes(difficulte)) {
         return res.status(400).json({erreur: `Difficulté invalide`})
     }
@@ -24,8 +28,7 @@ routeurQuetes.post("/quete/creer", async (req: Request, res: Response) => {
     }
 })
 
-
-//Modifier un quete
+//Modifier une quete
 routeurQuetes.patch("/quete/:nom", async(req: Request, res: Response)=>{
     const nom = req.params.nom as string
         //Trouver l'quete
@@ -44,18 +47,16 @@ routeurQuetes.patch("/quete/:nom", async(req: Request, res: Response)=>{
 
         //Modifie l'quete
         const queteModifie = await prisma.quete.update({
-            where: { id:quete.id},
+            where: { id : quete.id },
             data: req.body
         })
 
         res.json(queteModifie)
 
-
     } catch(e){
         res.status(500).json({erreur: `Erreur serveur lors de la modification du quete : ${e}`})
     }
 })
-
 
 //Supprimer quete de la table des quetes
 routeurQuetes.delete("/quete/supprimer/:nom", async (req: Request, res: Response) => {
@@ -74,14 +75,51 @@ routeurQuetes.delete("/quete/supprimer/:nom", async (req: Request, res: Response
     }
 });
 
+//une seule route pour lister toutes les quetes ou filtrer par difficulte
+routeurQuetes.get("/quete", async(req: Request, res: Response) => {     
+    const { difficulte, statut } = req.query 
+    const filtre : any = {}
+    const difficulteValides = ["FACILE", "MOYEN", "DIFFICILE", "LEGENDAIRE"]
+    const statutValides = ["DISPONIBLE", "EN_COURS", "TERMINE", "ECHOUE"]
+    try {
 
-//Liste des quetes dans la table
-routeurQuetes.get("/quete/", async(req: Request, res: Response)=>{
-    const quetes = await prisma.quete.findMany({
-        orderBy : { id : "asc" }
-    });
-    res.json(quetes)
-})
+        if (difficulte) {
+            const difMaj = (difficulte as string).toUpperCase()
+            if (!difficulteValides.includes(difMaj)) return res.status(400).json({erreur: "Difficulté invalide"})
+            const quete = await prisma.quete.findMany({
+                where : { difficulte: Difficulte[difMaj as keyof typeof Difficulte]},
+                orderBy : { id : "asc" }
+            })
+            if (quete.length ===0) {
+                return res.status(404).json({erreur: `Aucune quête la difficulte: ${difMaj}`})
+            }
+            return res.json(quete)
+        }
+
+        if (statut) {
+            const statutMaj = (statut as string).toUpperCase()
+            if (!statutValides.includes(statutMaj)) return res.status(400).json({erreur: "Statut invalide"})
+            const persoQuete = await prisma.persoQuete.findMany({
+                where : { statut : Statut[statutMaj as keyof typeof Statut]},
+                include: { quete: true },
+                orderBy : { id : "asc" }
+            })
+            if (persoQuete.length ===0) {
+                return res.status(404).json({erreur: `Aucune quête avec le statut: ${statutMaj}`})
+            }
+            return res.json(persoQuete)
+        }
+
+        const toutesLesQuetes = await prisma.quete.findMany({
+            orderBy: {id:"asc"}
+        })
+        if (toutesLesQuetes.length === 0) return res.status(404).json({erreur: "Aucune quête dans la table"})
+        return res.json(toutesLesQuetes)
+
+    } catch (e) {
+        return res.status(500).json({erreur: `Erreur serveur : ${e}`})
+    }
+});
 
 //recuprer 1 quete dans la table
 routeurQuetes.get("/quete/:nom", async(req: Request, res: Response)=>{
