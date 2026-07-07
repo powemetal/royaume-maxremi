@@ -5,6 +5,8 @@ import routeurMonstres from "./routes/monstres.routes.js"
 import routeurObjets from "./routes/objet.routes.js"
 import routeurQuetes from "./routes/quete.routes.js"
 import authRoutes from "./routes/auth.routes.js"
+import routerInventaire from "./routes/inventaire.routes.js"
+import routerPersoQuete from "./routes/persoquete.routes.js"
 
 dotenv.config()
 
@@ -21,8 +23,10 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/", routeurMonstres)
 app.use("/", routeurObjets)
 app.use("/", routeurQuetes)
+app.use("/", routerInventaire)
+app.use("/persoQuete", routerPersoQuete)
 
-//app.use("/auth", authRoutes)
+
 app.use("/utilisateur", routerUtilisateur)
 app.use("/auth", authRoutes)
 

@@ -17,7 +17,7 @@ export function authentifier(req: Request, res: Response, next: NextFunction){
 
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload
-        (req as any).user = payload
+        (req as any).utilisateur = payload
         next()
     } catch {
         res.status(401).json({erreur:"Accès refusé! Token invalide ou expiré!"})
