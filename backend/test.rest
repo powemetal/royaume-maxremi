@@ -179,3 +179,67 @@ Content-Type: application/json
 ### Voir le journal de quete d'un personnage
 
 GET http://localhost:3000/persoquete/6483f897-fa98-55e6-8350-e9355e9a16b5
+
+### Créer un utilisateur (MAITRE_DU_JEU)
+POST {{baseUrl}}/utilisateur/creer
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "test-utilisateur@gmail.com",
+    "pseudo": "test-utilisateur",
+    "mdp": "mdp-test-utilisateur"
+}
+
+### Récupérer l'information d'un utilisateur 
+POST {{baseUrl}}/utilisateur/recuperer/b210684c-5e29-4404-80e2-c097549117ae
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Mettre à jour un utilisateur
+PATCH {{baseUrl}}/utilisateur/modifier/b210684c-5e29-4404-80e2-c097549117ae
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "test-utilisateur2@gmail.com",
+    "pseudo": "test-utilisateur2",
+    "mdp": "mdp-test-utilisateur2"
+}
+
+### Supprimer un utilisateur
+DELETE {{baseUrl}}/utilisateur/supprimer/b210684c-5e29-4404-80e2-c097549117ae
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Créer un personnage (MAITRE_DU_JEU)
+POST {{baseUrl}}/personnage/creer
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "nom": "Gandalf",
+    "classe": "MAGE",
+    "idUtilisateur": "dfa91794-cd92-4dd5-9ae5-d9671e8d170f"
+}
+
+### Récupérer l'information d'un personnage 
+POST {{baseUrl}}/personnage/recuperer/be48b13f-1ad6-438d-b896-0d9ef804e046
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Mettre à jour un personnage
+PATCH {{baseUrl}}/personnage/modifier/be48b13f-1ad6-438d-b896-0d9ef804e046
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "nom": "Donkey Kong",
+    "classe": "GUERRIER",
+    "piecesDOr": 1000
+}
+
+### Supprimer un personnage
+DELETE {{baseUrl}}/personnage/supprimer/be48b13f-1ad6-438d-b896-0d9ef804e046
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
