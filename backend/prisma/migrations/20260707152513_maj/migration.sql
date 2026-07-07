@@ -17,7 +17,7 @@ CREATE TYPE "Classe" AS ENUM ('GUERRIER', 'MAGE', 'VOLEUR', 'CLERC');
 CREATE TABLE "Monstre" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
-    "pointsDeVie" INTEGER NOT NULL,
+    "pointsDeVie" INTEGER NOT NULL DEFAULT 100,
     "attaque" INTEGER NOT NULL,
 
     CONSTRAINT "Monstre_pkey" PRIMARY KEY ("id")
@@ -50,7 +50,7 @@ CREATE TABLE "Personnage" (
     "classe" "Classe" NOT NULL,
     "niveau" INTEGER NOT NULL DEFAULT 1,
     "piecesDOr" INTEGER NOT NULL DEFAULT 0,
-    "pointsDeVie" INTEGER NOT NULL,
+    "pointsDeVie" INTEGER NOT NULL DEFAULT 100,
     "idUtilisateur" UUID NOT NULL,
 
     CONSTRAINT "Personnage_pkey" PRIMARY KEY ("id")
@@ -61,19 +61,19 @@ CREATE TABLE "Quete" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "difficulte" "Difficulte" NOT NULL,
-    "statut" "Statut" NOT NULL,
     "recompense" INTEGER NOT NULL,
 
     CONSTRAINT "Quete_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "JournalQuete" (
+CREATE TABLE "PersoQuete" (
     "id" UUID NOT NULL,
     "idQuete" UUID NOT NULL,
+    "statut" "Statut" NOT NULL DEFAULT 'DISPONIBLE',
     "idPersonnage" UUID NOT NULL,
 
-    CONSTRAINT "JournalQuete_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "PersoQuete_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -100,14 +100,20 @@ CREATE UNIQUE INDEX "Personnage_nom_key" ON "Personnage"("nom");
 -- CreateIndex
 CREATE UNIQUE INDEX "Quete_nom_key" ON "Quete"("nom");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "PersoQuete_idPersonnage_idQuete_key" ON "PersoQuete"("idPersonnage", "idQuete");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Inventaire_idPersonnage_idObjet_key" ON "Inventaire"("idPersonnage", "idObjet");
+
 -- AddForeignKey
 ALTER TABLE "Personnage" ADD CONSTRAINT "Personnage_idUtilisateur_fkey" FOREIGN KEY ("idUtilisateur") REFERENCES "Utilisateur"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "JournalQuete" ADD CONSTRAINT "JournalQuete_idQuete_fkey" FOREIGN KEY ("idQuete") REFERENCES "Quete"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PersoQuete" ADD CONSTRAINT "PersoQuete_idQuete_fkey" FOREIGN KEY ("idQuete") REFERENCES "Quete"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "JournalQuete" ADD CONSTRAINT "JournalQuete_idPersonnage_fkey" FOREIGN KEY ("idPersonnage") REFERENCES "Personnage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PersoQuete" ADD CONSTRAINT "PersoQuete_idPersonnage_fkey" FOREIGN KEY ("idPersonnage") REFERENCES "Personnage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Inventaire" ADD CONSTRAINT "Inventaire_idObjet_fkey" FOREIGN KEY ("idObjet") REFERENCES "Objet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
