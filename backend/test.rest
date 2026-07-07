@@ -1,3 +1,54 @@
+### Variables globales
+@baseUrl = http://localhost:3000
+
+######### REQUETES AUTH #########
+
+### Créer un compte comme utilisateur
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email": "math_le_barbare@waaagh.com",
+    "pseudo": "DakkaBoii",
+    "mdp": "WaaAgh247!"
+}
+
+### Login dans un compte comme utilisateur avec infos OK
+# @name loginReq
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "math_le_barbare@waaagh.com",
+    "mdp": "WaaAgh247!"
+}
+
+### authToken garde en mémoire le token du login pour l'utiliser dans d'autres routes
+@authToken = {{loginReq.response.body.token}}
+
+### Login dans un compte comme utilisateur avec un mauvais MDP
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "math_le_barbare@waaagh.com",
+    "mdp": "wAAaGH247!"
+}
+
+### Login dans un compte comme utilisateur avec un mauvais pseudo
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "math_le_barbare@waagh.com",
+    "mdp": "WaaAgh247!"
+}
+
+### Obtenir mes informations d'utilisateur
+GET http://localhost:3000/auth/me
+Authorization: Bearer {{authToken}}
+
+
 ######### REQUETES MONSTRES SANS TOKEN ###################
 
 ### Afficher tous les monstres
@@ -8,6 +59,9 @@ GET http://localhost:3000/monstre/goblin
 
 ### Ajout de monstre (sans token pour le moment)
 POST http://localhost:3000/monstre/ajouter/orc
+
+### Ajout de monstre (sans token pour le moment)
+POST http://localhost:3000/monstre/ajouter/goblin
 
 ### Suppression de monstre par nom (sans token pour le moment)
 DELETE http://localhost:3000/monstre/supprimer/orc
@@ -76,6 +130,16 @@ Content-Type: application/json
     "recompense" : 100
 }
 
+### Creer 2e quete (sans token pour le moment)
+POST http://localhost:3000/quete/creer
+Content-Type: application/json
+
+{
+    "nom": "Vaincre Grok",
+    "difficulte": "MOYEN",
+    "recompense" : 150
+}
+
 ### Afficher tous les quetes
 GET http://localhost:3000/quete/
 
@@ -97,4 +161,17 @@ Content-Type: application/json
     "recompense" : 1000
 }
 
-###########################################################
+######### PERSOQUETE - JOURNAL DE QUETES #########
+
+### Ajouter une quete a la table intermediaire persoquete
+POST http://localhost:3000/persoquete/ajouter
+Content-Type: application/json
+
+{
+    "idPerso": "6483f897-fa98-55e6-8350-e9355e9a16b5",
+    "idQuete": "8e5d0f99-0ab0-4431-bc06-41ac7d1aed70"
+}
+
+### Voir le journal de quete d'un personnage
+
+GET http://localhost:3000/persoquete/6483f897-fa98-55e6-8350-e9355e9a16b5

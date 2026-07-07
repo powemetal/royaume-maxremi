@@ -50,13 +50,27 @@ router.post("/login", async (req:Request, res:Response) => {
 
 // GET /auth/me
 
-router.get("/me", async (req:Request, res: Response) => {
-    const id = (req as any).utilisateur.sub
-    const utilisateur = await prisma.utilisateur.findUnique({
-        where: {id},
-        select: {id:true, email:true, pseudo:true, role: true/*, createdAt: true*/},
-    })
-    res.json(utilisateur)
+router.get("/me", authentifier, async (req:Request, res: Response) => {
+    try {
+        const id = (req as any).utilisateur?.sub
+
+        if (!id) {
+            return res.status(401).json({ erreur: "Accès refusé. Vous n'êtes pas connecté."})
+        }
+
+        const utilisateur = await prisma.utilisateur.findUnique({
+            where: {id},
+            select: {id:true, email:true, pseudo:true, role: true/*, createdAt: true*/},
+        })
+
+        if (!utilisateur) {
+            return res.status(404).json({ erreur: "Utilisateur introuvable."})
+        }
+
+        return res.json(utilisateur)
+    } catch(e) {
+        return res.status(500).json({erreur: "Erreur du serveur"})
+    }
 })
 
 export default router

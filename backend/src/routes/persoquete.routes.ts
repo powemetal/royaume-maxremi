@@ -1,10 +1,11 @@
 import { Router, type Request, type Response } from "express"
 import prisma from "../utils/prisma.js"
+import { authentifier } from "../middlewares/auth.js";
 
 const routerPersoQuete = Router();
 
 // Recuperer un ID de personnage et son journal de quetes
-routerPersoQuete.get("/persoquete/:personnageId", async (req: Request, res: Response) => {
+routerPersoQuete.get("/:personnageId", async (req: Request, res: Response) => {
   const idPerso = req.params;
 
   try {
@@ -23,7 +24,7 @@ routerPersoQuete.get("/persoquete/:personnageId", async (req: Request, res: Resp
 
 
 // ajouter une quete a un personnage
-routerPersoQuete.post("/persoquete/ajouter", async (req: Request, res:Response) => {
+routerPersoQuete.post("/ajouter", async (req: Request, res:Response) => {
     const { idPerso, idQuete } = req.body
 
     if (!idPerso || !idQuete) {
@@ -58,5 +59,7 @@ routerPersoQuete.post("/persoquete/ajouter", async (req: Request, res:Response) 
 
     }
 });
+
+export default routerPersoQuete;
 
 
