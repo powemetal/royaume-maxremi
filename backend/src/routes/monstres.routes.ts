@@ -2,6 +2,7 @@ import { Router , type Request , type Response } from "express"
 import { monstres } from "../api/monstres.js"
 import axios from "axios"
 import prisma from "../utils/prisma.js"
+import { authentifier, exigerRole } from "../middlewares/auth.js"
 
 const routeurMonstres = Router ()
 
@@ -26,7 +27,7 @@ async function recupererMonstre(nom: string){
 
 
 //Ajouter un monstre dans la table monstre
-routeurMonstres.post("/monstre/ajouter/:nom", async (req: Request, res: Response)=>{
+routeurMonstres.post("/monstre/ajouter/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response)=>{
     const donnees = await recupererMonstre(req.params.nom as string)
     if (!donnees) {
         return res.status(404).json({erreur: "Ce monstre n'existe pas dans le manuel des monstres"})
@@ -43,7 +44,7 @@ routeurMonstres.post("/monstre/ajouter/:nom", async (req: Request, res: Response
 
 
 //Modifier un monstre
-routeurMonstres.patch("/monstre/:nom", async(req: Request, res: Response)=>{
+routeurMonstres.patch("/monstre/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
     const nom = req.params.nom as string
         //Trouver le monstre
     try{
@@ -75,7 +76,7 @@ routeurMonstres.patch("/monstre/:nom", async(req: Request, res: Response)=>{
 
 
 //Supprimer monstre de la table des monstre
-routeurMonstres.delete("/monstre/supprimer/:nom", async (req: Request, res: Response) => {
+routeurMonstres.delete("/monstre/supprimer/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     const suppression = await prisma.monstre.deleteMany({
         where: {
             nom: {

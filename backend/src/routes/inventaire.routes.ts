@@ -1,11 +1,12 @@
 import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { validate as estUuidValide } from "uuid";
+import { authentifier } from "../middlewares/auth.js";
 
 const routerInventaire = Router();
 
 // Récuperer l'inventaire d'un personnage
-routerInventaire.get("/:idPersonnage", async (req: Request, res: Response) => {
+routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: Response) => {
   const idPersonnage = req.params.personnageId as string;
 
   if (!estUuidValide(idPersonnage)) {
@@ -29,7 +30,7 @@ routerInventaire.get("/:idPersonnage", async (req: Request, res: Response) => {
 });
 
 //Ajouter un objet a l'inventaire
-routerInventaire.post("/ajouter", async (req: Request, res: Response) => {
+routerInventaire.post("/ajouter", authentifier, async (req: Request, res: Response) => {
   const { personnageId, nomObjet } = req.body;
 
   if (!personnageId || !nomObjet) {
@@ -73,7 +74,7 @@ routerInventaire.post("/ajouter", async (req: Request, res: Response) => {
 });
 
 // Retirer objet de l'inventaire
-routerInventaire.delete("/retirer", async (req: Request, res: Response) => {
+routerInventaire.delete("/retirer", authentifier, async (req: Request, res: Response) => {
   const { personnageId, nomObjet } = req.body;
 
   if (!personnageId || !nomObjet) {

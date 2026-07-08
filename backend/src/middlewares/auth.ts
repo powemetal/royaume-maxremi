@@ -6,7 +6,7 @@ dotenv.config()
 
 export type JwtPayload = {sub:number, role: "JOUEUR" | "MAITRE_DU_JEU"}
 
-// verifie le token JWT et attache l'utilisateur a req.user
+// verifie le token JWT et attache l'utilisateur a req.utilisateur
 export function authentifier(req: Request, res: Response, next: NextFunction){
     const header = req.headers.authorization
     if(!header?.startsWith("Bearer ")){

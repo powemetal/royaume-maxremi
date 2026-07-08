@@ -5,7 +5,7 @@ import { authentifier } from "../middlewares/auth.js";
 const routerPersoQuete = Router();
 
 // Recuperer un ID de personnage et son journal de quetes
-routerPersoQuete.get("/:personnageId", async (req: Request, res: Response) => {
+routerPersoQuete.get("/:personnageId", authentifier, async (req: Request, res: Response) => {
   const idPerso = req.params.personnageId as string;
 
   try {
@@ -24,7 +24,7 @@ routerPersoQuete.get("/:personnageId", async (req: Request, res: Response) => {
 
 
 // ajouter une quete a un personnage
-routerPersoQuete.post("/ajouter", async (req: Request, res:Response) => {
+routerPersoQuete.post("/ajouter", authentifier, async (req: Request, res:Response) => {
     const { idPerso, idQuete } = req.body
 
     if (!idPerso || !idQuete) {
@@ -63,7 +63,7 @@ routerPersoQuete.post("/ajouter", async (req: Request, res:Response) => {
 
 
 //Modifier un persoQuete
-routerPersoQuete.patch("/persoquete/modifier/:id", async(req: Request, res: Response)=>{
+routerPersoQuete.patch("/persoquete/modifier/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
 try {
     const persoQueteModifie = await prisma.persoQuete.update({
@@ -80,7 +80,7 @@ try {
 })
 
 // reussir une quete
-routerPersoQuete.patch("/journal/reussir/:id", async(req: Request, res: Response)=>{
+routerPersoQuete.patch("/journal/reussir/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
 try {
     const persoQueteModifie = await prisma.persoQuete.update({
@@ -108,7 +108,7 @@ try {
 })
 
 // Echouer une quete
-routerPersoQuete.patch("/journal/echouer/:id", async(req: Request, res: Response)=>{
+routerPersoQuete.patch("/journal/echouer/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
 try {
     const persoQueteModifie = await prisma.persoQuete.update({
@@ -129,7 +129,7 @@ try {
 })
 
 // Abandonner une quete
-routerPersoQuete.delete("/journal/abandonner/:id", async(req: Request, res: Response)=>{
+routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
     try {
         const abandon = await prisma.persoQuete.deleteMany({  // pour savoir si il y a un nombre de lignes eviter de faire 2 requetes pour verifier

@@ -1,6 +1,7 @@
 import { Router , type Request , type Response } from "express"
 import prisma from "../utils/prisma.js"
 import { Statut, Difficulte } from "../../generated/prisma/client.js"
+import { authentifier, exigerRole } from "../middlewares/auth.js"
 
 
 
@@ -8,7 +9,7 @@ import { Statut, Difficulte } from "../../generated/prisma/client.js"
 
 const routeurQuetes = Router ()
 
-routeurQuetes.post("/quete/creer", async (req: Request, res: Response) => {
+routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     
     const difficulteValides = ["FACILE", "MOYEN", "DIFFICILE", "LEGENDAIRE"]
     const { nom, difficulte, recompense } = req.body
@@ -29,7 +30,7 @@ routeurQuetes.post("/quete/creer", async (req: Request, res: Response) => {
 })
 
 //Modifier une quete
-routeurQuetes.patch("/quete/:nom", async(req: Request, res: Response)=>{
+routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
     const nom = req.params.nom as string
         //Trouver l'quete
     try{
@@ -59,7 +60,7 @@ routeurQuetes.patch("/quete/:nom", async(req: Request, res: Response)=>{
 })
 
 //Supprimer quete de la table des quetes
-routeurQuetes.delete("/quete/supprimer/:nom", async (req: Request, res: Response) => {
+routeurQuetes.delete("/quete/supprimer/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     const suppression = await prisma.quete.deleteMany({
         where: {
             nom: {
