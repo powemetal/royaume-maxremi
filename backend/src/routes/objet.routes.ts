@@ -1,9 +1,10 @@
 import { Router , type Request , type Response } from "express"
 import prisma from "../utils/prisma.js"
+import { authentifier, exigerRole } from "../middlewares/auth.js"
 
 const routeurObjets = Router ()
 
-routeurObjets.post("/objet/creer", async (req: Request, res: Response) => {
+routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     const raretesValides = ["COMMUN", "PEU_COMMUN", "RARE", "LEGENDAIRE"]
     const { nom, rarete } = req.body
 
@@ -25,7 +26,7 @@ routeurObjets.post("/objet/creer", async (req: Request, res: Response) => {
 
 
 //Modifier un objet
-routeurObjets.patch("/objet/:nom", async(req: Request, res: Response)=>{
+routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
     const nom = req.params.nom as string
         //Trouver l'objet
     try{
@@ -57,7 +58,7 @@ routeurObjets.patch("/objet/:nom", async(req: Request, res: Response)=>{
 
 
 //Supprimer objet de la table des objets
-routeurObjets.delete("/objet/supprimer/:nom", async (req: Request, res: Response) => {
+routeurObjets.delete("/objet/supprimer/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     const suppression = await prisma.objet.deleteMany({
         where: {
             nom: {

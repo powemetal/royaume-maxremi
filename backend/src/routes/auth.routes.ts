@@ -12,13 +12,19 @@ const router = Router()
 // POST /auth/register
 
 router.post("/register", async(req:Request, res:Response) => {
-    const { email, pseudo, mdp } = req.body
+    const { email, pseudo, mdp, codeAdmin } = req.body
     if (!email || !pseudo || !mdp) {
         return res.status(400).json({erreur: "Une information requise est manquante! (email, pseudo, mot de passe)"})
     }
+    let attributionRole: "JOUEUR" | "MAITRE_DU_JEU" = "JOUEUR";
+
+    if (codeAdmin && codeAdmin === process.env.CODE_ADMIN) {
+        attributionRole = "MAITRE_DU_JEU";
+    }
+
     try {
         const hash = await bcrypt.hash(mdp, 10)
-        const utilisateur = await prisma.utilisateur.create({data: {email, pseudo, mdp: hash}})
+        const utilisateur = await prisma.utilisateur.create({data: {email, pseudo, mdp: hash, role: attributionRole}})
         res.status(201).json({id: utilisateur.id, email: utilisateur.email, pseudo: utilisateur.pseudo})
     } catch {
         res.status(400).json({erreur: "Erreur: le email ou le nom d'utilisateur est déjà pris."})

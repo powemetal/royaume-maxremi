@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 
 const routerUtilisateur = Router();
 
-// Création d'un utilisateur
+// Création d'un utilisateur en tant que MDJ
 routerUtilisateur.post(
   "/creer",
   authentifier,
@@ -34,7 +34,7 @@ routerUtilisateur.post(
   },
 );
 
-// Récupérer l'information d'un utilisateur
+// Récupérer l'information d'un utilisateur en tant que MDJ
 routerUtilisateur.get(
   "/recuperer/:id",
   authentifier,
@@ -60,7 +60,7 @@ routerUtilisateur.get(
   },
 );
 
-// Mettre à jour un utilisateur
+// Mettre à jour un utilisateur en tant que MDJ
 routerUtilisateur.patch(
   "/modifier/:id",
   authentifier,
@@ -99,7 +99,7 @@ routerUtilisateur.patch(
   },
 );
 
-// Supprimer un utilisateur
+// Supprimer un utilisateur en tant que MDJ
 routerUtilisateur.delete(
   "/supprimer/:id",
   authentifier,
