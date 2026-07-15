@@ -61,6 +61,7 @@ routerPersonnage.get(
 routerPersonnage.patch(
   "/modifier/:id",
   authentifier,
+  exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {

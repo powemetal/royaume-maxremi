@@ -38,7 +38,7 @@ Génère le client Prisma et lance les migrations pour créer les tables :
 
     npx prisma generate
     npx prisma migrate dev --name init
-
+    
 Lancer le serveur:
 
     npm run dev
