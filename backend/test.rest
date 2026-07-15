@@ -4,7 +4,8 @@
 ######### REQUETES AUTH #########
 
 ### Créer un compte Admin
-POST http://localhost:3000/auth/register
+###
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -16,8 +17,9 @@ Content-Type: application/json
 
 
 ### Créer un compte comme utilisateur
-POST http://localhost:3000/auth/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
+
 {
     "email": "math_le_barbare@waaagh.com",
     "pseudo": "DakkaBoii",
@@ -26,7 +28,7 @@ Content-Type: application/json
 
 ### Login dans un compte Admin avec infos OK
 # @name loginAdmin
-POST http://localhost:3000/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -40,7 +42,7 @@ Content-Type: application/json
 
 ### Login dans un compte comme utilisateur avec infos OK
 # @name loginReq
-POST http://localhost:3000/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -52,7 +54,7 @@ Content-Type: application/json
 @authToken = {{loginReq.response.body.token}}
 
 ### Login dans un compte comme utilisateur avec un mauvais MDP
-POST http://localhost:3000/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -61,7 +63,7 @@ Content-Type: application/json
 }
 
 ### Login dans un compte comme utilisateur avec un mauvais pseudo
-POST http://localhost:3000/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -70,32 +72,32 @@ Content-Type: application/json
 }
 
 ### Obtenir mes informations d'utilisateur
-GET http://localhost:3000/auth/me
+GET {{baseUrl}}/auth/me
 Authorization: Bearer {{authToken}}
 
 
 ######### REQUETES MONSTRES ###################
 
 ### Afficher tous les monstres (PUBLIC)
-GET http://localhost:3000/monstre/
+GET {{baseUrl}}/monstre/
 
 ### afficher 1 monstre par son nom (PUBLIC)
-GET http://localhost:3000/monstre/goblin
+GET {{baseUrl}}/monstre/goblin
 
 ### Ajout de monstre (MDJ)
-POST http://localhost:3000/monstre/ajouter/orc
+POST {{baseUrl}}/monstre/ajouter/orc
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Ajout de monstre (MDJ)
-POST http://localhost:3000/monstre/ajouter/goblin
+POST {{baseUrl}}/monstre/ajouter/goblin
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Suppression de monstre par nom (MDJ)
-DELETE http://localhost:3000/monstre/supprimer/orc
+DELETE {{baseUrl}}/monstre/supprimer/orc
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Modification du monstre par nom (changement de nom et changement de la stat attaque) (MDJ)
-PATCH HTTP://localhost:3000/monstre/goblin
+PATCH {{baseUrl}}/monstre/goblin
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -105,13 +107,13 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Suppression du nouveau monstre cree lors de la modification (MDJ)
-DELETE http://localhost:3000/monstre/supprimer/goblin%20++
+DELETE {{baseUrl}}/monstre/supprimer/goblin%20++
 Authorization: Bearer {{authTokenAdmin}}
 
-######### REQUETES OBJETS SANS TOKEN ###################
+######### REQUETES OBJETS ###################
 
 ### Creer 1 objet (MDJ)
-POST http://localhost:3000/objet/creer
+POST {{baseUrl}}/objet/creer
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -121,19 +123,19 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Afficher tous les objets (PUBLIC)
-GET http://localhost:3000/objet/
+GET {{baseUrl}}/objet/
 
 ### afficher 1 objet par son nom (PUBLIC)
-GET http://localhost:3000/objet/baton
+GET {{baseUrl}}/objet/baton
 
 
 ### Suppression de objet par nom (MDJ)
-DELETE http://localhost:3000/objet/supprimer/baton
+DELETE {{baseUrl}}/objet/supprimer/baton
 Authorization: Bearer {{authTokenAdmin}}
 
 
 ### Modification du objet par nom (changement de nom et changement de la rarete) (MDJ)
-PATCH HTTP://localhost:3000/objet/baton
+PATCH {{baseUrl}}/objet/baton
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -143,14 +145,14 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Suppression de l'objet modifié par son nouveau nom (MDJ)
-DELETE http://localhost:3000/objet/supprimer/baton%20Legendaire
+DELETE {{baseUrl}}/objet/supprimer/baton%20Legendaire
 Authorization: Bearer {{authTokenAdmin}}
 
 
 ######### REQUETES QUETES ###################
 
 ### Creer 1 quete (MDJ)
-POST http://localhost:3000/quete/creer
+POST {{baseUrl}}/quete/creer
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -161,7 +163,7 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Creer 2e quete (sans token pour le moment)
-POST http://localhost:3000/quete/creer
+POST {{baseUrl}}/quete/creer
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -172,23 +174,23 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Afficher tous les quetes (PUBLIC)
-GET http://localhost:3000/quete
+GET {{baseUrl}}/quete
 
 ### Afficher tous les quetes par difficulte (PUBLIC)
-GET http://localhost:3000/quete?difficulte=difficile
+GET {{baseUrl}}/quete?difficulte=difficile
 
 
 ### afficher 1 quete par son nom (PUBLIC)
-GET http://localhost:3000/quete/Aller%20chercher%20le%20baton
+GET {{baseUrl}}/quete/Aller%20chercher%20le%20baton
 
 
 ### Suppression de quete par nom (MDJ)
-DELETE http://localhost:3000/quete/supprimer/Aller%20chercher%20le%20baton
+DELETE {{baseUrl}}/quete/supprimer/Aller%20chercher%20le%20baton
 Authorization: Bearer {{authTokenAdmin}}
 
 
 ### Modification de quete par nom (changement de difficultee et changement de la recompense) (MDJ)
-PATCH HTTP://localhost:3000/quete/Aller%20chercher%20le%20baton
+PATCH {{baseUrl}}/quete/Aller%20chercher%20le%20baton
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -198,10 +200,14 @@ Authorization: Bearer {{authTokenAdmin}}
     "recompense" : 1000
 }
 
+
+
+
+
 ######### REQUETES UTILISATEURS (MDJ) ###################
 
 # ajoutez un id d'utilisateur valide dans la variable @uuidUser pour les tests - IMPORTANT: Pas de ""
-@uuidUser = 358697cf-563a-4a0b-8516-b35980b4d76e
+@uuidUser = 69cb394f-cecf-441b-ac22-be4999e241b8
 
 ### Créer un utilisateur (MAITRE_DU_JEU)
 POST {{baseUrl}}/utilisateur/creer
@@ -252,8 +258,8 @@ Authorization: Bearer {{authToken}}
 ###
 
 # uuidPerso doit contenir un id de personnage valide pour les tests suivants
-@uuidPerso = d9af2f02-222a-4eb1-97e6-66347e791f76
-@uuidQuete = 6f9110e0-f4ce-49fc-bfb0-7df2c29c53b8
+@uuidPerso = 6a32b874-6bf7-48c2-870f-d105b11f804d
+@uuidQuete = 3b166405-927a-4281-b8dd-1fdee07ea779
 
 ### Récupérer l'information d'un personnage 
 GET {{baseUrl}}/personnage/recuperer/{{uuidPerso}}
@@ -279,7 +285,7 @@ Authorization: Bearer {{authToken}}
 ######### PERSOQUETE - JOURNAL DE QUETES #########
 
 ### Ajouter une quete a la table intermediaire persoquete
-POST http://localhost:3000/persoquete/ajouter
+POST {{baseUrl}}/persoquete/ajouter
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -290,7 +296,23 @@ Authorization: Bearer {{authToken}}
 
 ### Voir le journal de quete d'un personnage
 
-GET http://localhost:3000/persoquete/{{uuidPerso}}
+GET {{baseUrl}}/persoquete/{{uuidPerso}}
+Authorization: Bearer {{authToken}}
+
+@uuidPersoQuete = a1bb5585-c57e-4de0-8c68-364e5cad8e53
+
+### Réussir une quête
+PATCH {{baseUrl}}/persoquete/journal/reussir/{{uuidPersoQuete}}
+Authorization: Bearer {{authToken}}
+
+
+### Echouer une quete
+PATCH {{baseUrl}}/persoquete/journal/echouer/{{uuidPersoQuete}}
+Authorization: Bearer {{authToken}}
+
+
+### Abandonner une quête
+DELETE {{baseUrl}}/persoquete/journal/abandonner/{{uuidPersoQuete}}
 Authorization: Bearer {{authToken}}
 
 

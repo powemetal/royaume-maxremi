@@ -13,6 +13,7 @@ const router = Router()
 
 router.post("/register", async(req:Request, res:Response) => {
     const { email, pseudo, mdp, codeAdmin } = req.body
+
     if (!email || !pseudo || !mdp) {
         return res.status(400).json({erreur: "Erreur: Une information requise est manquante. (email, pseudo, mot de passe)"})
     }
