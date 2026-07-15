@@ -292,3 +292,80 @@ Authorization: Bearer {{authToken}}
 
 GET http://localhost:3000/persoquete/{{uuidPerso}}
 Authorization: Bearer {{authToken}}
+
+
+######### REQUETES INVENTAIRE ###################
+
+### Récupérer l'inventaire d'un personnage (Succès)
+GET {{baseUrl}}/inventaire/{{uuidPerso}}
+Authorization: Bearer {{authToken}}
+
+
+### Récupérer l'inventaire avec un UUID invalide (Doit retourner 400)
+GET {{baseUrl}}/inventaire/un-id-invalide-1234
+Authorization: Bearer {{authToken}}
+
+
+### Ajouter un objet à l'inventaire (Succès)
+POST {{baseUrl}}/inventaire/ajouter
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}",
+    "nomObjet": "Baton"
+}
+
+
+### Ajouter un objet : Erreur Doublon (Doit retourner 500)
+POST {{baseUrl}}/inventaire/ajouter
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}",
+    "nomObjet": "Baton"
+}
+
+
+### Ajouter un objet : Erreur champs manquants (Doit retourner 400)
+POST {{baseUrl}}/inventaire/ajouter
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}"
+}
+
+
+### Ajouter un objet : L'objet n'existe pas dans le jeu (Doit retourner 404)
+POST {{baseUrl}}/inventaire/ajouter
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}",
+    "nomObjet": "ObjetImaginaireQuiNExistePas"
+}
+
+
+### Retirer un objet de l'inventaire (Succès)
+DELETE {{baseUrl}}/inventaire/retirer
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}",
+    "nomObjet": "Baton"
+}
+
+
+### Retirer un objet : Le personnage ne le possède plus (Doit retourner 404)
+DELETE {{baseUrl}}/inventaire/retirer
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "personnageId": "{{uuidPerso}}",
+    "nomObjet": "Baton"
+}
