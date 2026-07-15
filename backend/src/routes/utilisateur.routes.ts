@@ -25,6 +25,7 @@ routerUtilisateur.post(
       });
       return res.status(201).json({
         message: `Utilisateur créé avec succès ! Email : ${email}, pseudo : ${pseudo}`,
+        id: utilisateur.id
       });
     } catch (error) {
       res
@@ -48,6 +49,13 @@ routerUtilisateur.get(
       const utilisateur = await prisma.utilisateur.findUnique({
         where: { id },
       });
+
+      if (!utilisateur) {
+        return res.status(404).json({
+          message: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
+        });
+      }
+
       return res.status(200).json({
         message: `Utilisateur trouvé.`,
         data: { utilisateur },
@@ -71,13 +79,13 @@ routerUtilisateur.patch(
       return res.status(400).json({ message: "Erreur: L'ID est invalide." });
     }
 
-    const { email, pseudo, mdp } = req.body
+    const { email, pseudo, mdp } = req.body;
 
-    const data: any = {}
+    const data: any = {};
 
-    if (email) data.email = email
-    if (pseudo) data.pseudo = pseudo
-    if (mdp) data.mdp = await bcrypt.hash(mdp, 10)
+    if (email) data.email = email;
+    if (pseudo) data.pseudo = pseudo;
+    if (mdp) data.mdp = await bcrypt.hash(mdp, 10);
 
     try {
       const utilisateur = await prisma.utilisateur.update({
@@ -85,8 +93,8 @@ routerUtilisateur.patch(
         data: data,
       });
 
-      utilisateur.mdp = "" //attribuer une nouvelle valeur a mdp sinon la reponse contiendra le mdp hashé
-      
+      utilisateur.mdp = ""; //attribuer une nouvelle valeur a mdp sinon la reponse contiendra le mdp hashé
+
       return res.status(200).json({
         message: `L'utilisateur a été mis à jour.`,
         data: utilisateur,
