@@ -200,6 +200,10 @@ Authorization: Bearer {{authTokenAdmin}}
     "recompense" : 1000
 }
 
+
+
+
+
 ######### REQUETES UTILISATEURS (MDJ) ###################
 
 # ajoutez un id d'utilisateur valide dans la variable @uuidUser pour les tests - IMPORTANT: Pas de ""
@@ -254,8 +258,8 @@ Authorization: Bearer {{authToken}}
 ###
 
 # uuidPerso doit contenir un id de personnage valide pour les tests suivants
-@uuidPerso = d9af2f02-222a-4eb1-97e6-66347e791f76
-@uuidQuete = 6f9110e0-f4ce-49fc-bfb0-7df2c29c53b8
+@uuidPerso = 6a32b874-6bf7-48c2-870f-d105b11f804d
+@uuidQuete = 3b166405-927a-4281-b8dd-1fdee07ea779
 
 ### Récupérer l'information d'un personnage 
 GET {{baseUrl}}/personnage/recuperer/{{uuidPerso}}
@@ -293,6 +297,22 @@ Authorization: Bearer {{authToken}}
 ### Voir le journal de quete d'un personnage
 
 GET {{baseUrl}}/persoquete/{{uuidPerso}}
+Authorization: Bearer {{authToken}}
+
+@uuidPersoQuete = a1bb5585-c57e-4de0-8c68-364e5cad8e53
+
+### Réussir une quête
+PATCH {{baseUrl}}/persoquete/journal/reussir/{{uuidPersoQuete}}
+Authorization: Bearer {{authToken}}
+
+
+### Echouer une quete
+PATCH {{baseUrl}}/persoquete/journal/echouer/{{uuidPersoQuete}}
+Authorization: Bearer {{authToken}}
+
+
+### Abandonner une quête
+DELETE {{baseUrl}}/persoquete/journal/abandonner/{{uuidPersoQuete}}
 Authorization: Bearer {{authToken}}
 
 
