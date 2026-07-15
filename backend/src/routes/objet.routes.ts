@@ -9,18 +9,18 @@ routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
     const { nom, rarete } = req.body
 
     if (!nom) {
-        return res.status(400).json({ erreur: "Le nom de l'objet est manquant" });
+        return res.status(400).json({ erreur: "Erreur: Le nom de l'objet est manquant" });
     }
     
     if (!raretesValides.includes(rarete)) {
-        return res.status(400).json({erreur: `Rarete invalide`})
+        return res.status(400).json({erreur: `Erreur: La rareté de l'objet est invalide`})
     }
 
     try {
         const objet = await prisma.objet.create({ data: { nom, rarete } })
         return res.status(201).json({ message: `Objet ${nom} créé avec succès !` })
     } catch (error) {
-        res.status(400).json({ message: "Erreur lors de la création de l'objet" })
+        res.status(400).json({ message: "Erreur: L'objet n'a pas pu être créé." })
     }
 })
 
@@ -39,7 +39,7 @@ routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             }, 
         })
         if (!objet){
-            return res.status(404).json({erreur: `${nom} n'existe pas dans la table des objets`})
+            return res.status(404).json({erreur: `Erreur: L'objet ${nom} n'existe pas dans le jeu.`})
         }
 
         //Modifie l'objet
@@ -52,7 +52,7 @@ routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
 
 
     } catch(e){
-        res.status(500).json({erreur: `Erreur serveur lors de la modification du objet : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`})
     }
 })
 
@@ -68,9 +68,9 @@ routeurObjets.delete("/objet/supprimer/:nom", authentifier, exigerRole("MAITRE_D
         },
     });
     if (suppression.count === 0) {
-        res.status(404).json({ erreur: "ce objet n'est pas dans la table des objets" })
+        res.status(404).json({ erreur: "Erreur: Cet objet n'est pas dans le jeu." })
     } else {
-        res.status(200).json({ok: "Objet supprimé"})
+        res.status(200).json({ok: "L'objet a été supprimé."})
     }
 });
 
@@ -97,11 +97,11 @@ routeurObjets.get("/objet/:nom", async(req: Request, res: Response)=>{
         });
 
         if (!objet) {
-            return res.status(404).json({erreur: `Objet introuvable dans la table`})
+            return res.status(404).json({erreur: `Erreur: Cet objet n'est pas dans le jeu`})
         }
         res.json(objet)
     } catch (e) {
-        res.status(500).json({erreur: `Erreur serveur : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'objet: ${e}`})
     }
 
 })

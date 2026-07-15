@@ -15,7 +15,7 @@ routerUtilisateur.post(
     const { email, pseudo, mdp } = req.body;
     if (!email || !pseudo || !mdp) {
       return res.status(400).json({
-        erreur: "Une information requise est manquante! (email, pseudo, mdp)",
+        erreur: "Erreur: Une information requise est manquante. (email, pseudo, mdp)",
       });
     }
     try {
@@ -29,7 +29,7 @@ routerUtilisateur.post(
     } catch (error) {
       res
         .status(400)
-        .json({ message: "Erreur lors de la création de l'utilisateur" });
+        .json({ message: "Erreur: l'utilisateur n'a pas pu être créé." });
     }
   },
 );
@@ -42,19 +42,19 @@ routerUtilisateur.get(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
     }
     try {
       const utilisateur = await prisma.utilisateur.findUnique({
         where: { id },
       });
       return res.status(200).json({
-        message: `Utilisateur trouvé`,
+        message: `Utilisateur trouvé.`,
         data: { utilisateur },
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
+        message: `Erreur: Aucun utilisateur ne correspond à l'ID ${id}`,
       });
     }
   },
@@ -68,7 +68,7 @@ routerUtilisateur.patch(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
     }
 
     const { email, pseudo, mdp } = req.body
@@ -88,12 +88,12 @@ routerUtilisateur.patch(
       utilisateur.mdp = "" //attribuer une nouvelle valeur a mdp sinon la reponse contiendra le mdp hashé
       
       return res.status(200).json({
-        message: `Utilisateur mis à jour`,
+        message: `L'utilisateur a été mis à jour.`,
         data: utilisateur,
       });
     } catch (error) {
       return res.status(400).json({
-        message: "Erreur : Requête mal formée ou utilisateur non trouvé",
+        message: "Erreur : Requête mal formée ou utilisateur non trouvé.",
       });
     }
   },
@@ -107,7 +107,7 @@ routerUtilisateur.delete(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
     }
 
     try {
@@ -120,7 +120,7 @@ routerUtilisateur.delete(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
+        message: `Erreur: Aucun utilisateur ne correspond à l'ID: ${id}`,
       });
     }
   },
