@@ -19,7 +19,7 @@ async function recupererMonstre(nom: string){
         if (axios.isAxiosError(e) && e.response) {
             console.log("Statut HTTP : ", e.response)
         } else {
-            console.log("Erreur reseau ou timeout")
+            console.log("Erreur réseau ou time-out")
         }
         return null;
     }
@@ -30,15 +30,15 @@ async function recupererMonstre(nom: string){
 routeurMonstres.post("/monstre/ajouter/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response)=>{
     const donnees = await recupererMonstre(req.params.nom as string)
     if (!donnees) {
-        return res.status(404).json({erreur: "Ce monstre n'existe pas dans le manuel des monstres"})
+        return res.status(404).json({erreur: "Erreur: Ce monstre n'existe pas dans le manuel des monstres."})
     }
     try{
         const monstre = await prisma.monstre.create({
             data: donnees as any,
         })
-        res.status(201).json({ message: `${monstre.nom} a été ajouté a dans la table: monstres de la base de données`})
+        res.status(201).json({ message: `Le monstre ${monstre.nom} a été ajouté à la base de données.`})
     } catch (e) {
-        res.status(400).json({erreur: "Ce monstre est deja dans la base de données"})
+        res.status(400).json({erreur: "Erreur: Ce monstre est deja dans la base de données."})
     }
 })
 
@@ -57,7 +57,7 @@ routeurMonstres.patch("/monstre/:nom", authentifier, exigerRole("MAITRE_DU_JEU")
             }, 
         })
         if (!monstre){
-            return res.status(404).json({erreur: `${nom} n'existe pas dans la table des monstres`})
+            return res.status(404).json({erreur: `Erreur: Le monstre ${nom} n'existe pas dans le jeu.`})
         }
         //Modifier le monstre
 
@@ -70,7 +70,7 @@ routeurMonstres.patch("/monstre/:nom", authentifier, exigerRole("MAITRE_DU_JEU")
 
 
     } catch(e){
-        res.status(500).json({erreur: `Erreur serveur lors de la modification du monstre : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification du monstre : ${e}`})
     }
 })
 
@@ -86,9 +86,9 @@ routeurMonstres.delete("/monstre/supprimer/:nom", authentifier, exigerRole("MAIT
         },
     });
     if (suppression.count === 0) {
-        res.status(404).json({ erreur: "ce monstre n'est pas dans la table des monstres" })
+        res.status(404).json({ erreur: "Erreur: Ce monstre n'est pas dans le jeu." })
     } else {
-        res.status(200).json({ok: "Monstre supprimé"})
+        res.status(200).json({ok: "Le monstre a été supprimé."})
     }
 });
 
@@ -115,11 +115,11 @@ routeurMonstres.get("/monstre/:nom", async(req: Request, res: Response)=>{
         });
 
         if (!monstre) {
-            return res.status(404).json({erreur: `Monstre introuvable dans la table`})
+            return res.status(404).json({erreur: `Erreur: Le monstre ${nom} n'existe pas dans le jeu.`})
         }
         res.json(monstre)
     } catch (e) {
-        res.status(500).json({erreur: `Erreur serveur : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la récupération du monstre: ${e}`})
     }
 
 })
