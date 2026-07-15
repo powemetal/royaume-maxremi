@@ -10,7 +10,7 @@ export type JwtPayload = {sub:number, role: "JOUEUR" | "MAITRE_DU_JEU"}
 export function authentifier(req: Request, res: Response, next: NextFunction){
     const header = req.headers.authorization
     if(!header?.startsWith("Bearer ")){
-        return res.status(401).json({erreur: "Token Manquant!"})
+        return res.status(401).json({erreur: "Accès refusé. Votre token est manquant."})
     }
 
     const token = header.split(" ")[1]
@@ -20,7 +20,7 @@ export function authentifier(req: Request, res: Response, next: NextFunction){
         (req as any).utilisateur = payload
         next()
     } catch {
-        res.status(401).json({erreur:"Accès refusé! Token invalide ou expiré!"})
+        res.status(401).json({erreur:"Accès refusé. Votre token est invalide ou expiré."})
 
     }
 }
@@ -29,7 +29,7 @@ export function authentifier(req: Request, res: Response, next: NextFunction){
 export function exigerRole(role: "MAITRE_DU_JEU" | "JOUEUR"){
     return (req: Request, res:Response, next:NextFunction) => {
         if((req as any).utilisateur.role !== role) {
-            return res.status(403).json({erreur: "Accès refusé! Vous n'avez pas les droits."})
+            return res.status(403).json({erreur: "Accès refusé. Vous n'avez pas les droits."})
         }
         next()
     }

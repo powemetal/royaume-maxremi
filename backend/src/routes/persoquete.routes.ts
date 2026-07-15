@@ -18,7 +18,7 @@ routerPersoQuete.get("/:personnageId", authentifier, async (req: Request, res: R
 
     return res.json(journalQuetes)
     } catch (e) {
-        return res.status(500).json({ erreur: `Erreur serveur lors de la récupération du journal de quêtes : ${e}` })
+        return res.status(500).json({ erreur: `Erreur: Le serveur ne répond pas lors de la récupération du journal de quêtes : ${e}` })
     }
 });
 
@@ -28,7 +28,7 @@ routerPersoQuete.post("/ajouter", authentifier, async (req: Request, res:Respons
     const { idPerso, idQuete } = req.body
 
     if (!idPerso || !idQuete) {
-        return res.status(400).json({ erreur: "L'ID du personnage et l'ID de la quête sont requis." })
+        return res.status(400).json({ erreur: "Erreur: L'ID du personnage et l'ID de la quête sont requis." })
     }
 
     try {
@@ -37,7 +37,7 @@ routerPersoQuete.post("/ajouter", authentifier, async (req: Request, res:Respons
         })
 
         if (!queteAAjouter) {
-            return res.status(404).json({erreur: `La quête ${idQuete} n'existe pas dans le jeu.`})
+            return res.status(404).json({erreur: `Erreur: La quête ${idQuete} n'existe pas dans le jeu.`})
         }
 
         const nouveauJournal = await prisma.persoQuete.create({
@@ -56,7 +56,7 @@ routerPersoQuete.post("/ajouter", authentifier, async (req: Request, res:Respons
             item: nouveauJournal
         })
     } catch (e) {
-        return res.status(500).json({erreur: `Erreur lors de l'ajout de la quête au journal: ${e}`})
+        return res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de l'ajout de la quête au journal de quêtes: ${e}`})
 
     }
 });
@@ -74,7 +74,7 @@ try {
 
     } catch (e) {
         return res.status(500).json({
-            erreur: `Erreur serveur lors de la modification du persoQuete : ${e}`
+            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
         })
     }
 })
@@ -97,12 +97,12 @@ try {
     return res.json({
         personnage: attribuerRecompense, 
         persoQuete: persoQueteModifie,
-        Message: `Quête réussie! récompense de ${recompense} recue`
+        Message: `Quête réussie! Récompense de ${recompense} reçue!`
     })
 
     } catch (e) {
         return res.status(500).json({
-            erreur: `Erreur serveur lors de la modification du journal persoQuete : ${e}`
+            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
         })
     }
 })
@@ -123,7 +123,7 @@ try {
 
     } catch (e) {
         return res.status(500).json({
-            erreur: `Erreur serveur lors de la modification du journal persoQuete : ${e}`
+            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
         })
     }
 })
@@ -137,7 +137,7 @@ routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Requ
         })
 
         if (abandon.count === 0) {
-            res.status(404).json({ erreur: "Cette quete n'existe pas dans le Journal du personnage" })
+            res.status(404).json({ erreur: "Erreur: Cette quête n'existe pas dans le journal de quêtes du personnage." })
         } else {
             return res.status(200).json({
             Message: "Quête abandonnée!"
@@ -146,7 +146,7 @@ routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Requ
 
         } catch (e) {
             return res.status(500).json({
-                erreur: `Erreur serveur lors de la modification du journal persoQuete : ${e}`
+                erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
             })
         }
 })

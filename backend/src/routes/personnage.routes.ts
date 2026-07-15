@@ -14,7 +14,7 @@ routerPersonnage.post(
     if (!nom || !classe || !idUtilisateur) {
       return res.status(400).json({
         erreur:
-          "Une information requise est manquante! (nom, classe, idUtilisateur)",
+          "Erreur: Une information requise est manquante. (nom, classe, idUtilisateur)",
       });
     }
     try {
@@ -27,7 +27,7 @@ routerPersonnage.post(
     } catch (error) {
       res
         .status(400)
-        .json({ message: "Erreur lors de la création du personnage" });
+        .json({ message: "Erreur: La création du personnage a échouée." });
     }
   },
 );
@@ -51,7 +51,7 @@ routerPersonnage.get(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur : Aucun personnage ne correspond à l'UUID ${id}`,
+        message: `Erreur : Aucun personnage ne correspond à cet ID: ${id}.`,
       });
     }
   },
@@ -65,7 +65,7 @@ routerPersonnage.patch(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ message: "Erreur : L'ID est invalide." });
     }
 
     try {
@@ -80,7 +80,7 @@ routerPersonnage.patch(
       });
     } catch (error) {
       return res.status(400).json({
-        message: "Erreur : Requête mal formée ou personnage non trouvé",
+        message: "Erreur: Requête mal formée ou personnage inexistant dans le jeu.",
       });
     }
   },
@@ -93,7 +93,7 @@ routerPersonnage.delete(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ message: "Erreur : L'ID est invalide." });
     }
 
     try {
@@ -106,7 +106,7 @@ routerPersonnage.delete(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur : Aucun personnage ne correspond à l'UUID ${id}`,
+        message: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
       });
     }
   },

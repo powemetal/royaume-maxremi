@@ -14,7 +14,7 @@ const router = Router()
 router.post("/register", async(req:Request, res:Response) => {
     const { email, pseudo, mdp, codeAdmin } = req.body
     if (!email || !pseudo || !mdp) {
-        return res.status(400).json({erreur: "Une information requise est manquante! (email, pseudo, mot de passe)"})
+        return res.status(400).json({erreur: "Erreur: Une information requise est manquante. (email, pseudo, mot de passe)"})
     }
     let attributionRole: "JOUEUR" | "MAITRE_DU_JEU" = "JOUEUR";
 
@@ -27,7 +27,7 @@ router.post("/register", async(req:Request, res:Response) => {
         const utilisateur = await prisma.utilisateur.create({data: {email, pseudo, mdp: hash, role: attributionRole}})
         res.status(201).json({id: utilisateur.id, email: utilisateur.email, pseudo: utilisateur.pseudo})
     } catch {
-        res.status(400).json({erreur: "Erreur: le email ou le nom d'utilisateur est déjà pris."})
+        res.status(400).json({erreur: "Erreur: Le email ou le nom d'utilisateur est déjà pris."})
     }
 })
 
@@ -43,7 +43,7 @@ router.post("/login", async (req:Request, res:Response) => {
 
     // rejeter si le mdp ne correspond pas a la version hachée dans la BD
     const ok = await bcrypt.compare(mdp, utilisateur.mdp)
-    if (!ok) return res.status(401).json({erreur: "Identifiants invalides."})
+    if (!ok) return res.status(401).json({erreur: "Erreur: Identifiants invalides."})
 
     // signature du token avec le JWT_SECRET de .env
     const token = jwt.sign(
@@ -61,7 +61,7 @@ router.get("/me", authentifier, async (req:Request, res: Response) => {
         const id = (req as any).utilisateur?.sub
 
         if (!id) {
-            return res.status(401).json({ erreur: "Accès refusé. Vous n'êtes pas connecté."})
+            return res.status(401).json({ erreur: "Accès refusé. Vous devez d'abord vous connecter."})
         }
 
         const utilisateur = await prisma.utilisateur.findUnique({
@@ -70,12 +70,12 @@ router.get("/me", authentifier, async (req:Request, res: Response) => {
         })
 
         if (!utilisateur) {
-            return res.status(404).json({ erreur: "Utilisateur introuvable."})
+            return res.status(404).json({ erreur: "Erreur: Utilisateur introuvable."})
         }
 
         return res.json(utilisateur)
     } catch(e) {
-        return res.status(500).json({erreur: "Erreur du serveur"})
+        return res.status(500).json({erreur: "Erreur: Problème au niveau du serveur."})
     }
 })
 

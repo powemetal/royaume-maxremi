@@ -10,7 +10,7 @@ routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: R
   const idPersonnage = req.params.personnageId as string;
 
   if (!estUuidValide(idPersonnage)) {
-    return res.status(400).json({ message: "Erreur : UUID invalide" });
+    return res.status(400).json({ message: "Erreur : ID du personnage invalide." });
   }
 
   try {
@@ -24,7 +24,7 @@ routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: R
     return res.status(200).json(`Inventaire : ${inventaire}`);
   } catch (e) {
     return res.status(500).json({
-      erreur: `Erreur serveur lors de la récupération de l'inventaire : ${e}`,
+      erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'inventaire : ${e}`,
     });
   }
 });
@@ -35,7 +35,7 @@ routerInventaire.post("/ajouter", authentifier, async (req: Request, res: Respon
 
   if (!personnageId || !nomObjet) {
     return res.status(400).json({
-      erreur: "L'ID du personnage et le nom de l'objet sont requis.",
+      erreur: "Erreur: L'ID du personnage et le nom de l'objet sont requis.",
     });
   }
 
@@ -48,7 +48,7 @@ routerInventaire.post("/ajouter", authentifier, async (req: Request, res: Respon
     if (!objet) {
       return res
         .status(404)
-        .json({ erreur: `L'objet ${nomObjet} n'existe pas dans le jeu.` });
+        .json({ erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.` });
     }
 
     // Connecte directement l'objet à l'inventaire via la relation 1-1 du personnage
@@ -69,7 +69,7 @@ routerInventaire.post("/ajouter", authentifier, async (req: Request, res: Respon
   } catch (e) {
     return res
       .status(500)
-      .json({ erreur: `Erreur lors de l'ajout de l'objet : ${e}.` });
+      .json({ erreur: `Erreur: Le serveur ne répond pas lors de l'ajout de l'objet : ${e}` });
   }
 });
 
@@ -80,7 +80,7 @@ routerInventaire.delete("/retirer", authentifier, async (req: Request, res: Resp
   if (!personnageId || !nomObjet) {
     return res
       .status(400)
-      .json({ erreur: "L'ID du personnage et le nom de l'objet sont requis." });
+      .json({ erreur: "Erreur: L'ID du personnage et le nom de l'objet sont requis." });
   }
 
   try {
@@ -92,7 +92,7 @@ routerInventaire.delete("/retirer", authentifier, async (req: Request, res: Resp
     if (!objet) {
       return res
         .status(404)
-        .json({ erreur: `L'objet '${nomObjet}' n'existe pas.` });
+        .json({ erreur: `Erreur: L'objet '${nomObjet}' n'existe pas dans le jeu.` });
     }
 
     // Trouver la ligne dans l'inventaire du personnage qui lient cet objet
@@ -105,7 +105,7 @@ routerInventaire.delete("/retirer", authentifier, async (req: Request, res: Resp
 
     if (!itemInventaire) {
       return res.status(404).json({
-        erreur: `Le personnage ne possède pas cet objet dans son inventaire.`,
+        erreur: `Erreur: Le personnage ne possède pas cet objet dans son inventaire.`,
       });
     }
 
@@ -120,7 +120,7 @@ routerInventaire.delete("/retirer", authentifier, async (req: Request, res: Resp
   } catch (e) {
     return res
       .status(500)
-      .json({ erreur: `Erreur lors du retrait de l'objet : ${e}.` });
+      .json({ erreur: `Erreur: Le server ne répond pas lors du retrait de l'objet : ${e}` });
   }
 });
 

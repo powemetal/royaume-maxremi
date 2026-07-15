@@ -15,17 +15,17 @@ routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
     const { nom, difficulte, recompense } = req.body
 
     if (!nom) {
-        return res.status(400).json({ erreur: "Le nom de l'quete est manquant" });
+        return res.status(400).json({ erreur: "Erreur: Le nom de la quête est manquant." });
     }
     if (!difficulteValides.includes(difficulte)) {
-        return res.status(400).json({erreur: `Difficulté invalide`})
+        return res.status(400).json({erreur: `Erreur: La niveau de difficulté est invalide.`})
     }
 
     try {
         const quete = await prisma.quete.create({ data: { nom, difficulte, recompense } })
-        return res.status(201).json({ message: `Quete ${nom} créé avec succès !` })
+        return res.status(201).json({ message: `La quête ${nom} a été créée avec succès!` })
     } catch (error) {
-        res.status(400).json({ message: "Erreur lors de la création de l'quete" })
+        res.status(400).json({ message: "Erreur: La création de la quête a échouée." })
     }
 })
 
@@ -43,7 +43,7 @@ routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             }, 
         })
         if (!quete){
-            return res.status(404).json({erreur: `${nom} n'existe pas dans la table des quetes`})
+            return res.status(404).json({erreur: `Erreur: La quête ${nom} n'existe pas dans le jeu.`})
         }
 
         //Modifie l'quete
@@ -55,7 +55,7 @@ routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
         res.json(queteModifie)
 
     } catch(e){
-        res.status(500).json({erreur: `Erreur serveur lors de la modification du quete : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de la quête: ${e}`})
     }
 })
 
@@ -70,9 +70,9 @@ routeurQuetes.delete("/quete/supprimer/:nom", authentifier, exigerRole("MAITRE_D
         },
     });
     if (suppression.count === 0) {
-        res.status(404).json({ erreur: "ce quete n'est pas dans la table des quetes" })
+        res.status(404).json({ erreur: "Erreur: Cette quête n'est pas dans le jeu." })
     } else {
-        res.status(200).json({ok: "Quete supprimée"})
+        res.status(200).json({ok: "La quête a été supprimée."})
     }
 });
 
@@ -92,21 +92,21 @@ routeurQuetes.get("/quete", async(req: Request, res: Response) => {
                 orderBy : { id : "asc" }
             })
             if (quete.length ===0) {
-                return res.status(404).json({erreur: `Aucune quête la difficulte: ${difMaj}`})
+                return res.status(404).json({erreur: `Erreur: Aucune quête avec le niveau de difficulté recherché: ${difMaj}.`})
             }
             return res.json(quete)
         }
 
         if (statut) {
             const statutMaj = (statut as string).toUpperCase()
-            if (!statutValides.includes(statutMaj)) return res.status(400).json({erreur: "Statut invalide"})
+            if (!statutValides.includes(statutMaj)) return res.status(400).json({erreur: "Erreur: Statut invalide."})
             const persoQuete = await prisma.persoQuete.findMany({
                 where : { statut : Statut[statutMaj as keyof typeof Statut]},
                 include: { quete: true },
                 orderBy : { id : "asc" }
             })
             if (persoQuete.length ===0) {
-                return res.status(404).json({erreur: `Aucune quête avec le statut: ${statutMaj}`})
+                return res.status(404).json({erreur: `Erreur: Aucune quête avec le statut: ${statutMaj}.`})
             }
             return res.json(persoQuete)
         }
@@ -114,11 +114,11 @@ routeurQuetes.get("/quete", async(req: Request, res: Response) => {
         const toutesLesQuetes = await prisma.quete.findMany({
             orderBy: {id:"asc"}
         })
-        if (toutesLesQuetes.length === 0) return res.status(404).json({erreur: "Aucune quête dans la table"})
+        if (toutesLesQuetes.length === 0) return res.status(404).json({erreur: "Erreur: Il n'y a aucune quête dans le jeu."})
         return res.json(toutesLesQuetes)
 
     } catch (e) {
-        return res.status(500).json({erreur: `Erreur serveur : ${e}`})
+        return res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la récupération des quêtes: ${e}`})
     }
 });
 
@@ -136,11 +136,11 @@ routeurQuetes.get("/quete/:nom", async(req: Request, res: Response)=>{
         });
 
         if (!quete) {
-            return res.status(404).json({erreur: `Quete introuvable dans la table`})
+            return res.status(404).json({erreur: `Erreur: Cette quête n'est pas dans le jeu.`})
         }
         res.json(quete)
     } catch (e) {
-        res.status(500).json({erreur: `Erreur serveur : ${e}`})
+        res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la récupération de la quête: ${e}`})
     }
 
 })
