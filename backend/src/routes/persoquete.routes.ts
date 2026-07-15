@@ -82,7 +82,20 @@ try {
 // reussir une quete
 routerPersoQuete.patch("/journal/reussir/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
+
 try {
+    const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete }
+    })
+
+    if (!persoQuete) {
+        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
+    }
+
+    if (persoQuete.statut !== "EN_COURS") {
+        return res.status(400).json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` })
+    }
+
     const persoQueteModifie = await prisma.persoQuete.update({
         where: { id: idPersoQuete },
         data: { statut: "TERMINE" },
@@ -111,6 +124,18 @@ try {
 routerPersoQuete.patch("/journal/echouer/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
 try {
+    const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete }
+    })
+
+    if (!persoQuete) {
+        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
+    }
+
+    if (persoQuete.statut !== "EN_COURS") {
+        return res.status(400).json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` })
+    }
+
     const persoQueteModifie = await prisma.persoQuete.update({
         where: { id: idPersoQuete },
         data: { statut: "ECHOUE" },
@@ -132,6 +157,19 @@ try {
 routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Request, res: Response)=>{
     const idPersoQuete = req.params.id as string
     try {
+    const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete }
+    })
+
+    if (!persoQuete) {
+        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
+    }
+
+    if (persoQuete.statut === "TERMINE") {
+        return res.status(400).json({ erreur: `Impossible d'abandonner une quête terminée` })
+    }        
+
+
         const abandon = await prisma.persoQuete.deleteMany({  // pour savoir si il y a un nombre de lignes eviter de faire 2 requetes pour verifier
             where: { id: idPersoQuete },
         })
