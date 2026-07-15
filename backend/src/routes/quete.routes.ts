@@ -23,7 +23,7 @@ routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
 
     try {
         const quete = await prisma.quete.create({ data: { nom, difficulte, recompense } })
-        return res.status(201).json({ message: `La quête ${nom} a été créée avec succès!` })
+        return res.status(201).json({ message: `La quête ${nom} a été créée avec succès!`, id: quete.id })
     } catch (error) {
         res.status(400).json({ message: "Erreur: La création de la quête a échouée." })
     }
@@ -46,13 +46,13 @@ routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             return res.status(404).json({erreur: `Erreur: La quête ${nom} n'existe pas dans le jeu.`})
         }
 
-        //Modifie l'quete
+        //Modifie la quête
         const queteModifie = await prisma.quete.update({
             where: { id : quete.id },
             data: req.body
         })
 
-        res.json(queteModifie)
+        res.status(200).json(queteModifie)
 
     } catch(e){
         res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de la quête: ${e}`})

@@ -7,7 +7,7 @@ const routerInventaire = Router();
 
 // Récuperer l'inventaire d'un personnage
 routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: Response) => {
-  const idPersonnage = req.params.personnageId as string;
+  const idPersonnage = req.params.idPersonnage as string;
 
   if (!estUuidValide(idPersonnage)) {
     return res.status(400).json({ message: "Erreur : ID du personnage invalide." });

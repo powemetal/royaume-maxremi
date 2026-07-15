@@ -48,7 +48,7 @@ routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             data: req.body
         })
 
-        res.json(objetModifie)
+        res.status(200).json(objetModifie)
 
 
     } catch(e){

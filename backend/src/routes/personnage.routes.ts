@@ -23,6 +23,7 @@ routerPersonnage.post(
       });
       return res.status(201).json({
         message: `Personnage créé avec succès ! Nom : ${nom}, classe : ${classe}, idUtilisateur : ${idUtilisateur}`,
+        id: personnage.id
       });
     } catch (error) {
       res
