@@ -71,7 +71,7 @@ routerPersonnage.patch(
     }
 
     try {
-      if ((req as any).utilisateur.sub !== "MAITRE_DU_JEU") {
+      if ((req as any).utilisateur.role !== "MAITRE_DU_JEU") {
         const idUtilisateur = (req as any).utilisateur.sub;
         const personnage = await prisma.personnage.findFirst({ where: { id } });
 
@@ -115,7 +115,7 @@ routerPersonnage.delete(
     }
 
     try {
-      if ((req as any).utilisateur.sub !== "MAITRE_DU_JEU") {
+      if ((req as any).utilisateur.role !== "MAITRE_DU_JEU") {
         const idUtilisateur = (req as any).utilisateur.sub;
         const personnage = await prisma.personnage.findFirst({ where: { id } });
 
