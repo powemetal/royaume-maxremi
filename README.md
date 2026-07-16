@@ -1,9 +1,9 @@
-[Le Royaume de Maxremi]
+# [Le Royaume de Maxremi]
 
-🧙‍♂️ Backend de jeu RPG utilisant l'API de DND 5e édition.
+## 🧙‍♂️ Backend de jeu RPG utilisant l'API de DND 5e édition.
 
 
-🚀 Technologies utilisées
+## 🚀 Technologies utilisées
 
     - Node
     - Express
@@ -12,7 +12,7 @@
     - JWT + bcrypt
 
 
-🛠️ Prérequis
+## 🛠️ Prérequis
 
 Vous devez avoir:
 
@@ -20,10 +20,11 @@ Vous devez avoir:
   - Une instance de base de données Neon (neon.com), c'est gratuit.
 
 
-⚙️ Installation et Configuration:
+## ⚙️ Installation et Configuration:
 
     git clone https://github.com/powemetal/royaume-maxremi.git
-    cd royaume-maxremi
+
+    cd royaume-maxremi/backend
 
 Installer les dépendances:
 
@@ -31,10 +32,13 @@ Installer les dépendances:
 
 Configuration des variables d'environnement :
 
-    Crée un fichier .env à la racine du backend du projet et ajouter le lien vers Neon. Voir .env.example.
+    Crée un fichier .env à la racine du backend du projet et ajouter le lien vers Neon.
+    
+    Voir .env.example.
 
 Initialiser Prisma (Base de données) :
-Génère le client Prisma et lance les migrations pour créer les tables :
+
+Générer le client Prisma et lancer les migrations pour créer les tables:
 
     npx prisma generate
     npx prisma migrate dev --name init
@@ -43,23 +47,20 @@ Lancer le serveur:
 
     npm run dev
 
-🛣️ Liste des routes:
 
-
-
-**  À COMPLÉTER!!! **
-
-
-🌐 Services externes
+## 🌐 Services externes
 
     DND 5e SRD API : https://www.dnd5eapi.co/
+
+
+## 🛣️ Liste des routes:
 
 Routes
 > **Note :** L'adresse de base pour toutes les requêtes est `http://localhost:3000`. Certaines routes nécessitent un token d'authentification (`Bearer token`) dans l'en-tête `Authorization`.
 
 ---
 
-## 1. Authentification
+### 1. Authentification
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/auth/register` | Création de compte (Utilisateur ou Admin) | Public |
@@ -68,7 +69,7 @@ Routes
 
 ---
 
-## 2. Monstres
+### 2. Monstres
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/monstre/` | Liste tous les monstres | Public |
@@ -79,7 +80,7 @@ Routes
 
 ---
 
-## 3. Objets
+### 3. Objets
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/objet/` | Liste tous les objets | Public |
@@ -90,7 +91,7 @@ Routes
 
 ---
 
-## 4. Quêtes
+### 4. Quêtes
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/quete` | Liste les quêtes (filtre par `?difficulte=X` possible) | Public |
@@ -101,7 +102,7 @@ Routes
 
 ---
 
-## 5. Utilisateurs & Personnages
+### 5. Utilisateurs & Personnages
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/utilisateur/creer` | Crée un compte utilisateur | MDJ |
@@ -115,7 +116,7 @@ Routes
 
 ---
 
-## 6. Journal de Quêtes & Inventaire
+### 6. Journal de Quêtes & Inventaire
 | Méthode | Route | Description | Accès |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/persoquete/ajouter` | Ajoute une quête au journal du perso | Joueur |
@@ -128,7 +129,33 @@ Routes
 | `DELETE`| `/inventaire/retirer` | Retire un objet de l'inventaire | Joueur |
 
 
-👤 Auteurs
+## Collection de tests
+
+Pour faire des tests sur les routes il y a deux options:
+
+### 1. Utiliser le fichier tests.ts
+
+Le fichier tests.ts lance une série de tests couvrant toutes les fonctionnalités de l'application. Pour utiliser cette méthode, il est idéal d'avoir une base de données vierge afin d'éviter de possibles doublons qui feraient
+échouer certains tests. Si votre base de données contient déjà des éléments, certains tests pourraient échouer.
+
+Pour lancer les tests:
+
+    - Assurez-vous d'être dans le dossier backend/src où se trouve tests.ts
+    - Assurez-vous d'avoir lancé le serveur backend
+    - Exécutez le fichier avec la commande :
+     
+         npx tsx tests.ts
+
+### 2. Utiliser le fichier tests.rest
+
+Il est possible de tester les routes individuellement à partir du fichier test.rest. Notez que certains tests nécessitent d'affecter des UUID aux variables ```@uuidPerso```,  ```@uuidQuete```, ```@uuidPersoQuete```, ```@uuidUser```. Ces UUID doivent être valides dans votre base de données.
+
+Pour lancer des tests à partir de test.rest:
+
+    - Assurez-vous d'avoir lancé le serveur backend
+    - Exécutez des requêtes à partir du fichier test.rest en cliquant
+
+## 👤 Auteurs
 
     Clément Laflamme
     Francis Boisvert

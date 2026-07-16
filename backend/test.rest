@@ -1,5 +1,11 @@
-### Variables globales
+### Variables globales, elles doivent être valides dans votre base de données pour que certains tests fonctionnent
 @baseUrl = http://localhost:3000
+@uuidUser = 13cee559-c297-4e18-8cb1-6fb7d628222b
+@uuidPersoQuete = 0193a590-1622-4527-86c5-42ad915057ac
+@uuidPerso = 6ebd536c-a341-479d-90e0-01a6a842ae25
+@uuidQuete = 19961698-036b-40b6-a624-0ee482a84861
+
+
 
 ######### REQUETES AUTH #########
 
@@ -173,10 +179,10 @@ Authorization: Bearer {{authTokenAdmin}}
     "recompense" : 150
 }
 
-### Afficher tous les quetes (PUBLIC)
+### Afficher toutes les quetes (PUBLIC)
 GET {{baseUrl}}/quete
 
-### Afficher tous les quetes par difficulte (PUBLIC)
+### Afficher toutes les quetes par difficulte (PUBLIC)
 GET {{baseUrl}}/quete?difficulte=difficile
 
 
@@ -189,7 +195,7 @@ DELETE {{baseUrl}}/quete/supprimer/Aller%20chercher%20le%20baton
 Authorization: Bearer {{authTokenAdmin}}
 
 
-### Modification de quete par nom (changement de difficultee et changement de la recompense) (MDJ)
+### Modification de quete par nom (changement de difficulte et changement de la recompense) (MDJ)
 PATCH {{baseUrl}}/quete/Aller%20chercher%20le%20baton
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
@@ -201,13 +207,7 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 
-
-
-
 ######### REQUETES UTILISATEURS (MDJ) ###################
-
-# ajoutez un id d'utilisateur valide dans la variable @uuidUser pour les tests - IMPORTANT: Pas de ""
-@uuidUser = 69cb394f-cecf-441b-ac22-be4999e241b8
 
 ### Créer un utilisateur (MAITRE_DU_JEU)
 POST {{baseUrl}}/utilisateur/creer
@@ -242,6 +242,7 @@ DELETE {{baseUrl}}/utilisateur/supprimer/{{uuidUser}}
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
+
 ######### REQUETES PERSONNAGES ###################
 
 ### Créer un personnage (JOUEUR) -- S'assurer que la variable uuidUser contient bien un id utilisateur valide
@@ -254,12 +255,6 @@ Authorization: Bearer {{authToken}}
     "classe": "MAGE",
     "idUtilisateur": "{{uuidUser}}"
 }
-
-###
-
-# uuidPerso doit contenir un id de personnage valide pour les tests suivants
-@uuidPerso = 6a32b874-6bf7-48c2-870f-d105b11f804d
-@uuidQuete = 3b166405-927a-4281-b8dd-1fdee07ea779
 
 ### Récupérer l'information d'un personnage 
 GET {{baseUrl}}/personnage/recuperer/{{uuidPerso}}
@@ -298,8 +293,6 @@ Authorization: Bearer {{authToken}}
 
 GET {{baseUrl}}/persoquete/{{uuidPerso}}
 Authorization: Bearer {{authToken}}
-
-@uuidPersoQuete = a1bb5585-c57e-4de0-8c68-364e5cad8e53
 
 ### Réussir une quête
 PATCH {{baseUrl}}/persoquete/journal/reussir/{{uuidPersoQuete}}
@@ -372,17 +365,6 @@ Authorization: Bearer {{authToken}}
 
 
 ### Retirer un objet de l'inventaire (Succès)
-DELETE {{baseUrl}}/inventaire/retirer
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-{
-    "personnageId": "{{uuidPerso}}",
-    "nomObjet": "Baton"
-}
-
-
-### Retirer un objet : Le personnage ne le possède plus (Doit retourner 404)
 DELETE {{baseUrl}}/inventaire/retirer
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
