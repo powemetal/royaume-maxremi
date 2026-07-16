@@ -2,7 +2,6 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
 import { validate as estUuidValide } from "uuid";
-import type { NextFunction } from "express";
 
 const routerPersonnage = Router();
 
@@ -44,6 +43,21 @@ routerPersonnage.get(
       return res.status(400).json({ message: "Erreur : UUID invalide" });
     }
     try {
+      if ((req as any).utilisateur.role !== "MAITRE_DU_JEU") {
+        const idUtilisateur = (req as any).utilisateur.sub;
+        const personnage = await prisma.personnage.findFirst({ where: { id } });
+
+        if (!personnage) {
+          return res.status(404).json({
+            erreur: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
+          });
+        }
+        if (idUtilisateur !== personnage.idUtilisateur) {
+          return res
+            .status(403)
+            .json({ erreur: "Erreur: Ce personnage ne vous appartient pas" });
+        }
+      }
       const personnage = await prisma.personnage.findUnique({
         where: { id },
       });
@@ -69,23 +83,7 @@ routerPersonnage.patch(
     if (!estUuidValide(id)) {
       return res.status(400).json({ message: "Erreur : L'ID est invalide." });
     }
-
     try {
-      if ((req as any).utilisateur.role !== "MAITRE_DU_JEU") {
-        const idUtilisateur = (req as any).utilisateur.sub;
-        const personnage = await prisma.personnage.findFirst({ where: { id } });
-
-        if (!personnage) {
-          return res.status(404).json({
-            erreur: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
-          });
-        }
-        if (idUtilisateur !== personnage.idUtilisateur) {
-          return res
-            .status(401)
-            .json({ erreur: "Erreur: Ce personnage ne vous appartient pas" });
-        }
-      }
       const personnage = await prisma.personnage.update({
         where: { id },
         data: req.body,
@@ -123,8 +121,9 @@ routerPersonnage.delete(
           throw new Error();
         }
         if (idUtilisateur !== personnage.idUtilisateur) {
+          console.log(idUtilisateur, personnage.idUtilisateur);
           return res
-            .status(401)
+            .status(403)
             .json({ erreur: "Erreur: Ce personnage ne vous appartient pas" });
         }
       }
