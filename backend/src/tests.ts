@@ -9,10 +9,12 @@ const test = axios.create({
 // Variables globales pour les tests
 let tokenAdmin: string | null = null;
 let tokenJoueur: string | null = null;
+let tokenAutreJoueur: string | null = null; // Ajout pour les tests de sécurité
 
 let uuidUser: string | undefined;
 let uuidPerso: string | undefined;
 let uuidQuete: string | undefined;
+let uuidJoueur: string | undefined;
 
 /* =========================================
    REQUÊTES AUTHENTIFICATION
@@ -45,6 +47,19 @@ try {
   console.error("Test 2 échoué ❌ : " + error);
 }
 
+// Test 2.bis : Créer un autre compte utilisateur pour les tests de sécurité
+try {
+  const res = await test.post("/auth/register", {
+    email: "voleur_sournois@waaagh.com",
+    pseudo: "SneakyBoii",
+    mdp: "SneakSnik247!",
+  });
+  if (res.status !== 201) throw new Error(`Status inattendu: ${res.status}`);
+  console.log("Test 2.bis réussi ! ✅");
+} catch (error) {
+  console.error("Test 2.bis échoué ❌ : " + error);
+}
+
 // Test 3 : Login dans un compte Admin avec infos OK
 try {
   const res = await test.post("/auth/login", {
@@ -69,6 +84,19 @@ try {
   console.log("Test 4 réussi ! ✅");
 } catch (error) {
   console.error("Test 4 échoué ❌ : " + error);
+}
+
+// Test 4.bis : Login du deuxième utilisateur
+try {
+  const res = await test.post("/auth/login", {
+    email: "voleur_sournois@waaagh.com",
+    mdp: "SneakSnik247!",
+  });
+  if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  tokenAutreJoueur = res.data.token;
+  console.log("Test 4.bis réussi ! ✅");
+} catch (error) {
+  console.error("Test 4.bis échoué ❌ : " + error);
 }
 
 // Test 5 : Login dans un compte comme utilisateur avec un mauvais MDP
@@ -101,6 +129,12 @@ try {
     headers: { Authorization: `Bearer ${tokenJoueur}` },
   });
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+
+  // Sauvegarde l'ID du joueur connecté
+  if (res.data && res.data.id) {
+    uuidJoueur = res.data.id;
+  }
+
   console.log("Test 7 réussi ! ✅");
 } catch (error) {
   console.error("Test 7 échoué ❌ : " + error);
@@ -121,10 +155,15 @@ try {
 
 // Test 9 : Ajout de monstre goblin (MDJ)
 try {
-  const res = await test.post("/monstre/ajouter/goblin", {}, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/monstre/ajouter/goblin",
+    {},
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 9 réussi ! ✅");
 } catch (error) {
   console.error("Test 9 échoué ❌ : " + error);
@@ -132,10 +171,15 @@ try {
 
 // Test 10 : Ajout de monstre orc (MDJ)
 try {
-  const res = await test.post("/monstre/ajouter/orc", {}, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/monstre/ajouter/orc",
+    {},
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 10 réussi ! ✅");
 } catch (error) {
   console.error("Test 10 échoué ❌ : " + error);
@@ -155,7 +199,8 @@ try {
   const res = await test.delete("/monstre/supprimer/orc", {
     headers: { Authorization: `Bearer ${tokenAdmin}` },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 12 réussi ! ✅");
 } catch (error) {
   console.error("Test 12 échoué ❌ : " + error);
@@ -163,12 +208,16 @@ try {
 
 // Test 13 : Modification du monstre goblin (MDJ)
 try {
-  const res = await test.patch("/monstre/goblin", {
-    nom: "Goblin ++",
-    attaque: 50,
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
+  const res = await test.patch(
+    "/monstre/goblin",
+    {
+      nom: "Goblin ++",
+      attaque: 50,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 13 réussi ! ✅");
 } catch (error) {
@@ -180,7 +229,8 @@ try {
   const res = await test.delete("/monstre/supprimer/goblin%20++", {
     headers: { Authorization: `Bearer ${tokenAdmin}` },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 14 réussi ! ✅");
 } catch (error) {
   console.error("Test 14 échoué ❌ : " + error);
@@ -192,13 +242,18 @@ try {
 
 // Test 15 : Creer 1 objet (MDJ)
 try {
-  const res = await test.post("/objet/creer", {
-    nom: "Baton",
-    rarete: "RARE",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/objet/creer",
+    {
+      nom: "Baton",
+      rarete: "RARE",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 15 réussi ! ✅");
 } catch (error) {
   console.error("Test 15 échoué ❌ : " + error);
@@ -224,12 +279,16 @@ try {
 
 // Test 19 : Modification du objet par nom (MDJ)
 try {
-  const res = await test.patch("/objet/baton", {
-    nom: "Baton Legendaire",
-    rarete: "LEGENDAIRE",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
+  const res = await test.patch(
+    "/objet/baton",
+    {
+      nom: "Baton Legendaire",
+      rarete: "LEGENDAIRE",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 19 réussi ! ✅");
 } catch (error) {
@@ -241,7 +300,8 @@ try {
   const res = await test.delete("/objet/supprimer/baton%20Legendaire", {
     headers: { Authorization: `Bearer ${tokenAdmin}` },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 20 réussi ! ✅");
 } catch (error) {
   console.error("Test 20 échoué ❌ : " + error);
@@ -249,13 +309,18 @@ try {
 
 // Test 15.bis : Recréer l'objet pour les tests d'inventaire
 try {
-  const res = await test.post("/objet/creer", {
-    nom: "Baton",
-    rarete: "RARE",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/objet/creer",
+    {
+      nom: "Baton",
+      rarete: "RARE",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 15.bis (Recréation) réussi ! ✅");
 } catch (error) {
   console.error("Test 15.bis échoué ❌ : " + error);
@@ -267,14 +332,19 @@ try {
 
 // Test 21 : Creer 1 quete (MDJ)
 try {
-  const res = await test.post("/quete/creer", {
-    nom: "Aller chercher le baton",
-    difficulte: "FACILE",
-    recompense: 100,
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/quete/creer",
+    {
+      nom: "Aller chercher le baton",
+      difficulte: "FACILE",
+      recompense: 100,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidQuete = res.data.id;
   console.log("Test 21 réussi ! ✅");
 } catch (error) {
@@ -283,14 +353,19 @@ try {
 
 // Test 22 : Creer 2e quete (MDJ)
 try {
-  const res = await test.post("/quete/creer", {
-    nom: "Vaincre Grok",
-    difficulte: "DIFFICILE",
-    recompense: 150,
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/quete/creer",
+    {
+      nom: "Vaincre Grok",
+      difficulte: "DIFFICILE",
+      recompense: 150,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 22 réussi ! ✅");
 } catch (error) {
   console.error("Test 22 échoué ❌ : " + error);
@@ -325,13 +400,17 @@ try {
 
 // Test 27 : Modification de quete par nom (MDJ)
 try {
-  const res = await test.patch("/quete/Aller%20chercher%20le%20baton", {
-    nom: "Aller chercher le baton ++",
-    difficulte: "DIFFICILE",
-    recompense: 1000,
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
+  const res = await test.patch(
+    "/quete/Aller%20chercher%20le%20baton",
+    {
+      nom: "Aller chercher le baton ++",
+      difficulte: "DIFFICILE",
+      recompense: 1000,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 27 réussi ! ✅");
 } catch (error) {
@@ -340,10 +419,14 @@ try {
 
 // Test 26 : Suppression de quete par nom (MDJ)
 try {
-  const res = await test.delete("/quete/supprimer/Aller%20chercher%20le%20baton%20++", {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.delete(
+    "/quete/supprimer/Aller%20chercher%20le%20baton%20++",
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 26 réussi ! ✅");
 } catch (error) {
   console.error("Test 26 échoué ❌ : " + error);
@@ -351,14 +434,19 @@ try {
 
 // Test 21.bis : Recréer la quête pour les tests de PersoQuete
 try {
-  const res = await test.post("/quete/creer", {
-    nom: "Aller chercher le baton",
-    difficulte: "FACILE",
-    recompense: 100,
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/quete/creer",
+    {
+      nom: "Aller chercher le baton",
+      difficulte: "FACILE",
+      recompense: 100,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidQuete = res.data.id;
   console.log("Test 21.bis (Recréation) réussi ! ✅");
 } catch (error) {
@@ -371,14 +459,19 @@ try {
 
 // Test 28 : Créer un utilisateur (MDJ)
 try {
-  const res = await test.post("/utilisateur/creer", {
-    email: "test-utilisateur@gmail.com",
-    pseudo: "test-utilisateur",
-    mdp: "mdp-test-utilisateur",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/utilisateur/creer",
+    {
+      email: "test-utilisateur@gmail.com",
+      pseudo: "test-utilisateur",
+      mdp: "mdp-test-utilisateur",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidUser = res.data.id;
   console.log("Test 28 réussi ! ✅");
 } catch (error) {
@@ -398,13 +491,17 @@ try {
 
 // Test 30 : Mettre à jour un utilisateur (MDJ)
 try {
-  const res = await test.patch(`/utilisateur/modifier/${uuidUser}`, {
-    email: "test-utilisateur2@gmail.com",
-    pseudo: "test-utilisateur2",
-    mdp: "mdp-test-utilisateur2",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
+  const res = await test.patch(
+    `/utilisateur/modifier/${uuidUser}`,
+    {
+      email: "test-utilisateur2@gmail.com",
+      pseudo: "test-utilisateur2",
+      mdp: "mdp-test-utilisateur2",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 30 réussi ! ✅");
 } catch (error) {
@@ -416,7 +513,8 @@ try {
   const res = await test.delete(`/utilisateur/supprimer/${uuidUser}`, {
     headers: { Authorization: `Bearer ${tokenAdmin}` },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 31 réussi ! ✅");
 } catch (error) {
   console.error("Test 31 échoué ❌ : " + error);
@@ -424,14 +522,19 @@ try {
 
 // Test 28.bis : Recréer l'utilisateur pour les tests de personnages
 try {
-  const res = await test.post("/utilisateur/creer", {
-    email: "test-utilisateur@gmail.com",
-    pseudo: "test-utilisateur",
-    mdp: "mdp-test-utilisateur",
-  }, {
-    headers: { Authorization: `Bearer ${tokenAdmin}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/utilisateur/creer",
+    {
+      email: "test-utilisateur@gmail.com",
+      pseudo: "test-utilisateur",
+      mdp: "mdp-test-utilisateur",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidUser = res.data.id;
   console.log("Test 28.bis (Recréation) réussi ! ✅");
 } catch (error) {
@@ -447,7 +550,7 @@ try {
   const res = await test.post("/personnage/creer", {
     nom: "Gandalf",
     classe: "MAGE",
-    idUtilisateur: uuidUser,
+    idUtilisateur: uuidJoueur, 
   }, {
     headers: { Authorization: `Bearer ${tokenJoueur}` },
   });
@@ -469,15 +572,54 @@ try {
   console.error("Test 33 échoué ❌ : " + error);
 }
 
-// Test 34 : Mettre à jour un personnage (MDJ)
+// Test 33.a : Un autre utilisateur essaie de récupérer un personnage qui n'est pas à lui (Refus)
 try {
-  const res = await test.patch(`/personnage/modifier/${uuidPerso}`, {
-    nom: "Donkey Kong",
-    classe: "GUERRIER",
-    piecesDOr: 1000,
-  }, {
+  const res = await test.get(`/personnage/recuperer/${uuidPerso}`, {
+    headers: { Authorization: `Bearer ${tokenAutreJoueur}` },
+  });
+  if (res.status !== 403)
+    throw new Error(`Status inattendu (403 attendu): ${res.status}`);
+  console.log("Test 33.a réussi ! ✅");
+} catch (error) {
+  console.error("Test 33.a échoué ❌ : " + error);
+}
+
+// Test 33.b : Un autre utilisateur essaie de supprimer un personnage qui n'est pas à lui (Refus)
+try {
+  const res = await test.delete(`/personnage/supprimer/${uuidPerso}`, {
+    headers: { Authorization: `Bearer ${tokenAutreJoueur}` },
+  });
+  if (res.status !== 403)
+    throw new Error(`Status inattendu (403 attendu): ${res.status}`);
+  console.log("Test 33.b réussi ! ✅");
+} catch (error) {
+  console.error("Test 33.b échoué ❌ : " + error);
+}
+
+// Test 33.c : Un admin (maitre_du_jeu) récupère un personnage qui n'est pas à lui (Succès)
+try {
+  const res = await test.get(`/personnage/recuperer/${uuidPerso}`, {
     headers: { Authorization: `Bearer ${tokenAdmin}` },
   });
+  if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  console.log("Test 33.c réussi ! ✅");
+} catch (error) {
+  console.error("Test 33.c échoué ❌ : " + error);
+}
+
+// Test 34 : Mettre à jour un personnage (MDJ)
+try {
+  const res = await test.patch(
+    `/personnage/modifier/${uuidPerso}`,
+    {
+      nom: "Donkey Kong",
+      classe: "GUERRIER",
+      piecesDOr: 1000,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenAdmin}` },
+    },
+  );
   if (res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 34 réussi ! ✅");
 } catch (error) {
@@ -489,7 +631,8 @@ try {
   const res = await test.delete(`/personnage/supprimer/${uuidPerso}`, {
     headers: { Authorization: `Bearer ${tokenJoueur}` },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 35 réussi ! ✅");
 } catch (error) {
   console.error("Test 35 échoué ❌ : " + error);
@@ -497,14 +640,19 @@ try {
 
 // Test 32.bis : Recréer un personnage pour l'inventaire et les quêtes
 try {
-  const res = await test.post("/personnage/creer", {
-    nom: "Gandalf",
-    classe: "MAGE",
-    idUtilisateur: uuidUser,
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/personnage/creer",
+    {
+      nom: "Gandalf",
+      classe: "MAGE",
+      idUtilisateur: uuidJoueur,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidPerso = res.data.id;
   console.log("Test 32.bis (Recréation) réussi ! ✅");
 } catch (error) {
@@ -517,13 +665,18 @@ try {
 
 // Test 36 : Ajouter une quete a la table intermediaire (JOUEUR)
 try {
-  const res = await test.post("/persoquete/ajouter", {
-    idPerso: uuidPerso,
-    idQuete: uuidQuete,
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/persoquete/ajouter",
+    {
+      idPerso: uuidPerso,
+      idQuete: uuidQuete,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 36 réussi ! ✅");
 } catch (error) {
   console.error("Test 36 échoué ❌ : " + error);
@@ -568,13 +721,18 @@ try {
 
 // Test 40 : Ajouter un objet à l'inventaire - Succès (JOUEUR)
 try {
-  const res = await test.post("/inventaire/ajouter", {
-    personnageId: uuidPerso,
-    nomObjet: "Baton",
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/inventaire/ajouter",
+    {
+      personnageId: uuidPerso,
+      nomObjet: "Baton",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 40 réussi ! ✅");
 } catch (error) {
   console.error("Test 40 échoué ❌ : " + error);
@@ -582,12 +740,16 @@ try {
 
 // Test 41 : Ajouter un objet : Erreur Doublon - Doit retourner 500 (JOUEUR)
 try {
-  const res = await test.post("/inventaire/ajouter", {
-    personnageId: uuidPerso,
-    nomObjet: "Baton",
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
+  const res = await test.post(
+    "/inventaire/ajouter",
+    {
+      personnageId: uuidPerso,
+      nomObjet: "Baton",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
   if (res.status !== 500) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 41 réussi ! ✅");
 } catch (error) {
@@ -596,11 +758,15 @@ try {
 
 // Test 42 : Ajouter un objet : Erreur champs manquants - Doit retourner 400 (JOUEUR)
 try {
-  const res = await test.post("/inventaire/ajouter", {
-    personnageId: uuidPerso,
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
+  const res = await test.post(
+    "/inventaire/ajouter",
+    {
+      personnageId: uuidPerso,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
   if (res.status !== 400) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 42 réussi ! ✅");
 } catch (error) {
@@ -609,12 +775,16 @@ try {
 
 // Test 43 : Ajouter un objet : L'objet n'existe pas - Doit retourner 404 (JOUEUR)
 try {
-  const res = await test.post("/inventaire/ajouter", {
-    personnageId: uuidPerso,
-    nomObjet: "ObjetImaginaireQuiNExistePas",
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
+  const res = await test.post(
+    "/inventaire/ajouter",
+    {
+      personnageId: uuidPerso,
+      nomObjet: "ObjetImaginaireQuiNExistePas",
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
   if (res.status !== 404) throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 43 réussi ! ✅");
 } catch (error) {
@@ -630,7 +800,8 @@ try {
       nomObjet: "Baton",
     },
   });
-  if (res.status !== 200 && res.status !== 204) throw new Error(`Status inattendu: ${res.status}`);
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
   console.log("Test 44 réussi ! ✅");
 } catch (error) {
   console.error("Test 44 échoué ❌ : " + error);
@@ -649,4 +820,17 @@ try {
   console.log("Test 45 réussi ! ✅");
 } catch (error) {
   console.error("Test 45 échoué ❌ : " + error);
+}
+
+// Test 46 : Un admin (maitre_du_jeu) supprime un personnage qui n'est pas à lui (Succès)
+// Ce test doit être mis à la toute fin pour ne pas briser les tests d'inventaire et de quêtes
+try {
+  const res = await test.delete(`/personnage/supprimer/${uuidPerso}`, {
+    headers: { Authorization: `Bearer ${tokenAdmin}` },
+  });
+  if (res.status !== 200 && res.status !== 204)
+    throw new Error(`Status inattendu: ${res.status}`);
+  console.log("Test 46 réussi ! ✅");
+} catch (error) {
+  console.error("Test 46 échoué ❌ : " + error);
 }
