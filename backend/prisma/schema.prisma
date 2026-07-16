@@ -79,7 +79,7 @@ model Personnage{
   piecesDOr          Int            @default(0)
   pointsDeVie        Int            @default(100)
   idUtilisateur      String         @db.Uuid
-  utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id])
+  utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
   PersoQuetes      PersoQuete[]
   inventaire         Inventaire[]
 }
@@ -98,7 +98,7 @@ model PersoQuete{
   statut             Statut         @default(DISPONIBLE)
   quete              Quete          @relation(fields: [idQuete], references: [id])
   idPersonnage       String         @db.Uuid
-  personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
+  personnage         Personnage     @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
   @@unique([idPersonnage, idQuete])
 }
 
@@ -107,6 +107,6 @@ model Inventaire{
   idObjet            String         @db.Uuid
   objet              Objet          @relation(fields: [idObjet], references: [id])
   idPersonnage       String         @db.Uuid
-  personnage         Personnage     @relation(fields: [idPersonnage], references: [id])
+  personnage         Personnage     @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
   @@unique([idPersonnage, idObjet])
 }
