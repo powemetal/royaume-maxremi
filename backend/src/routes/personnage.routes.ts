@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
 import { validate as estUuidValide } from "uuid";
+import type { NextFunction } from "express";
 
 const routerPersonnage = Router();
 
@@ -23,7 +24,7 @@ routerPersonnage.post(
       });
       return res.status(201).json({
         message: `Personnage créé avec succès ! Nom : ${nom}, classe : ${classe}, idUtilisateur : ${idUtilisateur}`,
-        id: personnage.id
+        id: personnage.id,
       });
     } catch (error) {
       res
@@ -70,6 +71,21 @@ routerPersonnage.patch(
     }
 
     try {
+      if ((req as any).utilisateur.sub !== "MAITRE_DU_JEU") {
+        const idUtilisateur = (req as any).utilisateur.sub;
+        const personnage = await prisma.personnage.findFirst({ where: { id } });
+
+        if (!personnage) {
+          return res.status(404).json({
+            erreur: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
+          });
+        }
+        if (idUtilisateur !== personnage.idUtilisateur) {
+          return res
+            .status(401)
+            .json({ erreur: "Erreur: Ce personnage ne vous appartient pas" });
+        }
+      }
       const personnage = await prisma.personnage.update({
         where: { id },
         data: req.body,
@@ -81,7 +97,8 @@ routerPersonnage.patch(
       });
     } catch (error) {
       return res.status(400).json({
-        message: "Erreur: Requête mal formée ou personnage inexistant dans le jeu.",
+        message:
+          "Erreur: Requête mal formée ou personnage inexistant dans le jeu.",
       });
     }
   },
@@ -98,6 +115,19 @@ routerPersonnage.delete(
     }
 
     try {
+      if ((req as any).utilisateur.sub !== "MAITRE_DU_JEU") {
+        const idUtilisateur = (req as any).utilisateur.sub;
+        const personnage = await prisma.personnage.findFirst({ where: { id } });
+
+        if (!personnage) {
+          throw new Error();
+        }
+        if (idUtilisateur !== personnage.idUtilisateur) {
+          return res
+            .status(401)
+            .json({ erreur: "Erreur: Ce personnage ne vous appartient pas" });
+        }
+      }
       const personnage = await prisma.personnage.delete({
         where: { id },
       });
