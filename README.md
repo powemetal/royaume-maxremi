@@ -140,11 +140,14 @@ Le fichier tests.ts lance une série de tests couvrant toutes les fonctionnalit�
 
 Pour lancer les tests:
 
-    - Assurez-vous d'être dans le dossier backend/src où se trouve tests.ts
     - Assurez-vous d'avoir lancé le serveur backend
+    - Déplacez-vous dans le dossier backend/src où se trouve tests.ts
+
+        cd src
+
     - Exécutez le fichier avec la commande :
      
-         npx tsx tests.ts
+        npx tsx tests.ts
 
 ### 2. Utiliser le fichier tests.rest
 
