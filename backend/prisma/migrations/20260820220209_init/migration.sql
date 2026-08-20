@@ -13,12 +13,30 @@ CREATE TYPE "Statut" AS ENUM ('DISPONIBLE', 'EN_COURS', 'TERMINE', 'ECHOUE');
 -- CreateEnum
 CREATE TYPE "Classe" AS ENUM ('GUERRIER', 'MAGE', 'VOLEUR', 'CLERC');
 
+-- CreateEnum
+CREATE TYPE "TypeObjet" AS ENUM ('ARME', 'ARME_2_MAINS', 'BOUCLIER', 'ARMURE', 'BOTTES', 'CASQUE', 'BIJOU', 'TRINKET');
+
+-- CreateEnum
+CREATE TYPE "TypeDegats" AS ENUM ('FEU', 'GLACE', 'ACIDE', 'POISON', 'TONNERRE', 'PSYCHIQUE', 'NECROTIQUE', 'FORCE', 'PERCANT', 'CONTONDANT', 'TRANCHANT', 'RADIANT');
+
+-- CreateEnum
+CREATE TYPE "TypeMonstre" AS ENUM ('ABERRATION', 'BETE', 'CELESTIEL', 'CONSTRUCT', 'DRAGON', 'ELEMENTAIRE', 'FEERIQUE', 'FIELON', 'GEANT', 'HUMANOIDE', 'MONSTRUOSITE', 'VASE', 'PLANTE', 'MORT_VIVANT');
+
+-- CreateEnum
+CREATE TYPE "TypeGrosseur" AS ENUM ('TRES_PETIT', 'PETIT', 'MOYEN', 'GRAND', 'TRES_GRAND', 'GIGANTESQUE');
+
+-- CreateEnum
+CREATE TYPE "Alignement" AS ENUM ('NEUTRE', 'CHAOTIQUE_NEUTRE', 'LOYAL_NEUTRE', 'BON', 'LOYAL_BON', 'CHAOTIC_BON', 'MAUVAIS', 'CHAOTIQUE_MAUVAIS', 'LOYAL_MAUVAIS');
+
 -- CreateTable
 CREATE TABLE "Monstre" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "pointsDeVie" INTEGER NOT NULL DEFAULT 100,
     "attaque" INTEGER NOT NULL,
+    "typeMonstre" "TypeMonstre",
+    "grandeur" "TypeGrosseur",
+    "aligmnement" "Alignement",
 
     CONSTRAINT "Monstre_pkey" PRIMARY KEY ("id")
 );
@@ -28,6 +46,13 @@ CREATE TABLE "Objet" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "rarete" "Rarete" NOT NULL,
+    "Type" "TypeObjet" NOT NULL,
+    "Att" INTEGER,
+    "Def" INTEGER,
+    "Prix" INTEGER NOT NULL,
+    "TypeDegats" "TypeDegats" NOT NULL,
+    "DegatsBonus" INTEGER,
+    "TypeBonus" "TypeDegats",
 
     CONSTRAINT "Objet_pkey" PRIMARY KEY ("id")
 );
