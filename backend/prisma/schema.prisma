@@ -46,17 +46,105 @@ enum Classe{
   CLERC
 }
 
+enum TypeObjet {
+  ARME
+  ARME_2_MAINS
+  MUNITION
+  BOUCLIER
+  ARMURE
+  BOTTES
+  CASQUE
+  GANT
+  CAPE
+  BIJOU
+  TRINKET
+  POTION
+  PARCHEMIN
+  BAGUETTE
+  BATON
+  FOCALISATEUR
+  OUTIL
+  SAC
+  CONTENEUR
+  MARCHANDISE
+  AUTRE
+}
+
+enum TypeDegats {
+  FEU
+  GLACE
+  ACIDE
+  POISON
+  TONNERRE
+  PSYCHIQUE
+  NECROTIQUE
+  FORCE
+  PERCANT
+  CONTONDANT
+  TRANCHANT
+  RADIANT
+}
+
+enum TypeMonstre {
+    ABERRATION
+  BETE
+  CELESTIEL
+  CONSTRUCT
+  DRAGON
+  ELEMENTAIRE
+  FEERIQUE
+  FIELON
+  GEANT
+  HUMANOIDE
+  MONSTRUOSITE
+  VASE
+  PLANTE
+  MORT_VIVANT
+}
+
+enum TypeGrosseur{
+  TRES_PETIT
+  PETIT
+  MOYEN
+  GRAND
+  TRES_GRAND
+  GIGANTESQUE
+}
+
+enum Alignement {
+  NEUTRE
+  CHAOTIQUE_NEUTRE
+  LOYAL_NEUTRE
+  BON
+  LOYAL_BON
+  CHAOTIC_BON
+  MAUVAIS
+  CHAOTIQUE_MAUVAIS
+  LOYAL_MAUVAIS
+}
+
 model Monstre {
   id                String          @id @default(uuid()) @db.Uuid
   nom               String          @unique
   pointsDeVie       Int             @default(100)
   attaque           Int
+  typeMonstre       TypeMonstre?
+  grandeur          TypeGrosseur?
+  aligmnement       Alignement?
 }
 
 model Objet{
   id                String          @id @default(uuid()) @db.Uuid
   nom               String          @unique
   rarete            Rarete
+  tType             TypeObjet
+  att               Int?
+  def               Int?
+  prix              Int
+  typeDegats        TypeDegats?
+  degatsBonus       Int?
+  typeBonus         TypeDegats?
+  description       String?
   inventaire        Inventaire[]
 }
 
@@ -88,6 +176,7 @@ model Quete{
   id                 String         @id @default(uuid()) @db.Uuid
   nom                String         @unique
   difficulte         Difficulte   
+  description        String?
   recompense         Int
   PersoQuetes      PersoQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de PersoQuete
 }
