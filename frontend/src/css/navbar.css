@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap');
+
+.container-nav {
+    background-color: bisque;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 0 1rem;
+}
+
+.container-logo {
+    display: flex;
+    align-items: center;
+}
+
+.container-logo p {
+    text-transform: uppercase;
+    font-size: 2rem;
+    font-family: "Cinzel Decorative", serif;  
+    font-weight: 700;
+}
+
+#logo-maxremi {
+    height: 100px;
+}
+
+/* #btn-test {
+    padding: 20px;
+} */
