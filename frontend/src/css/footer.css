@@ -1,13 +1,11 @@
 .container-footer {
-    position: fixed;
-    background-color: bisque;
-    bottom: 0;
-    left: 0;
+
+    background-color: #2c0421;
     width: 100%;
     padding: 6px;
-
-    border-top: 2px solid rgb(114, 23, 23);
-    box-shadow: 0px 0px 30px 20px lightcoral;
+    margin-top: 20px;
+    border-top: 3px solid #971622;
+    box-shadow: 0px 0px 30px 10px #2c0421b4;
 }
 
 .serverStatusBadge {
@@ -22,4 +20,8 @@
 
     padding: 4px 6px 4px 6px;
     margin: 6px 12px;
+}
+
+.container-footer p {
+    color: #a94e5b;
 }

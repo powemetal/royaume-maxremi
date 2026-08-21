@@ -2,14 +2,14 @@ import "../css/navbar.css";
 
 export default function Navbar() {
   return (
-    <div className="container-nav">
+    <nav className="container-nav" style={{flexGrow: 1}}>
       <div className="container-logo">
         <img
-          src="https://cdn-icons-png.flaticon.com/512/2619/2619285.png"
+          src="src\assets\images\MaxRemiLogoBlanc.png"
           alt="Logo Maxremi"
           id="logo-maxremi"
         />
-        <p>Royaume Maxremi</p>
+        {/* <p>Royaume Maxremi</p> */}
       </div>
       <div className="flex flex-col flex-1">
         <div className="flex justify-end gap-3">
@@ -21,6 +21,6 @@ export default function Navbar() {
           <button className="px-4 py-2 mb-2 ml-4">Monstres</button>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }
