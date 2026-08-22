@@ -1,24 +1,51 @@
 import "../css/navbar.css";
+import DropdownAdmin from "./dropdownAdmin";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+  const { estConnecte, estAdmin, seDeconnecter } = useAuth();
+
   return (
-    <nav className="container-nav" style={{flexGrow: 1}}>
+    <nav className="container-nav">
       <div className="container-logo">
-        <img
-          src="src\assets\images\MaxRemiLogoBlanc.png"
-          alt="Logo Maxremi"
-          id="logo-maxremi"
-        />
-        {/* <p>Royaume Maxremi</p> */}
+        <Link to={"/"}>
+          <img
+            src="src/assets/images/MaxRemiLogoBlanc.png"
+            alt="Logo Maxremi"
+            id="logo-maxremi"
+          />
+        </Link>
       </div>
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 flex-col">
         <div className="flex justify-end gap-3">
-          <button>Administrer</button>
-          <button>Se connecter</button>
+          {estAdmin && <DropdownAdmin />}
+          {!estConnecte ? (
+            <Link
+              to={"/connexion"}
+              className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+            >
+              Se connecter
+            </Link>
+          ) : (
+            <button
+              onClick={seDeconnecter}
+              className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+            >
+              Se déconnecter
+            </button>
+          )}
         </div>
-        <div className="flex flex-1 items-end justify-center">
-          <button className="px-4 py-2 mb-2 ml-4">Mes Personnages</button>
-          <button className="px-4 py-2 mb-2 ml-4">Monstres</button>
+        <div className="flex flex-1 items-end justify-evenly gap-5">
+          <Link to={"/personnages"} className="btn-nav degrade-nav">
+            Mes Personnages
+          </Link>
+          <Link to={"/monstres"} className="btn-nav degrade-nav">
+            Monstres
+          </Link>
+          <Link to={"/objets"} className="btn-nav degrade-nav">
+            Objets
+          </Link>
         </div>
       </div>
     </nav>

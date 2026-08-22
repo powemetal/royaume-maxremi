@@ -1,55 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
 
 .container-nav {
-    background-image: url('../assets/images/MaxRemiFondBanniere.png');
-    background-size: 1960px 638px;
-    background-position: left center;
-    background-repeat: no-repeat;
-    overflow: hidden;
-    z-index: 0;
-    
-    width: 100%;
-    height: 100%;
+  background-image: url("../assets/images/MaxRemiFondBanniere.png");
+  background-size: 1960px 638px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  z-index: 0;
 
+  width: 100%;
+  height: 100%;
 
-    padding: 1rem 2rem;
-    display: flex;
-    gap: 0 1rem;
-    max-height: 140px;
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 0 1rem;
+  max-height: 140px;
 
-    border-bottom: 3px solid #971622;
-    box-shadow: 0px 0px 30px 10px #2c0421b4;
+  border-bottom: 3px solid #971622;
+  box-shadow: 0px 0px 30px 10px #2c0421b4;
+  font-family: "Cinzel Decorative", serif;
 }
 
 .container-nav button {
-    color: white;
+  color: white;
 }
 
 .container-logo {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-
-}
-
-.container-logo p {
-    text-transform: uppercase;
-    font-size: 2rem;
-    font-family: "Cinzel Decorative", serif;  
-    font-weight: 700;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+  margin: -1rem;
 }
 
 #logo-maxremi {
-    width: auto;
-    height: 125%;
-    object-fit: contain;
-    flex-shrink: 0;
-
-
-
-
+  width: auto;
+  height: 100%;
+  max-height: 140px;
+  object-fit: contain;
 }
 
-/* #btn-test {
-    padding: 20px;
-} */
+.btn-nav {
+  padding: 0.5em 1em;
+  white-space: nowrap;
+  border: 2px solid #971622;
+  border-radius: 10px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 2px 2px 2px #000000;
+  -webkit-box-shadow: 5px 5px 15px 5px #000000;
+  box-shadow: 5px 5px 10px 5px #000000;
+}
+
+.btn-nav:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+.degrade-nav {
+  background: #3f052e;
+  background: -moz-linear-gradient(left, #3f052e 0%, #ad4657 100%);
+  background: -webkit-linear-gradient(left, #3f052e 0%, #ad4657 100%);
+  background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
