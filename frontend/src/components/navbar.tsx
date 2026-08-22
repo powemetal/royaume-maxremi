@@ -27,13 +27,20 @@ export default function Navbar() {
       <div className="flex flex-1 flex-col">
         <div className="flex justify-end gap-3">
           {estAdmin && <DropdownAdmin />}
-          {!estConnecte ? (
+          {!estConnecte ? (<>
+            <Link
+              to={"/inscription"}
+              className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+            >
+              S'inscrire
+            </Link>
             <Link
               to={"/connexion"}
               className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
             >
               Se connecter
             </Link>
+            </>
           ) : (
             <button
               onClick={deconnexion}
