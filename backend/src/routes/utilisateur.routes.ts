@@ -30,7 +30,7 @@ routerUtilisateur.post(
     } catch (error) {
       res
         .status(400)
-        .json({ message: "Erreur: l'utilisateur n'a pas pu être créé." });
+        .json({ erreur: "Erreur: l'utilisateur n'a pas pu être créé." });
     }
   },
 );
@@ -43,7 +43,7 @@ routerUtilisateur.get(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
+      return res.status(400).json({ erreur: "Erreur: L'ID est invalide." });
     }
     try {
       const utilisateur = await prisma.utilisateur.findUnique({
@@ -52,7 +52,7 @@ routerUtilisateur.get(
 
       if (!utilisateur) {
         return res.status(404).json({
-          message: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
+          erreur: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
         });
       }
 
@@ -62,7 +62,7 @@ routerUtilisateur.get(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur: Aucun utilisateur ne correspond à l'ID ${id}`,
+        erreur: `Erreur: Aucun utilisateur ne correspond à l'ID ${id}`,
       });
     }
   },
@@ -76,7 +76,7 @@ routerUtilisateur.patch(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
+      return res.status(400).json({ erreur: "Erreur: L'ID est invalide." });
     }
 
     const { email, pseudo, mdp } = req.body;
@@ -101,7 +101,7 @@ routerUtilisateur.patch(
       });
     } catch (error) {
       return res.status(400).json({
-        message: "Erreur : Requête mal formée ou utilisateur non trouvé.",
+        erreur: "Erreur : Requête mal formée ou utilisateur non trouvé.",
       });
     }
   },
@@ -115,7 +115,7 @@ routerUtilisateur.delete(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur: L'ID est invalide." });
+      return res.status(400).json({ erreur: "Erreur: L'ID est invalide." });
     }
 
     try {
@@ -128,7 +128,7 @@ routerUtilisateur.delete(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur: Aucun utilisateur ne correspond à l'ID: ${id}`,
+        erreur: `Erreur: Aucun utilisateur ne correspond à l'ID: ${id}`,
       });
     }
   },

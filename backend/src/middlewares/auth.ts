@@ -20,7 +20,7 @@ export function authentifier(req: Request, res: Response, next: NextFunction){
         (req as any).utilisateur = payload
         next()
     } catch {
-        res.status(401).json({erreur:"Accès refusé. Votre token est invalide ou expiré."})
+        res.status(401).json({erreur:"Accès refusé. Votre token est invalide ou expiré.", code: "TOKEN_INVALIDE"})
 
     }
 }

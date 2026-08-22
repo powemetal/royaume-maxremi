@@ -25,7 +25,7 @@ routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
         const quete = await prisma.quete.create({ data: { nom, difficulte, recompense } })
         return res.status(201).json({ message: `La quête ${nom} a été créée avec succès!`, id: quete.id })
     } catch (error) {
-        res.status(400).json({ message: "Erreur: La création de la quête a échouée." })
+        res.status(400).json({ erreur: "Erreur: La création de la quête a échouée." })
     }
 })
 

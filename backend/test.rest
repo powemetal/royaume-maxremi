@@ -32,8 +32,8 @@ Content-Type: application/json
     "mdp": "WaaAgh247!"
 }
 
-### Login dans un compte Admin avec infos OK
-# @name loginAdmin
+### login dans un compte Admin avec infos OK
+# @name ConnexionAdmin
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
@@ -43,11 +43,11 @@ Content-Type: application/json
 }
 
 ### authTokenAdmin garde en mémoire le token admin pour l'utiliser dans d'autres routes
-@authTokenAdmin = {{loginAdmin.response.body.token}}
+@authTokenAdmin = {{ConnexionAdmin.response.body.token}}
 
 
-### Login dans un compte comme utilisateur avec infos OK
-# @name loginReq
+### login dans un compte comme utilisateur avec infos OK
+# @name ConnexionReq
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
@@ -57,9 +57,9 @@ Content-Type: application/json
 }
 
 ### authToken garde en mémoire le token du login pour l'utiliser dans d'autres routes
-@authToken = {{loginReq.response.body.token}}
+@authToken = {{ConnexionReq.response.body.token}}
 
-### Login dans un compte comme utilisateur avec un mauvais MDP
+### login dans un compte comme utilisateur avec un mauvais MDP
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
@@ -68,7 +68,7 @@ Content-Type: application/json
     "mdp": "wAAaGH247!"
 }
 
-### Login dans un compte comme utilisateur avec un mauvais pseudo
+### login dans un compte comme utilisateur avec un mauvais pseudo
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 

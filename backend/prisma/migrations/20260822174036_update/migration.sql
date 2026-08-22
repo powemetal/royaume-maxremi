@@ -14,7 +14,7 @@ CREATE TYPE "Statut" AS ENUM ('DISPONIBLE', 'EN_COURS', 'TERMINE', 'ECHOUE');
 CREATE TYPE "Classe" AS ENUM ('GUERRIER', 'MAGE', 'VOLEUR', 'CLERC');
 
 -- CreateEnum
-CREATE TYPE "TypeObjet" AS ENUM ('ARME', 'ARME_2_MAINS', 'BOUCLIER', 'ARMURE', 'BOTTES', 'CASQUE', 'BIJOU', 'TRINKET');
+CREATE TYPE "TypeObjet" AS ENUM ('ARME', 'ARME_2_MAINS', 'MUNITION', 'BOUCLIER', 'ARMURE', 'BOTTES', 'CASQUE', 'GANT', 'CAPE', 'BIJOU', 'TRINKET', 'POTION', 'PARCHEMIN', 'BAGUETTE', 'BATON', 'FOCALISATEUR', 'OUTIL', 'SAC', 'CONTENEUR', 'MARCHANDISE', 'AUTRE');
 
 -- CreateEnum
 CREATE TYPE "TypeDegats" AS ENUM ('FEU', 'GLACE', 'ACIDE', 'POISON', 'TONNERRE', 'PSYCHIQUE', 'NECROTIQUE', 'FORCE', 'PERCANT', 'CONTONDANT', 'TRANCHANT', 'RADIANT');
@@ -46,13 +46,14 @@ CREATE TABLE "Objet" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "rarete" "Rarete" NOT NULL,
-    "Type" "TypeObjet" NOT NULL,
-    "Att" INTEGER,
-    "Def" INTEGER,
-    "Prix" INTEGER NOT NULL,
-    "TypeDegats" "TypeDegats" NOT NULL,
-    "DegatsBonus" INTEGER,
-    "TypeBonus" "TypeDegats",
+    "tType" "TypeObjet" NOT NULL,
+    "att" INTEGER,
+    "def" INTEGER,
+    "prix" INTEGER NOT NULL,
+    "typeDegats" "TypeDegats",
+    "degatsBonus" INTEGER,
+    "typeBonus" "TypeDegats",
+    "description" TEXT,
 
     CONSTRAINT "Objet_pkey" PRIMARY KEY ("id")
 );
@@ -86,6 +87,7 @@ CREATE TABLE "Quete" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "difficulte" "Difficulte" NOT NULL,
+    "description" TEXT,
     "recompense" INTEGER NOT NULL,
 
     CONSTRAINT "Quete_pkey" PRIMARY KEY ("id")
