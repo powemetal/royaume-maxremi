@@ -2,9 +2,16 @@ import "../css/navbar.css";
 import DropdownAdmin from "./dropdownAdmin";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const { estConnecte, estAdmin, seDeconnecter } = useAuth();
+  const navigate = useNavigate();
+
+  function deconnexion() {
+    seDeconnecter();
+    navigate("/")
+  }
 
   return (
     <nav className="container-nav">
@@ -29,7 +36,7 @@ export default function Navbar() {
             </Link>
           ) : (
             <button
-              onClick={seDeconnecter}
+              onClick={deconnexion}
               className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
             >
               Se déconnecter

@@ -60,9 +60,9 @@ try {
   console.error("Test 2.bis échoué ❌ : " + error);
 }
 
-// Test 3 : Login dans un compte Admin avec infos OK
+// Test 3 : Connexion dans un compte Admin avec infos OK
 try {
-  const res = await test.post("/auth/login", {
+  const res = await test.post("/auth/Connexion", {
     email: "admin@maxremi.com",
     mdp: "MdP123456!lol",
   });
@@ -73,9 +73,9 @@ try {
   console.error("Test 3 échoué ❌ : " + error);
 }
 
-// Test 4 : Login dans un compte comme utilisateur avec infos OK
+// Test 4 : Connexion dans un compte comme utilisateur avec infos OK
 try {
-  const res = await test.post("/auth/login", {
+  const res = await test.post("/auth/Connexion", {
     email: "math_le_barbare@waaagh.com",
     mdp: "WaaAgh247!",
   });
@@ -86,9 +86,9 @@ try {
   console.error("Test 4 échoué ❌ : " + error);
 }
 
-// Test 4.bis : Login du deuxième utilisateur
+// Test 4.bis : Connexion du deuxième utilisateur
 try {
-  const res = await test.post("/auth/login", {
+  const res = await test.post("/auth/Connexion", {
     email: "voleur_sournois@waaagh.com",
     mdp: "SneakSnik247!",
   });
@@ -99,9 +99,9 @@ try {
   console.error("Test 4.bis échoué ❌ : " + error);
 }
 
-// Test 5 : Login dans un compte comme utilisateur avec un mauvais MDP
+// Test 5 : Connexion dans un compte comme utilisateur avec un mauvais MDP
 try {
-  const res = await test.post("/auth/login", {
+  const res = await test.post("/auth/Connexion", {
     email: "math_le_barbare@waaagh.com",
     mdp: "wAAaGH247!",
   });
@@ -111,9 +111,9 @@ try {
   console.error("Test 5 échoué ❌ : " + error);
 }
 
-// Test 6 : Login dans un compte comme utilisateur avec un mauvais pseudo
+// Test 6 : Connexion dans un compte comme utilisateur avec un mauvais pseudo
 try {
-  const res = await test.post("/auth/login", {
+  const res = await test.post("/auth/Connexion", {
     email: "math_le_barbare@waagh.com",
     mdp: "WaaAgh247!",
   });
@@ -547,14 +547,19 @@ try {
 
 // Test 32 : Créer un personnage (JOUEUR)
 try {
-  const res = await test.post("/personnage/creer", {
-    nom: "Gandalf",
-    classe: "MAGE",
-    idUtilisateur: uuidJoueur, 
-  }, {
-    headers: { Authorization: `Bearer ${tokenJoueur}` },
-  });
-  if (res.status !== 201 && res.status !== 200) throw new Error(`Status inattendu: ${res.status}`);
+  const res = await test.post(
+    "/personnage/creer",
+    {
+      nom: "Gandalf",
+      classe: "MAGE",
+      idUtilisateur: uuidJoueur,
+    },
+    {
+      headers: { Authorization: `Bearer ${tokenJoueur}` },
+    },
+  );
+  if (res.status !== 201 && res.status !== 200)
+    throw new Error(`Status inattendu: ${res.status}`);
   if (res.data && res.data.id) uuidPerso = res.data.id;
   console.log("Test 32 réussi ! ✅");
 } catch (error) {

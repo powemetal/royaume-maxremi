@@ -11,7 +11,7 @@ type AuthType = {
   estConnecte: boolean;
   estAdmin: boolean;
   chargement: boolean;
-  seConnecter: (t: string) => void;
+  seConnecter: (token: string, estAdmin: boolean) => void;
   seDeconnecter: () => void;
 };
 

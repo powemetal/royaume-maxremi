@@ -110,7 +110,7 @@ try {
     return res.json({
         personnage: attribuerRecompense, 
         persoQuete: persoQueteModifie,
-        Message: `Quête réussie! Récompense de ${recompense} reçue!`
+        message: `Quête réussie! Récompense de ${recompense} reçue!`
     })
 
     } catch (e) {
@@ -178,7 +178,7 @@ routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Requ
             res.status(404).json({ erreur: "Erreur: Cette quête n'existe pas dans le journal de quêtes du personnage." })
         } else {
             return res.status(200).json({
-            Message: "Quête abandonnée!"
+            message: "Quête abandonnée!"
             }) 
         }
 

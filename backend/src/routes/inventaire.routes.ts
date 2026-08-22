@@ -10,7 +10,7 @@ routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: R
   const idPersonnage = req.params.idPersonnage as string;
 
   if (!estUuidValide(idPersonnage)) {
-    return res.status(400).json({ message: "Erreur : ID du personnage invalide." });
+    return res.status(400).json({ erreur: "Erreur : ID du personnage invalide." });
   }
 
   try {

@@ -28,7 +28,7 @@ routerPersonnage.post(
     } catch (error) {
       res
         .status(400)
-        .json({ message: "Erreur: La création du personnage a échouée." });
+        .json({ erreur: "Erreur: La création du personnage a échouée." });
     }
   },
 );
@@ -40,7 +40,7 @@ routerPersonnage.get(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : UUID invalide" });
+      return res.status(400).json({ erreur: "Erreur : UUID invalide" });
     }
     try {
       if ((req as any).utilisateur.role !== "MAITRE_DU_JEU") {
@@ -67,7 +67,7 @@ routerPersonnage.get(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur : Aucun personnage ne correspond à cet ID: ${id}.`,
+        erreur: `Erreur : Aucun personnage ne correspond à cet ID: ${id}.`,
       });
     }
   },
@@ -81,7 +81,7 @@ routerPersonnage.patch(
   async (req: Request, res: Response) => {
     const id = req.params.id as string;
     if (!estUuidValide(id)) {
-      return res.status(400).json({ message: "Erreur : L'ID est invalide." });
+      return res.status(400).json({ erreur: "Erreur : L'ID est invalide." });
     }
     try {
       const personnage = await prisma.personnage.update({
@@ -95,7 +95,7 @@ routerPersonnage.patch(
       });
     } catch (error) {
       return res.status(400).json({
-        message:
+        erreur:
           "Erreur: Requête mal formée ou personnage inexistant dans le jeu.",
       });
     }
@@ -136,7 +136,7 @@ routerPersonnage.delete(
       });
     } catch (error) {
       return res.status(404).json({
-        message: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
+        erreur: `Erreur: Aucun personnage ne correspond à cet ID: ${id}.`,
       });
     }
   },
