@@ -1,0 +1,8 @@
+.formulaire-auth {
+    border: 1px solid gray;
+    background-color: gray;
+    border-radius: 10px;
+    width: 450px; 
+    max-width: 100%;
+    font-family: "Cinzel Decorative", serif;
+}
