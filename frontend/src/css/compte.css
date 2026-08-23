@@ -46,6 +46,7 @@ ul > :nth-child(even){
     justify-content: center;
 }
 
+
 .perso-nom {
     font-weight: bold;
     font-size: x-large;
@@ -77,6 +78,12 @@ ul > :nth-child(even){
     max-height: 150px;
     border-radius: 12px;
     box-shadow: 0px 0px 30px 10px #2c0421b4;
+    transition: transform 0.2s ease-in-out;
+    
+}
+
+.user-avatar:hover img {
+    transform: scale(1.1);
 }
 
 .container-utilisateur {

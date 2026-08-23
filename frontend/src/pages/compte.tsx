@@ -1,9 +1,29 @@
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useState } from "react";
 import "../css/compte.css";
 import TitreBackground from "../components/titreBackground";
 
+interface Personnage {
+    id: string;
+    nom: string;
+    niveau: number;
+    avatar: string; // on n'a pas encore d'avatar dans la BDD, c'est à faire
+}
+
 export default function Compte() {
+
+  const { estConnecte } = useAuth();
+  const [nomUtilisateur, setNomUtilisateur] = useState<string>("");
+  const [idCompte, setIdCompte] = useState<string>("");
+  const [idPerso, setIdPerso] = useState<string>("");
+  const [listePerso, setListePerso] = useState<Personnage[]>([]);
+
+
+  if (!estConnecte) {
+    return <Navigate to="/connexion" replace />;
+  }
     return (<>
     
     <div className="container-compte flex flex-col grow">
@@ -11,8 +31,13 @@ export default function Compte() {
             <div className="user-avatar"><img src="\src\assets\images\avatars\RMR02.jpeg" alt="avatar" /></div>
             <div className="container-nom-suppr flex flex-col">
                 <h2 className="user-nom m-1">Nom Utilisateur</h2>
-                <button className="btn-nav delete m-1">Supprimer mon compte</button>
-                <button className="btn-nav create m-1">Créer un personnage</button>
+                    <Link to={"/supprimercompte"} className="btn-nav delete m-1">
+                        Supprimer mon compte
+                    </Link>
+                    <Link to={"/creerperso"} className="btn-nav create m-1">
+                        Créer un personnage
+                    </Link>
+
             </div>
 
         </div>
