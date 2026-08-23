@@ -12,7 +12,7 @@ export default function OverlayChargement({
   children,
 }: LoadingOverlayProps) {
   return (
-    <div className="relative w-full">
+    <div className="relative w-fit mx-auto">
       {chargement && (
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-[2px] cursor-wait rounded-lg">
           <svg
