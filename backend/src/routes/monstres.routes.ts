@@ -3,18 +3,84 @@ import { monstres } from "../api/monstres.js";
 import axios from "axios";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
-
+import { TypeGrosseur, Alignement, TypeMonstre } from "../../generated/prisma/enums.js";
 const routeurMonstres = Router();
+
+interface MonstreAPI {
+  index: string;
+  name?: string;
+  url: string;
+}
+
+interface ListeMonstresAPI {
+  count: number;
+  results: MonstreAPI[]
+}
+
+
+const traductionTypeMonstre: Record<string, TypeMonstre> = {
+    "aberration": "ABERRATION",
+    "beast": "BETE",
+    "celestial": "CELESTIEL",
+    "construct": "CONSTRUCTION",
+    "dragon": "DRAGON",
+    "elemental": "ELEMENTAIRE",
+    "fey": "FEERIQUE",
+    "fiend": "FIELON",
+    "giant": "GEANT",
+    "humanoid": "HUMANOIDE",
+    "monstrosity": "MONSTRUOSITE",
+    "ooze": "VASE",
+    "plant": "PLANTE",
+    'undead': "MORT_VIVANT"
+};
+
+
+const traductionGrosseur: Record<string, TypeGrosseur> = {
+    "Tiny": "TRES_PETIT",
+    "Small": "PETIT",
+    "Medium": "MOYEN",
+    "Large": "GRAND",
+    "Huge": "TRES_GRAND",
+    "Gargantuan": "GIGANTESQUE"
+};
+
+
+const traductionAlignment: Record<string, Alignement> = {
+    "neutral evil": "NEUTRE_MAUVAIS",
+    "neutral good": "NEUTRE_BON",
+    "neutral": "NEUTRE",
+    "chaotic good": "CHAOTIQUE_BON",
+    "chaotic evil": "CHAOTIQUE_MAUVAIS",
+    "chaotic neutral": "CHAOTIQUE_NEUTRE",
+    "lawful good": "LOYAL_BON",
+    "lawful evil": "LOYAL_MAUVAIS",
+    "lawful neutral": "LOYAL_NEUTRE",
+    "unaligned": "SANS_ALIGNEMENT",
+    "any alignment": "SANS_ALIGNEMENT",
+    "typically chaotic evil": "CHAOTIQUE_NEUTRE",
+    "any non-good alignment": "NEUTRE_MAUVAIS"
+};
+
+
+
 
 async function recupererMonstre(nom: string) {
   try {
     const { data } = await monstres.get(`/${nom.toLowerCase()}`);
-    const attack =
-      data.strength > data.dexterity ? data.strength : data.dexterity;
+    const attack = data.strength > data.dexterity ? data.strength : data.dexterity;
+    const alignementMonstre = traductionAlignment[data.alignment.toLowerCase()];
+    const typeMonstre =  traductionTypeMonstre[data.type];
+    const grosseurMonstre = traductionGrosseur[data.size];
     return {
       nom: data.name,
       pointsDeVie: data.hit_points,
+      typeMonstre: typeMonstre,
       attaque: attack,
+      defense: data.armor_class[0],
+      alignement: alignementMonstre,
+      grandeur: grosseurMonstre
+
     };
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -46,6 +112,29 @@ routeurMonstres.post(
     }
   },
 );
+
+//chercher un monstre dans l'api et retourner les resultats
+routeurMonstres.get("/recherche/:nom", async (req: Request, res: Response) => {
+  const nom = req.params.nom;
+
+  //pour s'assurer que le nom est bel et bien une string non vide
+  if (typeof nom !== "string") return res.status(400).json({erreur: "Veuillez entrer un nom de monstre a rechercher"})
+
+  const recherche = nom.toLowerCase();
+
+  try{
+    const { data } = await monstres.get<ListeMonstresAPI>("/")
+
+    const resultats = data.results.filter(monstre =>
+    (monstre.name ?? "").toLowerCase().includes(recherche)
+    )
+
+  res.json(resultats)
+  } catch (e) {
+    res.status(500).json({erreur:"Impossible de contacter l'API"})
+  }
+
+})
 
 //Modifier un monstre
 routeurMonstres.patch(
