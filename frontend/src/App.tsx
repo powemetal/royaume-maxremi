@@ -6,6 +6,7 @@ import Accueil from "./pages/accueil";
 import Inscription from "./pages/inscription";
 import Personnages from "./pages/personnages";
 import Monstres from "./pages/monstres";
+import Compte from "./pages/compte";
 import Objets from "./pages/objets";
 import UtilisateursAdmin from "./pages/admin/utilisateursAdmin";
 import QuetesAdmin from "./pages/admin/quetesAdmin";
@@ -37,6 +38,7 @@ function App() {
             <Route path="/connexion" element={<Connexion />} />
             <Route path="/inscription" element={<Inscription />} />
             <Route path="/personnages" element={<Personnages />} />
+            <Route path="/compte" element={<Compte />} />
             <Route path="/monstres" element={<Monstres />} />
             <Route path="/objets" element={<Objets />} />
             <Route path="/admin/utilisateurs" element={<UtilisateursAdmin />} />

@@ -52,8 +52,8 @@ export default function Navbar() {
           )}
         </div>
         <div className="flex flex-1 items-end justify-evenly gap-5">
-          <Link to={"/personnages"} className="btn-nav degrade-rouge">
-            Mes Personnages
+          <Link to={"/compte"} className="btn-nav degrade-nav">
+            Mon compte
           </Link>
           <Link to={"/monstres"} className="btn-nav degrade-rouge">
             Monstres
