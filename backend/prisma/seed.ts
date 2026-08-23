@@ -1,4 +1,5 @@
 import prisma from "../src/utils/prisma.js";
+import bcrypt from "bcryptjs";
 
 await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Inventaire" CASCADE`);
 await prisma.$executeRawUnsafe(`TRUNCATE TABLE "PersoQuete" CASCADE`);
@@ -47,13 +48,13 @@ const users = [];
 for (let i = 0; i < userRealNames.length; i++) {
   const realName = userRealNames[i];
   const firstName = realName.split(" ")[0].toLowerCase(); // pour l'email
-  const pseudo = gamerPseudos[i]; // pseudo gamer
+  const pseudo = gamerPseudos[i] as string; // pseudo gamer
 
   const user = await prisma.utilisateur.create({
     data: {
       email: `${firstName}@royaume.com`,
       pseudo: pseudo,
-      mdp: `hashedpassword${i + 1}`,
+      mdp: await bcrypt.hash("Password123!", 10),
     },
   });
 
