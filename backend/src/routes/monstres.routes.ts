@@ -4,6 +4,7 @@ import axios from "axios";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
 import { TypeGrosseur, Alignement, TypeMonstre } from "../../generated/prisma/enums.js";
+import { brotliDecompressSync } from "node:zlib";
 const routeurMonstres = Router();
 
 interface MonstreAPI {
@@ -61,6 +62,16 @@ const traductionAlignment: Record<string, Alignement> = {
     "typically chaotic evil": "CHAOTIQUE_NEUTRE",
     "any non-good alignment": "NEUTRE_MAUVAIS"
 };
+
+interface PatchMonstre {
+  nom?: string,
+  pointsDeVie?: number,
+  attaque?: number,
+  defense?: number,
+  typeMonstre?: TypeMonstre,
+  grandeur?: TypeGrosseur,
+  alignement?: Alignement
+}
 
 // recuperer un monstre dans l'api
 async function recupererMonstre(nom: string) {
@@ -142,13 +153,68 @@ routeurMonstres.patch(
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
-    const nom = req.params.id as string;
-
-    try {
+    const id = req.params.id as string;
+    const body = req.body
+    const data: PatchMonstre = {};
 
     //validation des donnees
-    
 
+    if (body.nom !== undefined) data.nom = body.nom
+
+    if (body.pointsDeVie !== undefined) {
+      if (typeof body.pointsDeVie !== "number"){
+        return res.status(400).json({erreur: "Les points de vie sont invalide"})
+      }
+      data.pointsDeVie = body.pointsDeVie
+    } 
+      
+
+    if (body.attaque !== undefined) {
+      if (typeof body.attaque !== "number") {
+        return res.status(400).json({erreur: "L'attaque est invalide"})
+      }
+      data.attaque = body.attaque
+    } 
+
+    if (body.defense !== undefined) {
+      if (typeof body.defense !== "number") {
+        return res.status(400).json({erreur: "La defense est invalide"})
+      }
+      data.defense = body.defense
+    } 
+
+    if (body.typeMonstre !== undefined) {
+      const typeMonstreValide = Object.values(TypeMonstre)
+      if (!typeMonstreValide.includes(body.typeMonstre)) {
+        return res.status(400).json({erreur: "Le type de monstre est invalide"})
+      }
+      data.typeMonstre = body.typeMonstre
+    } 
+
+    if (body.grandeur !== undefined) {
+      const typeGrosseurValides = Object.values(TypeGrosseur);
+      if (!typeGrosseurValides.includes(body.grandeur)) {
+        return res.status(400).json({erreur: "Le type de grosseur/grandeur est invalide"})
+      }
+      data.grandeur = body.grandeur
+    } 
+
+
+    if (body.alignement !== undefined) {
+      const alignementValides = Object.values(Alignement);
+      if (!alignementValides.includes(body.alignement)) {
+        return res.status(400).json({erreur: "Alignement invalide"})
+      }
+      data.alignement = body.alignement
+    } 
+
+
+    try {
+      const monstreModifie = await prisma.monstre.update({
+        where: { id: id },
+        data: data
+      })
+      res.status(200).json({monstreModifie})
 
     } catch(e){
         res.status(500).json({erreur: `Erreur serveur lors de la modification du monstre : ${e}`})
