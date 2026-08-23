@@ -1,4 +1,4 @@
-import "../css/connexion.css";
+import "../css/formAuth.css";
 import TitreBackground from "../components/titreBackground";
 import { useAuth } from "../context/AuthContext";
 import type React from "react";
@@ -8,6 +8,7 @@ import OverlayChargement from "../components/overlayChargement";
 import { api } from "../api/backendApi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import FormulaireConnexion from "../components/formulaireConnexion";
 
 export default function Connexion() {
   const { seConnecter, estConnecte } = useAuth();
@@ -49,42 +50,8 @@ export default function Connexion() {
   }
 
   return (
-    <div
-      className="container-Connexion"
-      style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
-    >
-      <TitreBackground className="titleConnexion">Connexion</TitreBackground>
-      <OverlayChargement
-        chargement={chargement}
-        texte="Connexion au royaume..."
-      >
-        <form
-          onSubmit={soumettreConnexion}
-          className="container-Connexion-form container-style"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <label>Email :</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="email@royaume.com"
-          />
-          <label>Mot de passe :</label>
-          <input
-            type="password"
-            value={mdp}
-            onChange={(e) => setMdp(e.target.value)}
-            required
-            placeholder="Mot de passe"
-          />
-          <button>Connexion</button>
-          {msgErreur && (
-            <p style={{ color: "red", fontWeight: "bold" }}>{msgErreur}</p>
-          )}
-        </form>
-      </OverlayChargement>
+    <div className="container-inscription flex flex-1 flex-col my-auto">
+      <FormulaireConnexion />
     </div>
   );
 }
