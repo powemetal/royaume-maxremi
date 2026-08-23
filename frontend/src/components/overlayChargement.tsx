@@ -45,7 +45,7 @@ export default function OverlayChargement({
       )}
 
       <div
-        className={`transition-opacity duration-200 ${
+        className={`flex flex-col items-center w-full transition-opacity duration-200 ${
           chargement ? "pointer-events-none select-none opacity-40" : ""
         }`}
       >

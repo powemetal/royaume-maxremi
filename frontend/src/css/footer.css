@@ -25,3 +25,7 @@
 .container-footer p {
     color: #a94e5b;
 }
+
+.statusText {
+    font-family: Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+.container-accueil-image {
+    container-type: inline-size;
+
+  background-image: url("../assets/images/MaxRemiAccueil.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+
+  aspect-ratio: 1/1;
+  width: 100%;
+
+  color: white;
+  padding: 20px;
+}
+
+.container-accueil-image p {
+    font-size: 2cqw;
+    text-align: center;
+}
+
+p {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: bold;
+}

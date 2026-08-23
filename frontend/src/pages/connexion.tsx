@@ -60,16 +60,16 @@ export default function Connexion() {
       >
         <form
           onSubmit={soumettreConnexion}
-          className="container-Connexion-form"
-          style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+          className="container-Connexion-form container-style"
+          style={{ display: "flex", flexDirection: "column" }}
         >
-          <label>Nom d'utilisateur :</label>
+          <label>Email :</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Votre nom"
+            placeholder="email@royaume.com"
           />
           <label>Mot de passe :</label>
           <input
