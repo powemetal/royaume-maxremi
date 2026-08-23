@@ -132,7 +132,7 @@ model Monstre {
   defense           Int
   typeMonstre       TypeMonstre?
   grandeur          TypeGrosseur?
-  aligmnement       Alignement?
+  alignement       Alignement?
 }
 
 model Objet{
