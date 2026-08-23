@@ -64,7 +64,7 @@ routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
         }
     if (req.body.degatsBonus !== undefined) {
         if (typeof req.body.degatsBonus !== "number") {
-            return res.status(400).json({ erreur: "dégats bonus invalide" });
+            return res.status(400).json({ erreur: "Dégats bonus invalide" });
         } data.degatsBonus = req.body.degatsBonus
     }
     if (req.body.typeBonus !== undefined) {
@@ -73,7 +73,10 @@ routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
             }
             data.typeBonus = req.body.typeBonus;
         }
-    if (req.body.description !== undefined) data.description = req.body.description
+    if (req.body.description !== undefined) {
+        if (typeof req.body.description !== "string") return res.status(400).json({ erreur: "Description invalide" });
+        data.description = req.body.description;
+    }
     
 
         try {
@@ -157,7 +160,12 @@ routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             } 
             data.typeBonus = body.typeBonus;
         } 
-        if (body.description !== undefined) data.description = body.description;
+        if (body.description !== undefined) {
+            if (typeof body.description !== "string") return res.status(400).json({ erreur: "Description invalide" });
+            data.description = body.description;
+        }
+
+
         //Modifie l'objet
         const objetModifie = await prisma.objet.update({
             where: { id: objet.id},
