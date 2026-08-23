@@ -52,7 +52,7 @@ export default function Navbar() {
           )}
         </div>
         <div className="flex flex-1 items-end justify-evenly gap-5">
-          <Link to={"/compte"} className="btn-nav degrade-nav">
+          <Link to={"/compte"} className="btn-nav degrade-rouge">
             Mon compte
           </Link>
           <Link to={"/monstres"} className="btn-nav degrade-rouge">
