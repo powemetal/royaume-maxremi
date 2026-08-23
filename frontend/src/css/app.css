@@ -56,3 +56,21 @@
   background: -webkit-linear-gradient(left, #3f052e 0%, #ad4657 100%);
   background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
 }
+
+.btn-nav.delete {
+  background: #3f052e;
+  background: -moz-linear-gradient(left, #eb0c0c 0%, #4400ffef 100%);
+  background: -webkit-linear-gradient(left, #b84094 0%, #15aa21 100%);
+  background: linear-gradient(to right, #bb1a1a 0%, #7e0b24 100%);
+  transform: scale(0.85);
+  transform-origin: left;
+}
+
+.btn-nav.create {
+  background: #3f052e;
+  background: -moz-linear-gradient(left, #eb0c0c 0%, #4400ffef 100%);
+  background: -webkit-linear-gradient(left, #b84094 0%, #15aa21 100%);
+  background: linear-gradient(to right, #70bb1a 0%, #0b7e0b 100%);
+  transform: scale(0.85);
+  transform-origin: left;
+}

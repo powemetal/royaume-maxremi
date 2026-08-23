@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+
+.liste-personnages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.liste-personnages li {
+    padding: 10px 0;
+}
+
+
+ul > :nth-child(odd){
+    background-color: #aaa0a7;
+}
+
+ul > :nth-child(even){
+    background-color: #c2b3b5;
+}
+
+.liste-col-nom {
+    display: grid;
+    grid-template-columns: 110px minmax(0,1fr) 90px;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 8px;
+    box-shadow:
+        inset 0 4px 24px -20px #2c0421b4,
+        inset 0 -4px 24px -4px #2c0421b4;
+}
+
+
+.perso-avatar img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 5px solid rgb(72, 52, 85);
+    border-radius: 999px;
+    transition: transform 0.15s ease-in-out;
+}
+
+.perso-avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.perso-nom {
+    font-weight: bold;
+    font-size: x-large;
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 600;
+    color: white;
+    text-shadow: 2px 2px 2px #000000;
+
+    white-space: nowrap;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.perso-lvl {
+    padding-right: 8px;
+    font-weight: bold;
+    font-size: large;
+    place-self: center;
+    color : rgb(72, 52, 85);
+    text-shadow: 2px 2px 2px #0000002a;
+
+    text-align: right;
+    white-space: nowrap;
+}
+
+.user-avatar img {
+    border: 3px solid #c7596b;
+    max-height: 150px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 30px 10px #2c0421b4;
+}
+
+.container-utilisateur {
+    padding: 25px;
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+    border-bottom: 3px solid #971622;
+    box-shadow: 0px 0px 30px 10px #2c0421b4;
+}
+
+.container-utilisateur .btn-nav {
+    border-color: #c7596b;
+    
+    
+}
+
+.container-personnages {
+    max-height: 550px;
+}
+
+h2 {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: bold;
+    font-size: large;
+    font-weight: 600;
+    color: white;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.liste-col-nom:hover {
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
+
+.liste-col-nom:hover .perso-avatar img {
+    transform: scale(1.08);
+    border-color: #ad4657; /* Ajustez la valeur de grossissement selon vos préférences */
+}
+
+.liste-col-nom:hover .perso-lvl {
+    color: white;
+}

@@ -5,7 +5,7 @@ import TitreBackground from "../components/titreBackground";
 
 export default function Accueil() {
 
-    const {seConnecter, estConnecte} = useAuth();
+    const {estConnecte} = useAuth();
 
   return (
     <div
