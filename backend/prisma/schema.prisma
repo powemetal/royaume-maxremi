@@ -86,10 +86,10 @@ enum TypeDegats {
 }
 
 enum TypeMonstre {
-    ABERRATION
+  ABERRATION
   BETE
   CELESTIEL
-  CONSTRUCT
+  CONSTRUCTION
   DRAGON
   ELEMENTAIRE
   FEERIQUE
@@ -113,14 +113,15 @@ enum TypeGrosseur{
 
 enum Alignement {
   NEUTRE
+  NEUTRE_BON
+  NEUTRE_MAUVAIS
   CHAOTIQUE_NEUTRE
-  LOYAL_NEUTRE
-  BON
-  LOYAL_BON
-  CHAOTIC_BON
-  MAUVAIS
+  CHAOTIQUE_BON
   CHAOTIQUE_MAUVAIS
+  LOYAL_NEUTRE
+  LOYAL_BON
   LOYAL_MAUVAIS
+  SANS_ALIGNEMENT
 }
 
 model Monstre {
@@ -128,6 +129,7 @@ model Monstre {
   nom               String          @unique
   pointsDeVie       Int             @default(100)
   attaque           Int
+  defense           Int
   typeMonstre       TypeMonstre?
   grandeur          TypeGrosseur?
   aligmnement       Alignement?
