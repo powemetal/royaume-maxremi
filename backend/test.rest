@@ -1,8 +1,8 @@
 ### Variables globales, elles doivent être valides dans votre base de données pour que certains tests fonctionnent
 @baseUrl = http://localhost:3000
-@uuidUser = 13cee559-c297-4e18-8cb1-6fb7d628222b
+@uuidUser = aeef9798-0621-4023-b9af-d3c416c3f01b
 @uuidPersoQuete = 0193a590-1622-4527-86c5-42ad915057ac
-@uuidPerso = 6ebd536c-a341-479d-90e0-01a6a842ae25
+@uuidPerso = ef6b9fed-ef17-4b93-b624-5e9c85f76dc5
 @uuidQuete = 19961698-036b-40b6-a624-0ee482a84861
 
 
@@ -260,7 +260,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "nom": "Gandalf",
+    "nom": "Gandalf le gris",
     "classe": "MAGE",
     "idUtilisateur": "{{uuidUser}}"
 }
@@ -382,3 +382,12 @@ Authorization: Bearer {{authToken}}
     "personnageId": "{{uuidPerso}}",
     "nomObjet": "Baton"
 }
+
+### Récupérer la liste des personnage d'un joueur connecté
+GET {{baseUrl}}/personnage/recuperer/liste-personnages
+Authorization: Bearer {{authToken}}
+
+### Supprimer mon compte comme utilisateur
+DELETE {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
