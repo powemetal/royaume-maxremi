@@ -96,7 +96,7 @@ export default function Compte() {
     }, [estConnecte]);
 
     const ouvrirPagePersonnage = (id: string) => {
-        navigate(`/personnage/recuperer/${id}`);
+        navigate(`/personnage/recuperer?id=${id}`);
     };
 
 
