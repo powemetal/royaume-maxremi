@@ -84,6 +84,14 @@ Authorization: Bearer {{authToken}}
 
 ######### REQUETES MONSTRES ###################
 
+
+GET {{baseUrl}}/recherche/goblin
+
+
+### Ajout de monstre (MDJ)
+POST {{baseUrl}}/monstre/ajouter/orc
+Authorization: Bearer {{authTokenAdmin}}
+
 ### Afficher tous les monstres (PUBLIC)
 GET {{baseUrl}}/monstre/
 
@@ -91,19 +99,15 @@ GET {{baseUrl}}/monstre/
 GET {{baseUrl}}/monstre/goblin
 
 ### Ajout de monstre (MDJ)
-POST {{baseUrl}}/monstre/ajouter/orc
-Authorization: Bearer {{authTokenAdmin}}
-
-### Ajout de monstre (MDJ)
 POST {{baseUrl}}/monstre/ajouter/goblin
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Suppression de monstre par nom (MDJ)
-DELETE {{baseUrl}}/monstre/supprimer/orc
+DELETE {{baseUrl}}/monstre/supprimer/1adddb5c-8a5e-41e0-93fa-41037f7c0ed5
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Modification du monstre par nom (changement de nom et changement de la stat attaque) (MDJ)
-PATCH {{baseUrl}}/monstre/goblin
+PATCH {{baseUrl}}/monstre/83dfe29e-85ec-4431-8a07-c63433cc0a06
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
@@ -113,7 +117,7 @@ Authorization: Bearer {{authTokenAdmin}}
 }
 
 ### Suppression du nouveau monstre cree lors de la modification (MDJ)
-DELETE {{baseUrl}}/monstre/supprimer/goblin%20++
+DELETE {{baseUrl}}/monstre/supprimer/83dfe29e-85ec-4431-8a07-c63433cc0a06
 Authorization: Bearer {{authTokenAdmin}}
 
 ######### REQUETES OBJETS ###################
@@ -124,24 +128,29 @@ Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 
 {
-    "nom": "Baton",
-    "rarete": "RARE"
+    "nom": "Baton2",
+    "rarete": "RARE",
+    "tType": "ARME",
+    "att": 5,
+    "prix": 100,
+    "typeDegats": "CONTONDANT"
 }
+
 
 ### Afficher tous les objets (PUBLIC)
 GET {{baseUrl}}/objet/
 
 ### afficher 1 objet par son nom (PUBLIC)
-GET {{baseUrl}}/objet/baton
+GET {{baseUrl}}/objet/baton2
 
 
 ### Suppression de objet par nom (MDJ)
-DELETE {{baseUrl}}/objet/supprimer/baton
+DELETE {{baseUrl}}/objet/supprimer/baton2
 Authorization: Bearer {{authTokenAdmin}}
 
 
 ### Modification du objet par nom (changement de nom et changement de la rarete) (MDJ)
-PATCH {{baseUrl}}/objet/baton
+PATCH {{baseUrl}}/objet/baton2
 Content-Type: application/json
 Authorization: Bearer {{authTokenAdmin}}
 

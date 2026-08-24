@@ -92,21 +92,19 @@ routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
 
 
 //Modifier un objet
-routeurObjets.patch("/objet/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
+routeurObjets.patch("/objet/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
     const nomObjet = req.params.nom as string
     const body = req.body
 
         //Trouver l'objet
+        //pas la facon la plus utile, faire 2 requetes dans une route, 
+        //mais je lai fait ainsi pour simplifier le test.rest, je le laisse comme ca pour le moment
     try{
-        const objet = await prisma.objet.findFirst({
+        const objet = await prisma.objet.findUnique({
             where : {
-                nom: {
-                    equals: nomObjet,
-                    mode: "insensitive",    
-                }
+                nom: nomObjet
             }, 
         })
-
         if (!objet) return res.status(404).json({erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.`})
         
         
