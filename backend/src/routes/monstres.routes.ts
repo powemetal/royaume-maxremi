@@ -86,7 +86,7 @@ async function recupererMonstre(nom: string) {
       pointsDeVie: data.hit_points,
       typeMonstre: typeMonstre,
       attaque: attack,
-      defense: data.armor_class[0],
+      defense: data.armor_class[0].value,
       alignement: alignementMonstre,
       grandeur: grosseurMonstre
 
@@ -117,7 +117,7 @@ routeurMonstres.post(
         })
         res.status(201).json({ message: `${monstre.nom} a été ajouté a dans la table: monstres de la base de données`})
     } catch (e) {
-        res.status(400).json({erreur: "Ce monstre est deja dans la base de données"})
+        res.status(400).json({erreur: "Ce monstre est deja dans la base de données", e})
     }
   },
 );
