@@ -23,7 +23,6 @@ export default function Personnage() {
       setChargement(true);
       const id = searchParams.get("id");
       const personnage = await api.get(`/personnage/recuperer/${id}`);
-      console.log(personnage);
       setDataPerso({
         nom: personnage.data.personnage.nom,
         classe: personnage.data.personnage.classe,
@@ -39,6 +38,7 @@ export default function Personnage() {
       } else {
         setMsgErreur("Une erreur inattendue est survenue.");
       }
+      console.error(error);
     } finally {
       setChargement(false);
     }
