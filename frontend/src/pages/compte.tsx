@@ -1,24 +1,84 @@
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/compte.css";
 import TitreBackground from "../components/titreBackground";
+import { api } from "../api/backendApi";
 
 interface Personnage {
     id: string;
     nom: string;
     niveau: number;
-    avatar: string; // on n'a pas encore d'avatar dans la BDD, c'est à faire
+    avatar: string;
 }
+
+interface ReponseListePersonnages {
+    message: string;
+    data: {
+        listePersonnages: Personnage[];
+    }
+}
+
+interface ReponseUtilisateur {
+        id: string;
+        pseudo: string;
+    };
+
 
 export default function Compte() {
 
-  const { estConnecte } = useAuth();
-  const [nomUtilisateur, setNomUtilisateur] = useState<string>("");
-  const [idCompte, setIdCompte] = useState<string>("");
-  const [idPerso, setIdPerso] = useState<string>("");
-  const [listePerso, setListePerso] = useState<Personnage[]>([]);
+    const { estConnecte } = useAuth();
+    const [nomUtilisateur, setNomUtilisateur] = useState<string>("");
+    const [idCompte, setIdCompte] = useState<string>("");
+    const [idPerso, setIdPerso] = useState<string>("");
+    const [listePerso, setListePerso] = useState<Personnage[]>([]);
+    const [erreur, setErreur] = useState<string>("");
+    const [chargement, setChargement] = useState<boolean>(true)
+
+
+// what to do:
+// aller cherche le nom utilisateur et l'afficher
+// aller chercher la liste des persos et l'Afficher
+// clique sur un perso ouvre sa page
+// clique sur supprimer mon compte ouvre un popup de confirmation
+// clique sur creer un perso ouvre la page de création de perso
+
+    const recupererNomUtilisateur = async () => {
+        try{
+            setErreur("");
+            const reponse = await api.get<ReponseUtilisateur>("/auth/me");
+            setIdCompte(reponse.data.id);
+            setNomUtilisateur(reponse.data.pseudo);
+        } catch (err: any) {
+            console.error("Erreur API", err);
+            setErreur("Erreur lors du chargement du compte")
+        }
+    }
+
+    const recupererListePerso = async () => {
+        try{
+            setChargement(true);
+            setErreur("");
+            const reponse = await api.get<ReponseListePersonnages>("/personnage/recuperer/liste-personnages");
+            setListePerso(reponse.data.data.listePersonnages);
+        } catch (err: any) {
+            console.error("Erreur API", err);
+            setErreur("Erreur lors du chargement de la liste de personnages");
+        } finally {
+            setChargement(false);
+        }
+    }
+
+    useEffect(() => {
+        recupererListePerso();
+    }, [estConnecte]);
+
+    useEffect(() => {
+        recupererNomUtilisateur();
+    }, [estConnecte]);
+
+    
 
 
   if (!estConnecte) {
@@ -30,7 +90,7 @@ export default function Compte() {
         <div className="container-utilisateur flex justify-center gap-12">
             <div className="user-avatar"><img src="\src\assets\images\avatars\RMR02.jpeg" alt="avatar" /></div>
             <div className="container-nom-suppr flex flex-col">
-                <h2 className="user-nom m-1">Nom Utilisateur</h2>
+                    {nomUtilisateur && (<h2 className="user-nom m-1">{nomUtilisateur}</h2>)}
                     <Link to={"/supprimercompte"} className="btn-nav delete m-1">
                         Supprimer mon compte
                     </Link>
