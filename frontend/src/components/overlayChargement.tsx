@@ -12,7 +12,7 @@ export default function OverlayChargement({
   children,
 }: LoadingOverlayProps) {
   return (
-    <div className="relative w-fit mx-auto">
+    <div className="relative w-full flex-1 flex flex-col">
       {chargement && (
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-[2px] cursor-wait rounded-lg">
           <svg
@@ -45,7 +45,7 @@ export default function OverlayChargement({
       )}
 
       <div
-        className={`flex flex-col items-center w-full transition-opacity duration-200 ${
+        className={`flex flex-col w-full transition-opacity duration-200 ${
           chargement ? "pointer-events-none select-none opacity-40" : ""
         }`}
       >

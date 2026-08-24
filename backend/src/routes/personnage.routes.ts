@@ -83,7 +83,7 @@ routerPersonnage.get(
       });
       return res.status(200).json({
         message: `Personnage trouvé`,
-        data: { personnage },
+        personnage,
       });
     } catch (error) {
       return res.status(404).json({
