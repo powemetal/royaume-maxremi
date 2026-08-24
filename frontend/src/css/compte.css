@@ -124,3 +124,29 @@ h2 {
 .liste-col-nom:hover .perso-lvl {
     color: white;
 }
+
+/*gestion du popup*/
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+}
+
+.popup-contenu {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    max-width: 400px;
+    text-align: center;
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+    border: 3px solid #971622;
+}
+
+.popup-actions button {
+    font-family: "Cinzel Decorative", serif;
+}

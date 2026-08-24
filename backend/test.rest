@@ -378,3 +378,7 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/personnage/recuperer/liste-personnages
 Authorization: Bearer {{authToken}}
 
+### Supprimer mon compte comme utilisateur
+DELETE {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
