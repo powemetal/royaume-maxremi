@@ -33,6 +33,26 @@ routerPersonnage.post(
   },
 );
 
+// Récupérer la liste des personnage d'un joueur connecté
+routerPersonnage.get(
+  "/recuperer/liste-personnages",
+  authentifier,
+  async (req: Request, res: Response) => {
+    try {
+        const idUtilisateur = (req as any).utilisateur.sub;
+        const listePersonnages = await prisma.personnage.findMany({ where: { idUtilisateur } });
+          return res.status(200).json({
+          message: `Personnages trouvés`,
+          data: { listePersonnages },
+        });
+    } catch (error) {
+      return res.status(500).json({
+        erreur: `Erreur : Erreur interne du serveur`,
+      });
+    }
+  },
+);
+
 // Récupérer l'information d'un personnage
 routerPersonnage.get(
   "/recuperer/:id",
@@ -63,7 +83,7 @@ routerPersonnage.get(
       });
       return res.status(200).json({
         message: `Personnage trouvé`,
-        data: { personnage },
+        personnage,
       });
     } catch (error) {
       return res.status(404).json({
@@ -72,6 +92,7 @@ routerPersonnage.get(
     }
   },
 );
+
 
 // Mettre à jour un personnage
 routerPersonnage.patch(

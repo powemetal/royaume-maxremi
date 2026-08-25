@@ -15,6 +15,27 @@ async function main() {
 // 1. UTILISATEURS
 // -----------------------------
 
+// liste d'avatars disponibles pour le seed
+const avatars = [
+  "https://www.dndbeyond.com/avatars/10/65/636339379413013817.png",
+  "https://www.dndbeyond.com/avatars/9107/470/637196228289489674.jpeg",
+  "https://www.dndbeyond.com/avatars/9107/482/637196228800489268.jpeg",
+  "https://www.dndbeyond.com/avatars/12746/288/637357515792839711.jpeg",
+  "https://www.dndbeyond.com/avatars/20552/303/637680874915469521.jpeg",
+  "https://www.dndbeyond.com/avatars/22165/375/637744506649868734.jpeg",
+  "https://www.dndbeyond.com/avatars/25815/621/637883058119575241.jpeg",
+  "https://www.dndbeyond.com/avatars/25837/8/637883853797843861.jpeg",
+  "https://www.dndbeyond.com/avatars/28094/868/637962179280125405.jpeg",
+  "https://www.dndbeyond.com/avatars/28096/54/637962217962482365.jpeg",
+  "https://www.dndbeyond.com/avatars/32569/489/638131315738924762.jpeg",
+  "https://www.dndbeyond.com/avatars/35970/470/638265031037328700.jpeg",
+  "https://www.dndbeyond.com/avatars/54984/245/639072150492474063.jpeg",
+  "https://www.dndbeyond.com/avatars/55921/707/639111925043068821.jpeg",
+  "https://www.dndbeyond.com/avatars/25837/136/637883862095842371.jpeg",
+  "https://www.dndbeyond.com/avatars/17/338/636377874264854196.jpeg",
+]
+
+
 // Noms réels → pour l’email
 const userRealNames = [
   "Alexandre Dupuis",
@@ -55,6 +76,7 @@ for (let i = 0; i < userRealNames.length; i++) {
       email: `${firstName}@royaume.com`,
       pseudo: pseudo,
       mdp: await bcrypt.hash("Password123!", 10),
+      avatarUrl: avatars[Math.floor(Math.random()*avatars.length)],
     },
   });
 
@@ -212,6 +234,7 @@ for (let u = 0; u < users.length; u++) {
         niveau: Math.floor(Math.random() * 4) + 1,
         piecesDOr: Math.floor(Math.random() * 200),
         pointsDeVie: 100,
+        avatarUrl: avatars[Math.floor(Math.random()*avatars.length)],
       },
     });
 

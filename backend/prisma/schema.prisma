@@ -124,6 +124,7 @@ enum Alignement {
   SANS_ALIGNEMENT
 }
 
+
 model Monstre {
   id                String          @id @default(uuid()) @db.Uuid
   nom               String          @unique
@@ -159,6 +160,7 @@ model Utilisateur{
   pseudo             String
   mdp                String
   role               Role           @default(JOUEUR)
+  avatarUrl          String         @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
   personnages        Personnage[]
 }
 
@@ -169,6 +171,7 @@ model Personnage{
   niveau             Int            @default(1)
   piecesDOr          Int            @default(0)
   pointsDeVie        Int            @default(100)
+  avatarUrl          String         @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
   idUtilisateur      String         @db.Uuid
   utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
   PersoQuetes      PersoQuete[]

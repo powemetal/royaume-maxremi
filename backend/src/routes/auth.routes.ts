@@ -85,6 +85,7 @@ router.get("/me", authentifier, async (req: Request, res: Response) => {
         email: true,
         pseudo: true,
         role: true /*, createdAt: true*/,
+        avatarUrl: true,
       },
     });
 
@@ -99,5 +100,26 @@ router.get("/me", authentifier, async (req: Request, res: Response) => {
     return res.status(500).json({ erreur: "Erreur du serveur" });
   }
 });
+
+// DELETE /auth/me
+router.delete("/me", authentifier, async (req: Request, res: Response) => {
+  try {
+    const id = (req as any).utilisateur?.sub;
+
+    if(!id) {
+      return res
+        .status(401)
+        .json({erreur: "Accès refusé. Vous devez d'abord vous connecter."})
+    }
+
+    const utilisateurExiste = await prisma.utilisateur.findUnique({ where: {id}});
+    if (utilisateurExiste) {
+      await prisma.utilisateur.delete({where: {id}});
+      res.status(200).json({message: "Le compte a été supprimé avec succès."})
+    }
+  } catch {
+    return res.status(500).json({erreur: "Erreur du serveur"})
+  }
+})
 
 export default router;
