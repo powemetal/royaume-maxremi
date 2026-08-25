@@ -84,7 +84,7 @@ routeurObjets.post("/objet/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
             data: data 
             })
 
-        return res.status(201).json({ message: `Objet ${data.nom} créé avec succès !` })
+        return res.status(201).json({ message: `Objet ${data.nom} créé avec succès !`, id: objet.id })
     } catch (error) {
         res.status(400).json({ erreur: "Erreur: L'objet n'a pas pu être créé." })
     }

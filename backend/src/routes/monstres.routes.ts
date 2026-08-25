@@ -5,6 +5,7 @@ import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middlewares/auth.js";
 import { TypeGrosseur, Alignement, TypeMonstre } from "../../generated/prisma/enums.js";
 import { brotliDecompressSync } from "node:zlib";
+import { builtinModules } from "node:module";
 const routeurMonstres = Router();
 
 interface MonstreAPI {
@@ -70,7 +71,8 @@ interface PatchMonstre {
   defense?: number,
   typeMonstre?: TypeMonstre,
   grandeur?: TypeGrosseur,
-  alignement?: Alignement
+  alignement?: Alignement,
+  imageUrl?: string
 }
 
 // recuperer un monstre dans l'api
@@ -88,7 +90,8 @@ async function recupererMonstre(nom: string) {
       attaque: attack,
       defense: data.armor_class[0].value,
       alignement: alignementMonstre,
-      grandeur: grosseurMonstre
+      grandeur: grosseurMonstre,
+      imageUrl: `https://www.dnd5eapi.com${data.url}`
 
     };
   } catch (e) {
@@ -199,7 +202,6 @@ routeurMonstres.patch(
       data.grandeur = body.grandeur
     } 
 
-
     if (body.alignement !== undefined) {
       const alignementValides = Object.values(Alignement);
       if (!alignementValides.includes(body.alignement)) {
@@ -208,6 +210,9 @@ routeurMonstres.patch(
       data.alignement = body.alignement
     } 
 
+    if (body.imageUrl !== undefined) {
+      data.imageUrl = body.imageUrl
+    }
 
     try {
       const monstreModifie = await prisma.monstre.update({
