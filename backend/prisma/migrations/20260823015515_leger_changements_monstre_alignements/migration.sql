@@ -47,7 +47,7 @@ CREATE TABLE "Objet" (
     "id" UUID NOT NULL,
     "nom" TEXT NOT NULL,
     "rarete" "Rarete" NOT NULL,
-    "tType" "TypeObjet" NOT NULL,
+    "type" "TypeObjet" NOT NULL,
     "att" INTEGER,
     "def" INTEGER,
     "prix" INTEGER NOT NULL,
