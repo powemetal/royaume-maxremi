@@ -44,7 +44,8 @@ interface DataPerso {
 
 interface PopupData {
   estOuvert: boolean;
-  fonction?: () => void | Promise<void>;
+  estAnnulable: boolean;
+  fonction?: () => void | Promise<void> | null;
   titre?: string;
   message?: string;
 }
@@ -55,11 +56,11 @@ export default function Personnage() {
   const [searchParams] = useSearchParams();
   const [popupData, setPopupData] = useState<PopupData>({
     estOuvert: false,
+    estAnnulable: false,
     fonction: undefined,
     titre: undefined,
     message: undefined,
   });
-  const [msgErreur, setMsgErreur] = useState<string>("");
   const [dataPerso, setDataPerso] = useState<DataPerso>({
     nom: "Nom",
     classe: "Classe",
@@ -93,10 +94,25 @@ export default function Personnage() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Message renvoyé par le backend
-        const message = error.response?.data?.erreur;
-        setMsgErreur(message);
+        const message =
+          error.response?.data?.erreur ||
+          error.response?.data?.message ||
+          error.message;
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: false,
+          fonction: () => navigate("/compte"),
+          titre: "Erreur",
+          message: message,
+        });
       } else {
-        setMsgErreur("Une erreur inattendue est survenue.");
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: false,
+          fonction: () => navigate("/compte"),
+          titre: "Erreur",
+          message: "Une erreur inattendue est survenue.",
+        });
       }
       console.error(error);
     } finally {
@@ -115,9 +131,21 @@ export default function Personnage() {
       if (axios.isAxiosError(error)) {
         // Message renvoyé par le backend
         const message = error.response?.data?.erreur;
-        setMsgErreur(message);
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: true,
+          fonction: () => null,
+          titre: "Erreur",
+          message: message,
+        });
       } else {
-        setMsgErreur("Une erreur inattendue est survenue.");
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: true,
+          fonction: () => null,
+          titre: "Erreur",
+          message: "Une erreur inattendue est survenue.",
+        });
       }
       console.error(error);
     } finally {
@@ -134,9 +162,21 @@ export default function Personnage() {
       if (axios.isAxiosError(error)) {
         // Message renvoyé par le backend
         const message = error.response?.data?.erreur;
-        setMsgErreur(message);
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: true,
+          fonction: () => null,
+          titre: "Erreur",
+          message: message,
+        });
       } else {
-        setMsgErreur("Une erreur inattendue est survenue.");
+        setPopupData({
+          estOuvert: true,
+          estAnnulable: true,
+          fonction: () => null,
+          titre: "Erreur",
+          message: "Une erreur inattendue est survenue.",
+        });
       }
       console.error(error);
       recupererInfosPersonnage();
@@ -151,7 +191,7 @@ export default function Personnage() {
       >
         <div className="flex justify-center h-[200px] degrade-rouge gap-5 container-utilisateur text-white">
           <img
-            src={dataPerso.avatarUrl}
+            src={dataPerso.avatarUrl || "https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png"}
             alt="Avatar du personnage"
             className="img-perso"
             onError={(e) => {
@@ -164,12 +204,16 @@ export default function Personnage() {
             <p className="text-shadow-lg/50 text-xl">{dataPerso.nom}</p>
             <p className="text-shadow-lg/50 text-md">{dataPerso.classe}</p>
             <button
-              onClick={() => setPopupData({
-                estOuvert: true,
-                fonction: () => supprimerPersonnage(),
-                titre: "Suppression du personnage",
-                message: "Êtes-vous sûr de vouloir supprimer votre personnage ?"
-              })}
+              onClick={() =>
+                setPopupData({
+                  estOuvert: true,
+                  estAnnulable: true,
+                  fonction: () => supprimerPersonnage(),
+                  titre: "Suppression du personnage",
+                  message:
+                    "Êtes-vous sûr de vouloir supprimer votre personnage ?",
+                })
+              }
               className="btn-nav delete"
               id="btn-supprimer-perso"
             >
@@ -215,6 +259,7 @@ export default function Personnage() {
                     onClick={() =>
                       setPopupData({
                         estOuvert: true,
+                        estAnnulable: true,
                         fonction: () => abandonnerQuete(q.id),
                         titre: "Abandonner la quête",
                         message:
@@ -274,17 +319,19 @@ export default function Personnage() {
         <div
           className="popup-overlay"
           onClick={() =>
-            setPopupData((prev) => ({
-              ...prev,
-              estOuvert: false,
-            }))
+            popupData.estAnnulable
+              ? setPopupData((prev) => ({
+                  ...prev,
+                  estOuvert: false,
+                }))
+              : null
           }
         >
           <div className="popup-contenu" onClick={(e) => e.stopPropagation()}>
             <h2 className="mb-8">{popupData.titre}</h2>
             <p className="text-white">{popupData.message}</p>
             <div className="popup-actions flex gap-4 justify-center mt-8">
-              <button
+              {popupData.estAnnulable && <button
                 type="button"
                 className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 "
                 onClick={() =>
@@ -295,7 +342,7 @@ export default function Personnage() {
                 }
               >
                 Annuler
-              </button>
+              </button>}
               <button
                 type="button"
                 className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
