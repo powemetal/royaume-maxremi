@@ -7,8 +7,15 @@ import "../css/monstres.css";
 interface Monstre {
     id: string;
     nom: string;
-    imageUrl: string;
+    pointsDeVie: number;
+    attaque: number;
+    defense: number;
+    typeMonstre: string | null;
+    grandeur: string | null;
+    alignement: string | null;
+    imageUrl: string | null;
 }
+
 
 interface ReponseListeMonstres {
     message: string;
@@ -55,21 +62,46 @@ export default function Monstres() {
         <div>
             <TitreBackground>Monstres</TitreBackground>
             <div className="container-monstres container-style flex flex-col overflow-auto ml-25" >
-                <ul className="liste-monstres flex flex-col ">
+                <ul className="liste-monstres flex flex-col">
                     {!chargement && listeMonstres.length === 0 && (
-                    <span className="monstre-nom">Le serveur ne contient aucun monstre.</span>
-                )}
-                {listeMonstres.map((m:Monstre) => {
-                    return (
-                        // onClick={() => ouvrirPageMonstre(p.id)}
-                    <li key={m.id} className="liste-col-nom" > 
-                        <span className="monstre-avatar justify-start"><img src={m.imageUrl} /></span>
-                        <span className="monstre-nom">{m.nom}</span>
-                        {/* <span className="monstre-attaque">{m.attaque}</span> */}
-                    </li>  
-                    )
-                })}
-            </ul>
+                        <span className="monstre-nom">Le serveur ne contient aucun monstre.</span>
+                    )}
+
+                    {listeMonstres.map((m: Monstre) => {
+                        return (
+                            <li key={m.id} className="monstre-card">
+                                
+                                <div className="monstre-img-wrapper">
+                                    <img 
+                                        src={m.imageUrl || "/images/default-monster.png"} 
+                                        alt={m.nom}
+                                        className="monstre-img"
+                                    />
+                                </div>
+
+                                <div className="monstre-info">
+                                    <span className="monstre-nom">{m.nom}</span>
+
+                                    <div className="monstre-stats">
+                                        <span>HP: {m.pointsDeVie}</span>
+                                        <span>Atk: {m.attaque}</span>
+                                        <span>Def: {m.defense}</span>
+                                    </div>
+
+                                    <div className="monstre-meta">
+                                        {m.typeMonstre && <span>Type : {m.typeMonstre}</span>}
+                                        {m.grandeur && <span>Taille : {m.grandeur}</span>}
+                                        {m.alignement && <span>Alignement : {m.alignement}</span>}
+                                    </div>
+                                </div>
+
+                            </li>
+                        )
+                    })}
+                </ul>
+
+
+
 
         </div>
         </div>
