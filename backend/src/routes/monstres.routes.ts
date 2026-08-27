@@ -91,7 +91,7 @@ async function recupererMonstre(nom: string) {
       defense: data.armor_class[0].value,
       alignement: alignementMonstre,
       grandeur: grosseurMonstre,
-      imageUrl: `https://www.dnd5eapi.com${data.url}`
+      imageUrl: `https://www.dnd5eapi.co${data.image}`
 
     };
   } catch (e) {
@@ -256,12 +256,19 @@ routeurMonstres.delete(
 );
 
 //Liste des monstres dans la table
-routeurMonstres.get("/monstre/", async (req: Request, res: Response) => {
+routeurMonstres.get("/monstres", async (req: Request, res: Response) => {
   const monstres = await prisma.monstre.findMany({
     orderBy: { id: "asc" },
   });
-  res.json(monstres);
+
+  res.json({
+    message: "Liste des monstres",
+    data: {
+      listeMonstres: monstres
+    }
+  });
 });
+
 
 //recuperer 1 monstre dans la table
 routeurMonstres.get("/monstre/:nom", async (req: Request, res: Response) => {

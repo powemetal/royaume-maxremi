@@ -21,7 +21,7 @@ routerInventaire.get("/:idPersonnage", authentifier, async (req: Request, res: R
       },
     });
 
-    return res.status(200).json(`Inventaire : ${inventaire}`);
+    return res.status(200).json(inventaire);
   } catch (e) {
     return res.status(500).json({
       erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'inventaire : ${e}`,

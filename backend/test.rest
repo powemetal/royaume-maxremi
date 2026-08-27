@@ -131,7 +131,7 @@ Authorization: Bearer {{authTokenAdmin}}
 {
     "nom": "Baton2",
     "rarete": "RARE",
-    "tType": "ARME",
+    "type": "ARME",
     "att": 5,
     "prix": 100,
     "typeDegats": "CONTONDANT"

@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+.liste-monstres {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.liste-monstres li {
+    padding: 10px 0;
+}
+
+.liste-monstres > :nth-child(odd){
+    background-color: #aaa0a7;
+}
+
+.liste-monstres > :nth-child(even){
+    background-color: #c2b3b5;
+}
+
+
+
+.monstre-avatar img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 5px solid rgb(72, 52, 85);
+    border-radius: 999px;
+    transition: transform 0.15s ease-in-out;
+}
+
+.monstre-avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.monstre-nom {
+    font-weight: 600;
+    font-size: x-large;
+    font-family: "Cinzel Decorative", serif;
+    color: white;
+    text-shadow: 2px 2px 2px #000000;
+    white-space: nowrap;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.liste-col-nom:hover {
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
+
+.liste-col-nom:hover .monstre-avatar img {
+    transform: scale(1.08);
+    border-color: #ad4657;
+}
+
+.liste-col-nom:hover .monstre-nom {
+    color: white;
+}
+
+.container-monstres {
+    max-height: 550px;
+    overflow-y: auto;
+}
