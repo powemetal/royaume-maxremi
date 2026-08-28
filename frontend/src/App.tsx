@@ -4,7 +4,7 @@ import Connexion from "./pages/connexion";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Accueil from "./pages/accueil";
 import Inscription from "./pages/inscription";
-import Personnages from "./pages/personnages";
+import Personnage from "./pages/personnage";
 import Monstres from "./pages/monstres";
 import Compte from "./pages/compte";
 import Objets from "./pages/objets";
@@ -37,7 +37,7 @@ function App() {
             <Route path="/" element={<Accueil />} />
             <Route path="/connexion" element={<Connexion />} />
             <Route path="/inscription" element={<Inscription />} />
-            <Route path="/personnages" element={<Personnages />} />
+            <Route path="/personnage/recuperer" element={<Personnage />} />
             <Route path="/compte" element={<Compte />} />
             <Route path="/monstres" element={<Monstres />} />
             <Route path="/objets" element={<Objets />} />

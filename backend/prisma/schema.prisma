@@ -12,34 +12,33 @@ datasource db {
   provider = "postgresql"
 }
 
-
-enum Role{
+enum Role {
   JOUEUR
   MAITRE_DU_JEU
 }
 
-enum Rarete{
+enum Rarete {
   COMMUN
   PEU_COMMUN
   RARE
   LEGENDAIRE
 }
 
-enum Difficulte{
+enum Difficulte {
   FACILE
   MOYEN
   DIFFICILE
   LEGENDAIRE
 }
 
-enum Statut{
+enum Statut {
   DISPONIBLE
   EN_COURS
   TERMINE
   ECHOUE
 }
 
-enum Classe{
+enum Classe {
   GUERRIER
   MAGE
   VOLEUR
@@ -102,7 +101,7 @@ enum TypeMonstre {
   MORT_VIVANT
 }
 
-enum TypeGrosseur{
+enum TypeGrosseur {
   TRES_PETIT
   PETIT
   MOYEN
@@ -124,7 +123,6 @@ enum Alignement {
   SANS_ALIGNEMENT
 }
 
-
 model Monstre {
   id                String          @id @default(uuid()) @db.Uuid
   nom               String          @unique
@@ -133,74 +131,75 @@ model Monstre {
   defense           Int
   typeMonstre       TypeMonstre?
   grandeur          TypeGrosseur?
-  alignement       Alignement?
+  alignement        Alignement?
+  imageUrl          String? 
 }
 
-model Objet{
-  id                String          @id @default(uuid()) @db.Uuid
-  nom               String          @unique
-  rarete            Rarete
-  tType             TypeObjet
-  att               Int?
-  def               Int?
-  prix              Int
-  typeDegats        TypeDegats?
-  degatsBonus       Int?
-  typeBonus         TypeDegats?
-  description       String?
-  inventaire        Inventaire[]
+model Objet {
+  id          String       @id @default(uuid()) @db.Uuid
+  nom         String       @unique
+  rarete      Rarete
+  type        TypeObjet
+  att         Int?
+  def         Int?
+  prix        Int
+  typeDegats  TypeDegats?
+  degatsBonus Int?
+  typeBonus   TypeDegats?
+  description String?
+  inventaire  Inventaire[]
 }
 
-
-
-model Utilisateur{
-  id                 String         @id @default(uuid()) @db.Uuid
-  email              String         @unique
-  pseudo             String
-  mdp                String
-  role               Role           @default(JOUEUR)
-  avatarUrl          String         @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
-  personnages        Personnage[]
+model Utilisateur {
+  id          String       @id @default(uuid()) @db.Uuid
+  email       String       @unique
+  pseudo      String
+  mdp         String
+  role        Role         @default(JOUEUR)
+  avatarUrl   String       @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
+  personnages Personnage[]
 }
 
-model Personnage{
-  id                 String         @id @default(uuid()) @db.Uuid
-  nom                String         @unique
-  classe             Classe
-  niveau             Int            @default(1)
-  piecesDOr          Int            @default(0)
-  pointsDeVie        Int            @default(100)
-  avatarUrl          String         @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
-  idUtilisateur      String         @db.Uuid
-  utilisateur        Utilisateur    @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
-  PersoQuetes      PersoQuete[]
-  inventaire         Inventaire[]
+model Personnage {
+  id            String       @id @default(uuid()) @db.Uuid
+  nom           String       @unique
+  classe        Classe
+  niveau        Int          @default(1)
+  piecesDOr     Int          @default(0)
+  pointsDeVie   Int          @default(100)
+  avatarUrl     String       @default("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
+  idUtilisateur String       @db.Uuid
+  utilisateur   Utilisateur  @relation(fields: [idUtilisateur], references: [id], onDelete: Cascade)
+  PersoQuetes   PersoQuete[]
+  inventaire    Inventaire[]
 }
 
-model Quete{
-  id                 String         @id @default(uuid()) @db.Uuid
-  nom                String         @unique
-  difficulte         Difficulte   
-  description        String?
-  recompense         Int
-  PersoQuetes      PersoQuete[]  //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de PersoQuete
+model Quete {
+  id          String       @id @default(uuid()) @db.Uuid
+  nom         String       @unique
+  difficulte  Difficulte
+  description String?
+  recompense  Int
+  PersoQuetes PersoQuete[] //Oui....une liste de journal, parce que chaque quete peut etre dans plusieurs entree de PersoQuete
 }
 
-model PersoQuete{
-  id                 String         @id @default(uuid()) @db.Uuid
-  idQuete            String         @db.Uuid
-  statut             Statut         @default(DISPONIBLE)
-  quete              Quete          @relation(fields: [idQuete], references: [id], onDelete: Cascade)
-  idPersonnage       String         @db.Uuid
-  personnage         Personnage     @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
+model PersoQuete {
+  id           String     @id @default(uuid()) @db.Uuid
+  idQuete      String     @db.Uuid
+  statut       Statut     @default(DISPONIBLE)
+  quete        Quete      @relation(fields: [idQuete], references: [id], onDelete: Cascade)
+  idPersonnage String     @db.Uuid
+  personnage   Personnage @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
+
   @@unique([idPersonnage, idQuete])
 }
 
-model Inventaire{
-  id                 String         @id @default(uuid()) @db.Uuid
-  idObjet            String         @db.Uuid
-  objet              Objet          @relation(fields: [idObjet], references: [id])
-  idPersonnage       String         @db.Uuid
-  personnage         Personnage     @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
+model Inventaire {
+  id           String     @id @default(uuid()) @db.Uuid
+  idObjet      String     @db.Uuid
+  objet        Objet      @relation(fields: [idObjet], references: [id])
+  idPersonnage String     @db.Uuid
+  personnage   Personnage @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
+
   @@unique([idPersonnage, idObjet])
 }

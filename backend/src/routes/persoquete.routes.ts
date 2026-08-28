@@ -1,199 +1,248 @@
-import { Router, type Request, type Response } from "express"
-import prisma from "../utils/prisma.js"
+import { Router, type Request, type Response } from "express";
+import prisma from "../utils/prisma.js";
 import { authentifier } from "../middlewares/auth.js";
+import { Statut } from "../../generated/prisma/enums.js";
 
 const routerPersoQuete = Router();
 
 // Recuperer un ID de personnage et son journal de quetes
-routerPersoQuete.get("/:personnageId", authentifier, async (req: Request, res: Response) => {
-  const idPerso = req.params.personnageId as string;
+routerPersoQuete.get(
+  "/:personnageId",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const idPerso = req.params.personnageId as string;
+    const { statut } = req.query;
 
-  try {
-     const journalQuetes = await prisma.persoQuete.findMany({
-            where: { idPersonnage: idPerso }, 
-            include: {
-                quete: true // inclu toutes les quetes de persoquete pour ce personnage
-      }
-    });
+    try {
+      const journalQuetes = await prisma.persoQuete.findMany({
+        where: {
+          idPersonnage: idPerso,
+          ...(statut ? { statut: statut as Statut } : {}),
+        },
+        include: {
+          quete: true,
+        },
+      });
 
-    return res.json(journalQuetes)
+      return res.json(journalQuetes);
     } catch (e) {
-        return res.status(500).json({ erreur: `Erreur: Le serveur ne répond pas lors de la récupération du journal de quêtes : ${e}` })
+      return res
+        .status(500)
+        .json({
+          erreur: `Erreur: Le serveur ne répond pas lors de la récupération du journal de quêtes : ${e}`,
+        });
     }
-});
-
+  },
+);
 
 // ajouter une quete a un personnage
-routerPersoQuete.post("/ajouter", authentifier, async (req: Request, res:Response) => {
-    const { idPerso, idQuete } = req.body
+routerPersoQuete.post(
+  "/ajouter",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const { idPerso, idQuete } = req.body;
 
     if (!idPerso || !idQuete) {
-        return res.status(400).json({ erreur: "Erreur: L'ID du personnage et l'ID de la quête sont requis." })
+      return res
+        .status(400)
+        .json({
+          erreur: "Erreur: L'ID du personnage et l'ID de la quête sont requis.",
+        });
     }
 
     try {
-        const queteAAjouter = await prisma.quete.findFirst({
-            where: { id: idQuete },
-        })
+      const queteAAjouter = await prisma.quete.findFirst({
+        where: { id: idQuete },
+      });
 
-        if (!queteAAjouter) {
-            return res.status(404).json({erreur: `Erreur: La quête ${idQuete} n'existe pas dans le jeu.`})
-        }
+      if (!queteAAjouter) {
+        return res
+          .status(404)
+          .json({
+            erreur: `Erreur: La quête ${idQuete} n'existe pas dans le jeu.`,
+          });
+      }
 
-        const nouveauJournal = await prisma.persoQuete.create({
-            data: {
-                idPersonnage: idPerso,
-                idQuete: queteAAjouter.id,
-                statut : "EN_COURS"
-            },
-            include: {
-                quete: true
-            }
-        })
+      const nouveauJournal = await prisma.persoQuete.create({
+        data: {
+          idPersonnage: idPerso,
+          idQuete: queteAAjouter.id,
+          statut: "EN_COURS",
+        },
+        include: {
+          quete: true,
+        },
+      });
 
-        return res.status(201).json({
-            message: `La quête ${queteAAjouter.nom} a été ajoutée au journal de quêtes du personnage.`,
-            item: nouveauJournal
-        })
+      return res.status(201).json({
+        message: `La quête ${queteAAjouter.nom} a été ajoutée au journal de quêtes du personnage.`,
+        item: nouveauJournal,
+      });
     } catch (e) {
-        return res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de l'ajout de la quête au journal de quêtes: ${e}`})
-
+      return res
+        .status(500)
+        .json({
+          erreur: `Erreur: Le serveur ne répond pas lors de l'ajout de la quête au journal de quêtes: ${e}`,
+        });
     }
-});
-
+  },
+);
 
 //Modifier un persoQuete
-routerPersoQuete.patch("/persoquete/modifier/:id", authentifier, async(req: Request, res: Response)=>{
-    const idPersoQuete = req.params.id as string
-try {
-    const persoQueteModifie = await prisma.persoQuete.update({
+routerPersoQuete.patch(
+  "/persoquete/modifier/:id",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const idPersoQuete = req.params.id as string;
+    try {
+      const persoQueteModifie = await prisma.persoQuete.update({
         where: { id: idPersoQuete },
-        data: req.body
-    })
-    return res.json(persoQueteModifie)
-
+        data: req.body,
+      });
+      return res.json(persoQueteModifie);
     } catch (e) {
-        return res.status(500).json({
-            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
-        })
+      return res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`,
+      });
     }
-})
+  },
+);
 
 // reussir une quete
-routerPersoQuete.patch("/journal/reussir/:id", authentifier, async(req: Request, res: Response)=>{
-    const idPersoQuete = req.params.id as string
+routerPersoQuete.patch(
+  "/journal/reussir/:id",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const idPersoQuete = req.params.id as string;
 
-try {
-    const persoQuete = await prisma.persoQuete.findUnique({
-        where: { id: idPersoQuete }
-    })
+    try {
+      const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete },
+      });
 
-    if (!persoQuete) {
-        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
-    }
+      if (!persoQuete) {
+        return res
+          .status(404)
+          .json({ erreur: "Cette quêtre n'est pas dans le Journal" });
+      }
 
-    if (persoQuete.statut !== "EN_COURS") {
-        return res.status(400).json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` })
-    }
+      if (persoQuete.statut !== "EN_COURS") {
+        return res
+          .status(400)
+          .json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` });
+      }
 
-    const persoQueteModifie = await prisma.persoQuete.update({
+      const persoQueteModifie = await prisma.persoQuete.update({
         where: { id: idPersoQuete },
         data: { statut: "TERMINE" },
-        include: { quete: true }
-    })
+        include: { quete: true },
+      });
 
-    const recompense = persoQueteModifie.quete.recompense
+      const recompense = persoQueteModifie.quete.recompense;
 
-    const attribuerRecompense = await prisma.personnage.update({
+      const attribuerRecompense = await prisma.personnage.update({
         where: { id: persoQueteModifie.idPersonnage },
-        data: { piecesDOr : { increment: recompense } }})
-    return res.json({
-        personnage: attribuerRecompense, 
+        data: { piecesDOr: { increment: recompense } },
+      });
+      return res.json({
+        personnage: attribuerRecompense,
         persoQuete: persoQueteModifie,
-        message: `Quête réussie! Récompense de ${recompense} reçue!`
-    })
-
+        message: `Quête réussie! Récompense de ${recompense} reçue!`,
+      });
     } catch (e) {
-        return res.status(500).json({
-            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
-        })
+      return res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`,
+      });
     }
-})
+  },
+);
 
 // Echouer une quete
-routerPersoQuete.patch("/journal/echouer/:id", authentifier, async(req: Request, res: Response)=>{
-    const idPersoQuete = req.params.id as string
-try {
-    const persoQuete = await prisma.persoQuete.findUnique({
-        where: { id: idPersoQuete }
-    })
+routerPersoQuete.patch(
+  "/journal/echouer/:id",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const idPersoQuete = req.params.id as string;
+    try {
+      const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete },
+      });
 
-    if (!persoQuete) {
-        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
-    }
+      if (!persoQuete) {
+        return res
+          .status(404)
+          .json({ erreur: "Cette quêtre n'est pas dans le Journal" });
+      }
 
-    if (persoQuete.statut !== "EN_COURS") {
-        return res.status(400).json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` })
-    }
+      if (persoQuete.statut !== "EN_COURS") {
+        return res
+          .status(400)
+          .json({ erreur: `Impossible: cette quête est ${persoQuete.statut}` });
+      }
 
-    const persoQueteModifie = await prisma.persoQuete.update({
+      const persoQueteModifie = await prisma.persoQuete.update({
         where: { id: idPersoQuete },
         data: { statut: "ECHOUE" },
-        include: { quete: true }
-    })
-    return res.status(200).json({
-        persoQuete: persoQueteModifie, 
-        Message: "Quête échouée!"
-    })
-
+        include: { quete: true },
+      });
+      return res.status(200).json({
+        persoQuete: persoQueteModifie,
+        Message: "Quête échouée!",
+      });
     } catch (e) {
-        return res.status(500).json({
-            erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
-        })
+      return res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`,
+      });
     }
-})
+  },
+);
 
 // Abandonner une quete
-routerPersoQuete.delete("/journal/abandonner/:id", authentifier, async(req: Request, res: Response)=>{
-    const idPersoQuete = req.params.id as string
+routerPersoQuete.delete(
+  "/journal/abandonner/:id",
+  authentifier,
+  async (req: Request, res: Response) => {
+    const idPersoQuete = req.params.id as string;
     try {
-    const persoQuete = await prisma.persoQuete.findUnique({
-        where: { id: idPersoQuete }
-    })
+      const persoQuete = await prisma.persoQuete.findUnique({
+        where: { id: idPersoQuete },
+      });
 
-    if (!persoQuete) {
-        return res.status(404).json({ erreur: "Cette quêtre n'est pas dans le Journal" })
+      if (!persoQuete) {
+        return res
+          .status(404)
+          .json({ erreur: "Cette quête n'est pas dans le Journal" });
+      }
+
+      if (persoQuete.statut === "TERMINE") {
+        return res
+          .status(400)
+          .json({ erreur: `Impossible d'abandonner une quête terminée` });
+      }
+
+      const abandon = await prisma.persoQuete.deleteMany({
+        // pour savoir si il y a un nombre de lignes eviter de faire 2 requetes pour verifier
+        where: { id: idPersoQuete },
+      });
+
+      if (abandon.count === 0) {
+        res
+          .status(404)
+          .json({
+            erreur:
+              "Erreur: Cette quête n'existe pas dans le journal de quêtes du personnage.",
+          });
+      } else {
+        return res.status(200).json({
+          message: "Quête abandonnée!",
+        });
+      }
+    } catch (e) {
+      return res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`,
+      });
     }
-
-    if (persoQuete.statut === "TERMINE") {
-        return res.status(400).json({ erreur: `Impossible d'abandonner une quête terminée` })
-    }        
-
-
-        const abandon = await prisma.persoQuete.deleteMany({  // pour savoir si il y a un nombre de lignes eviter de faire 2 requetes pour verifier
-            where: { id: idPersoQuete },
-        })
-
-        if (abandon.count === 0) {
-            res.status(404).json({ erreur: "Erreur: Cette quête n'existe pas dans le journal de quêtes du personnage." })
-        } else {
-            return res.status(200).json({
-            message: "Quête abandonnée!"
-            }) 
-        }
-
-        } catch (e) {
-            return res.status(500).json({
-                erreur: `Erreur: Le serveur ne répond pas lors de la modification du journal de quêtes: ${e}`
-            })
-        }
-})
-
-
-
-
-
+  },
+);
 
 export default routerPersoQuete;
-
-

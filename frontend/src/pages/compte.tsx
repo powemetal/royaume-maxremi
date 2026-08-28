@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import "../css/compte.css";
 import TitreBackground from "../components/titreBackground";
 import { api } from "../api/backendApi";
+import OverlayChargement from "../components/overlayChargement";
 
 interface Personnage {
     id: string;
@@ -93,7 +94,7 @@ export default function Compte() {
     }, [estConnecte]);
 
     const ouvrirPagePersonnage = (id: string) => {
-        navigate(`/personnage/recuperer/${id}`);
+        navigate(`/personnage/recuperer?id=${id}`);
     };
 
 
@@ -104,6 +105,7 @@ export default function Compte() {
     return (<>
     
     <div className="container-compte flex flex-col grow">
+        <OverlayChargement chargement={chargement} texte="Chargement du compte...">
         <div className="container-utilisateur flex justify-center gap-12">
             {estConnecte && (<>
             <div className="user-avatar"><img src={avatarUtilisateur} alt="avatar" /></div>
@@ -137,6 +139,7 @@ export default function Compte() {
             </ul>
 
         </div>
+            </OverlayChargement>
     </div>
     
 
@@ -166,6 +169,7 @@ export default function Compte() {
                         {suppressionEnCours ? "Suppression..." : "Confirmer la suppression"}
                     </button>
                 </div>
+            
             </div>
         </div>
     )}

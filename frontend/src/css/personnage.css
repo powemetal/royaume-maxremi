@@ -1,0 +1,70 @@
+.img-perso {
+  border: 3px solid #c7596b;
+  border-radius: 50%;
+}
+
+.li-perso {
+  box-shadow:
+    inset 0 4px 24px -20px #2c0421b4,
+    inset 0 -4px 24px -4px #2c0421b4;
+  align-items: center;
+  padding: 10px !important;
+  font-family: "Cinzel Decorative", serif;
+}
+
+.li-perso:hover {
+  filter: brightness(1.1);
+}
+
+.li-perso:hover .prix-recompense {
+  transform: scale(1.2);
+  transition: transform 0.1s ease-in-out;
+}
+
+.nom-quete {
+  font-weight: bold;
+  font-size: medium;
+  font-weight: 600;
+  color: white;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+.prix-recompense {
+  font-weight: bold;
+  font-size: large;
+  font-weight: 600;
+  color: #34d399;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+.container-perso {
+  background-color: rgba(209, 207, 207, 0.5);
+  border: 3px solid #971622;
+  box-shadow: 0px 15px 30px 5px #2c04212d;
+  width: 80vw;
+  align-self: center;
+  max-height: 200px !important;
+}
+
+.en-tete {
+  box-shadow:
+    inset 0 4px 24px -20px #2c0421b4,
+    inset 0 -4px 24px -4px #2c0421b4;
+  align-items: center;
+  padding: 10px !important;
+  font-family: "Cinzel Decorative", serif;
+  color: #f3d082;
+  font-weight: bold;
+  font-size: large;
+  font-weight: 600;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+#btn-supprimer-perso {
+  font-family: "Cinzel Decorative", serif;
+}
+
+.label-stats {
+  color: #fb2c36;
+  text-shadow: 2px 2px 2px #000000;
+}

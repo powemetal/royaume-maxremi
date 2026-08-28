@@ -12,11 +12,11 @@
 }
 
 
-ul > :nth-child(odd){
+ul.liste-personnages > li:nth-of-type(odd) {
     background-color: #aaa0a7;
 }
 
-ul > :nth-child(even){
+ul.liste-personnages > li:nth-of-type(even) {
     background-color: #c2b3b5;
 }
 
