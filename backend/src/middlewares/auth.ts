@@ -10,7 +10,7 @@ export type JwtPayload = {sub:number, role: "JOUEUR" | "MAITRE_DU_JEU"}
 export function authentifier(req: Request, res: Response, next: NextFunction){
     const header = req.headers.authorization
     if(!header?.startsWith("Bearer ")){
-        return res.status(401).json({erreur: "Accès refusé. Votre token est manquant."})
+        return res.status(401).json({erreur: "Accès refusé. Votre token est manquant.", code: "TOKEN_INVALIDE"})
     }
 
     const token = header.split(" ")[1]

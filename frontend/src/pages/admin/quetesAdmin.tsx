@@ -167,6 +167,13 @@ export default function QuetesAdmin() {
     }
 
     useEffect(() => {
+        const verifierAcces = async () => {
+            try { 
+                await api.get("auth/me");
+            } catch (err) {
+            }
+        };
+        verifierAcces();
         recupererListeQuetes();
     }, []);
 
