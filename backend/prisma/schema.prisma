@@ -190,7 +190,7 @@ model PersoQuete{
   id                 String         @id @default(uuid()) @db.Uuid
   idQuete            String         @db.Uuid
   statut             Statut         @default(DISPONIBLE)
-  quete              Quete          @relation(fields: [idQuete], references: [id])
+  quete              Quete          @relation(fields: [idQuete], references: [id], onDelete: Cascade)
   idPersonnage       String         @db.Uuid
   personnage         Personnage     @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
   @@unique([idPersonnage, idQuete])

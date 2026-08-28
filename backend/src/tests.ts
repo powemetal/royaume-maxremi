@@ -25,7 +25,7 @@ try {
   const res = await test.post("/auth/register", {
     email: "admin@maxremi.com",
     pseudo: "AllSeeingEye",
-    mdp: "MdP123456!lol",
+    mdp: "Password123!",
     codeAdmin: "AdminTest123",
   });
   if (res.status !== 201) throw new Error(`Status inattendu: ${res.status}`);

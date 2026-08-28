@@ -17,7 +17,7 @@ Content-Type: application/json
 {
     "email": "admin@maxremi.com",
     "pseudo": "AllSeeingEye",
-    "mdp": "MdP123456!lol",
+    "mdp": "Password123!",
     "codeAdmin": "AdminTest123"
 }
 
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 {
     "email": "admin@maxremi.com",
-    "mdp": "MdP123456!lol"
+    "mdp": "Password123!"
 }
 
 ### authTokenAdmin garde en mémoire le token admin pour l'utiliser dans d'autres routes

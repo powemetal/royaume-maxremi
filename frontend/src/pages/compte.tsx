@@ -35,8 +35,6 @@ export default function Compte() {
 
     const { estConnecte, seDeconnecter } = useAuth();
     const [nomUtilisateur, setNomUtilisateur] = useState<string>("");
-    const [idCompte, setIdCompte] = useState<string>("");
-    const [idPerso, setIdPerso] = useState<string>("");
     const [listePerso, setListePerso] = useState<Personnage[]>([]);
     const [erreur, setErreur] = useState<string>("");
     const [chargement, setChargement] = useState<boolean>(true)
@@ -50,7 +48,6 @@ export default function Compte() {
         try{
             setErreur("");
             const reponse = await api.get<ReponseUtilisateur>("/auth/me");
-            setIdCompte(reponse.data.id);
             setNomUtilisateur(reponse.data.pseudo);
             setAvatarUtilisateur(reponse.data.avatarUrl);
         } catch (err: any) {

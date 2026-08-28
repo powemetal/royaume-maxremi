@@ -63,3 +63,25 @@
   border: 3px solid #971622;
   box-shadow: 0px 15px 30px 5px #2c04212d;
 }
+
+/* controles du css de la scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: 93858F;
+}
+
+::-webkit-scrollbar-thumb {
+    background: B29FA5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d1abc6;
+}
+
+/* Scrollbar pour Firefox spécifiquement */
+.container-modif-droite {
+    scrollbar-color: #B29FA5 #93858F;
+}
