@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+textarea {
+    margin: 0px 32px;
+    background-color: #aaa0a7;
+}
+
+.container-admin-quetes {
+  font-family: "Cinzel Decorative", serif; 
+}
+
+.container-modif-droite {
+    max-height: 550px;
+    overflow-y: auto;
+    text-overflow: ellipsis;
+}
+
+.quetes-modif-list {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 8px;
+    box-shadow:
+        inset 0 4px 24px -20px #2c0421b4,
+        inset 0 -4px 24px -4px #2c0421b4;
+}
+
+.msg {
+    color: rgb(104, 53, 128);
+    font-weight: normal;
+    min-height: 1.5rem;
+}

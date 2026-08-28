@@ -12,38 +12,73 @@ const routeurQuetes = Router ()
 routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     
     const difficulteValides = ["FACILE", "MOYEN", "DIFFICILE", "LEGENDAIRE"]
-    const { nom, difficulte, recompense } = req.body
+    const { nom, difficulte, recompense, description } = req.body
 
     if (!nom) {
         return res.status(400).json({ erreur: "Erreur: Le nom de la quête est manquant." });
     }
     if (!difficulteValides.includes(difficulte)) {
-        return res.status(400).json({erreur: `Erreur: La niveau de difficulté est invalide.`})
+        return res.status(400).json({erreur: `Erreur: Le niveau de difficulté est invalide.`})
+    }
+    if (recompense < 0) {
+        return res.status(400).json({erreur: `Erreur: La récompense est invalide.`})
+    }
+    if (recompense === undefined || recompense === null) { // 0 est falsy mais permis dans notre scénario, on doit absolument vérifier si recompense est non definie ou nulle
+        return res.status(400).json({erreur: `Erreur: Il doit y avoir une récompense valide.`})
     }
 
     try {
-        const quete = await prisma.quete.create({ data: { nom, difficulte, recompense } })
+        const quete = await prisma.quete.create({ data: { nom, difficulte, recompense, description } })
         return res.status(201).json({ message: `La quête ${nom} a été créée avec succès!`, id: quete.id })
     } catch (error) {
         res.status(400).json({ erreur: "Erreur: La création de la quête a échouée." })
     }
 })
 
-//Modifier une quete
-routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
-    const nom = req.params.nom as string
-        //Trouver l'quete
+// //Modifier une quete avec le nom ( Math : j'ai changé la route pour utiliser l'ID lors de la sélection d'une quête dans la liste dans la section admin )
+// routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
+//     const nom = req.params.nom as string
+//         //Trouver l'quete
+//     try{
+//         const quete = await prisma.quete.findFirst({
+//             where : {
+//                 nom: {
+//                     equals: nom,
+//                     mode: "insensitive",    
+//                 }
+//             }, 
+//         })
+//         if (!quete){
+//             return res.status(404).json({erreur: `Erreur: La quête ${nom} n'existe pas dans le jeu.`})
+//         }
+
+//         //Modifie la quête
+//         const queteModifie = await prisma.quete.update({
+//             where: { id : quete.id },
+//             data: req.body
+//         })
+
+//         res.status(200).json(queteModifie)
+
+//     } catch(e){
+//         res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de la quête: ${e}`})
+//     }
+// })
+
+//Modifier une quete avec l'id
+routeurQuetes.patch("/quete/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
+    const id = req.params.id as string
+        //Trouver la quete
     try{
         const quete = await prisma.quete.findFirst({
             where : {
-                nom: {
-                    equals: nom,
-                    mode: "insensitive",    
+                id: {
+                    equals: id,   
                 }
             }, 
         })
         if (!quete){
-            return res.status(404).json({erreur: `Erreur: La quête ${nom} n'existe pas dans le jeu.`})
+            return res.status(404).json({erreur: `Erreur: La quête avec l'ID ${id} n'existe pas dans le jeu.`})
         }
 
         //Modifie la quête
@@ -52,10 +87,28 @@ routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), as
             data: req.body
         })
 
-        res.status(200).json(queteModifie)
+        res.status(200).json({quete: queteModifie, message: "La quête a été modifiée avec succès!" })
 
     } catch(e){
         res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de la quête: ${e}`})
+    }
+})
+
+//Supprimer quete de la table des quetes avec id
+routeurQuetes.delete("/quete/supprimer/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
+    const id = req.params.id as string
+
+    try {
+        const queteExiste = await prisma.quete.findUnique({ where: {id} });
+
+        if (!queteExiste) {
+            return res.status(404).json({erreur: "Erreur: La quête n'a pas été retrouvé. Suppression impossible."})
+        }
+
+        await prisma.quete.delete({where: {id}});
+        return res.status(200).json({message: "La quête a été supprimée avec succès."})
+    } catch {
+        return res.status(500).json({erreur: "Erreur du serveur"})
     }
 })
 
