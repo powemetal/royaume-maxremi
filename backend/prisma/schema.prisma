@@ -124,14 +124,15 @@ enum Alignement {
 }
 
 model Monstre {
-  id          String        @id @default(uuid()) @db.Uuid
-  nom         String        @unique
-  pointsDeVie Int           @default(100)
-  attaque     Int
-  defense     Int
-  typeMonstre TypeMonstre?
-  grandeur    TypeGrosseur?
-  alignement  Alignement?
+  id                String          @id @default(uuid()) @db.Uuid
+  nom               String          @unique
+  pointsDeVie       Int             @default(100)
+  attaque           Int
+  defense           Int
+  typeMonstre       TypeMonstre?
+  grandeur          TypeGrosseur?
+  alignement        Alignement?
+  imageUrl          String? 
 }
 
 model Objet {
