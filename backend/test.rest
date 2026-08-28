@@ -85,7 +85,7 @@ Authorization: Bearer {{authToken}}
 ######### REQUETES MONSTRES ###################
 
 
-GET {{baseUrl}}/recherche/goblin
+GET {{baseUrl}}/recherche/dragon
 
 
 ### Ajout de monstre (MDJ)
@@ -99,7 +99,7 @@ GET {{baseUrl}}/monstre/
 GET {{baseUrl}}/monstre/goblin
 
 ### Ajout de monstre (MDJ)
-POST {{baseUrl}}/monstre/ajouter/goblin
+POST {{baseUrl}}/monstre/ajouter/adult-black-dragon
 Authorization: Bearer {{authTokenAdmin}}
 
 ### Suppression de monstre par nom (MDJ)
