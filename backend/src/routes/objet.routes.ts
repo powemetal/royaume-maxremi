@@ -168,11 +168,9 @@ routeurObjets.patch(
         where: {id},
       });
       if (!objet)
-        return res
-          .status(404)
-          .json({
-            erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.`,
-          });
+        return res.status(404).json({
+          erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.`,
+        });
 
       const data: PatchObjet = {};
 
@@ -252,11 +250,9 @@ routeurObjets.patch(
       });
       res.status(200).json(objetModifie);
     } catch (e) {
-      res
-        .status(500)
-        .json({
-          erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`,
-        });
+      res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`,
+      });
     }
   },
 );
@@ -303,11 +299,64 @@ routeurObjets.delete("/objet/supprimer/:id", authentifier, exigerRole("MAITRE_DU
 // );
 
 //Liste des objets dans la table
-routeurObjets.get("/objet/", async (req: Request, res: Response) => {
-  const objets = await prisma.objet.findMany({
-    orderBy: { id: "asc" },
-  });
-  res.json(objets);
+routeurObjets.get("/objet", async (req: Request, res: Response) => {
+  try {
+    const {
+      page = "1",
+      limit = "5",
+      type,
+      rarete,
+      valeur,
+      ordre = "asc",
+      recherche,
+    } = req.query;
+
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    if (isNaN(pageNum) || isNaN(limitNum) || pageNum < 1 || limitNum < 1) {
+      return res
+        .status(400)
+        .json({ message: "Paramètres page/limit invalides" });
+    }
+
+    const skip = (pageNum - 1) * limitNum;
+
+    const where: Record<string, unknown> = {};
+    if (type) where.type = type;
+    if (rarete) where.rarete = rarete;
+    if (recherche) {
+      where.nom = {
+        contains: recherche as string,
+        mode: "insensitive",
+      };
+    }
+
+    const direction = ordre === "desc" ? "desc" : "asc";
+
+    const orderBy = valeur
+  ? { [valeur as string]: direction }
+  : { nom: "asc" as const };
+
+    const [objets, total] = await Promise.all([
+      prisma.objet.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.objet.count({ where }),
+    ]);
+
+    return res.json({
+      objets,
+      totalPages: Math.ceil(total / limitNum),
+      currentPage: pageNum,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des objets :", error);
+    return res.status(500).json({ erreur: "Erreur serveur" });
+  }
 });
 
 //recuperer 1 objet dans la table
@@ -330,11 +379,9 @@ routeurObjets.get("/objet/:nom", async (req: Request, res: Response) => {
     }
     res.json(objet);
   } catch (e) {
-    res
-      .status(500)
-      .json({
-        erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'objet: ${e}`,
-      });
+    res.status(500).json({
+      erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'objet: ${e}`,
+    });
   }
 });
 
