@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+textarea {
+    margin: 0px 32px;
+    background-color: #aaa0a7;
+}
+
+.container-admin-quetes {
+  font-family: "Cinzel Decorative", serif; 
+}
+
+.container-modif-droite {
+
+    overflow-y: auto;
+    text-overflow: ellipsis;
+}
+
+.quetes-modif-list {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 8px;
+    box-shadow:
+        inset 0 4px 24px -20px #2c0421b4,
+        inset 0 -4px 24px -4px #2c0421b4;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.diff {
+    opacity: 80%;
+    color : rgb(72, 52, 85);
+    font-size: medium;
+    text-shadow: none;
+    font-family: none;
+
+}
+
+.msg {
+    color: rgb(222, 200, 233);
+    font-weight: bold;
+    font-size: medium;
+    min-height: 1.5rem;
+}
+
+.container-ajout-quete {
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
+
+.container-modif-quete {
+    background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
+
+.admin-form-text {
+    color: white;
+}
+
+.form-labels {
+    color: white;
+    font-weight: bold;
+    font-size: x-large;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.quetes-modif-list:hover {
+    background: linear-gradient(to left, #3f052e 0%, #ad4657 100%);
+}
+
+.quetes-modif-list:hover .diff {
+    color: white;
+}
+
+ul.liste-quetes > li:nth-of-type(odd) {
+    background-color: #aaa0a7;
+}
+
+ul.liste-quetes > li:nth-of-type(even) {
+    background-color: #c2b3b5;
+}
