@@ -36,7 +36,7 @@ export const DropdownForm = ({ choix, choixSelectionne, onSelect, formatLabel = 
             </button>
 
             {isOpen && (
-                <ul className="absolute top-full z-50 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
+                <ul className="absolute max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 top-full z-50 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
                     {choix.map((c) => (
                         <li
                             key={c}
