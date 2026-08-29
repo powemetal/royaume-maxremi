@@ -4,39 +4,14 @@ import { api } from "../api/backendApi";
 import "../css/monstres.css";
 import { useAuth } from "../context/AuthContext";
 import OverlayChargement from "../components/overlayChargement";
-
-interface Monstre {
-    id: string;
-    nom: string;
-    pointsDeVie: number;
-    attaque: number;
-    defense: number;
-    typeMonstre: string | null;
-    grandeur: string | null;
-    alignement: string | null;
-    imageUrl: string | null;
-}
+import { formatAlignement, formatTypeMonstre, formatGrosseur} from "../utils/formatMonstres"
+import type { Monstre, ReponseListeMonstres, ReponseUtilisateur} from "../utils/interfaces"
 
 
-interface ReponseListeMonstres {
-    message: string;
-    data: {
-        listeMonstres: Monstre[];
-    }
-}
 
-interface ReponseUtilisateur {
-        id: string;
-        pseudo: string;
-        avatarUrl: string;
-    };
 
 export default function Monstres() {
 
-    
-    
-    
-    
     const [listeMonstres, setListeMonstres] = useState<Monstre[]>([]);
     const [erreur, setErreur] = useState<string>("");
     const [chargement, setChargement] = useState<boolean>(true)
@@ -64,7 +39,7 @@ export default function Monstres() {
             setChargement(true);
             setErreur("");
             const reponse = await api.get<ReponseListeMonstres>("/monstres/");
-            setListeMonstres(reponse.data.data.listeMonstres);
+            setListeMonstres(reponse.data.resultats);
         } catch (err: any) {
             console.error("Erreur API", err);
             setErreur("Erreur lors du chargement de la liste de monstres");
@@ -101,12 +76,6 @@ return (
             )}
 
 
-
-
-
-
-
-
             <TitreBackground>Monstres</TitreBackground>
 
             <div className="intro-monstres flex flex-col items-center text-center p-6 mb-6">
@@ -117,8 +86,7 @@ return (
                 </p>
             </div>
 
-
-            <div className="container-monstres container-style flex flex-col overflow-auto">
+            <div className="container-monstres flex flex-col overflow-auto">
                 <ul className="liste-monstres">
                     {!chargement && listeMonstres.length === 0 && (
                         <span className="monstre-nom">Le serveur ne contient aucun monstre.</span>
@@ -145,9 +113,9 @@ return (
                                 </div>
 
                                 <div className="monstre-meta">
-                                    {m.typeMonstre && <span>Type : {m.typeMonstre}</span>}
-                                    {m.grandeur && <span>Taille : {m.grandeur}</span>}
-                                    {m.alignement && <span>Alignement : {m.alignement}</span>}
+                                    {m.typeMonstre && <span>Type : {formatTypeMonstre[m.typeMonstre]}</span>}
+                                    {m.grandeur && <span>Taille : {formatGrosseur[m.grandeur]}</span>}
+                                    {m.alignement && <span>Alignement : {formatAlignement[m.alignement]}</span>}
                                 </div>
                             </div>
 
