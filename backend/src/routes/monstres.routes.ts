@@ -141,7 +141,9 @@ routeurMonstres.get("/recherche/:nom", async (req: Request, res: Response) => {
     (monstre.name ?? "").toLowerCase().includes(recherche)
     )
 
-  res.json(resultats)
+  res.json({
+      resultats
+  })
   } catch (e) {
     res.status(500).json({erreur:"Impossible de contacter l'API"})
   }
@@ -261,12 +263,7 @@ routeurMonstres.get("/monstres", async (req: Request, res: Response) => {
     orderBy: { id: "asc" },
   });
 
-  res.json({
-    message: "Liste des monstres",
-    data: {
-      listeMonstres: monstres
-    }
-  });
+  res.json({resultats: monstres});
 });
 
 

@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+
+.titre-admin-monstres {
+    margin-top: 40px;
+    font-family: 'Cinzel Decorative', serif !important;
+    background: linear-gradient(to right, #ad4657 0%, #3f052e 100%);
+    background-clip: text;
+    color: transparent;
+}
+
+.btn-ajouter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 12px 0;
+  margin-right: 20px;
+  font-size: 18px;
+  font-weight: 600;
+
+  background: linear-gradient(135deg, #4f8cff, #1e5bd8);
+  color: #fff;
+
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+}
+
+.btn-ajouter:hover {
+  background: linear-gradient(135deg, #5b9aff, #2a6af0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.btn-ajouter:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
