@@ -197,7 +197,7 @@ model PersoQuete {
 model Inventaire {
   id           String     @id @default(uuid()) @db.Uuid
   idObjet      String     @db.Uuid
-  objet        Objet      @relation(fields: [idObjet], references: [id])
+  objet        Objet      @relation(fields: [idObjet], references: [id], onDelete: Cascade)
   idPersonnage String     @db.Uuid
   personnage   Personnage @relation(fields: [idPersonnage], references: [id], onDelete: Cascade)
 

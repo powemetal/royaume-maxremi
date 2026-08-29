@@ -124,13 +124,13 @@ export default function ObjetsAdmin() {
     const [formDataAjout, setFormDataAjout] = useState({ //formData pour la création
         nom: "",
         rarete: "COMMUN",
-        type: "AUTRE",
-        att: "0",
-        def: "0",
+        type: "ARME",
+        att: "",
+        def: "",
         prix: "",
         typeDegats: "CONTONDANT",
-        degatsBonus: "0",
-        typeBonus: null,
+        degatsBonus: "",
+        typeBonus: "CONTONDANT",
         description: "",
     });
 
@@ -169,21 +169,21 @@ export default function ObjetsAdmin() {
             const reponse = await api.post("/objet/creer", {
                 ...formDataAjout,
                 att: Number(formDataAjout.att), //casts en number pour les champs concernés
-                def: Number(formDataAjout.att), 
-                prix: Number(formDataAjout.att), 
-                degatsBonus: Number(formDataAjout.att), 
+                def: Number(formDataAjout.def), 
+                prix: Number(formDataAjout.prix), 
+                degatsBonus: Number(formDataAjout.degatsBonus), 
             });
             setMessage(reponse.data.message);
             setFormDataAjout({
                 nom: "",
                 rarete: "COMMUN",
                 type: "AUTRE",
-                att: "0",
-                def: "0",
+                att: "",
+                def: "",
                 prix: "",
                 typeDegats: "CONTONDANT",
-                degatsBonus: "0",
-                typeBonus: null,
+                degatsBonus: "",
+                typeBonus: "CONTONDANT",
                 description: "",
             })
             recupererListeObjets();
@@ -200,7 +200,7 @@ export default function ObjetsAdmin() {
             formDataAjout.nom.trim() !== "" &&
             formDataAjout.rarete.trim() !== "" &&
             formDataAjout.type.trim() !== "" &&
-            formDataAjout.prix.trim() !== ""
+            formDataAjout.prix.trim() !== "" 
         );
     };
 
@@ -221,10 +221,10 @@ export default function ObjetsAdmin() {
         try {
             const reponse = await api.patch(`/objet/${objetSelection.id}`, {
                 ...formDataModifier,
-                att: Number(formDataAjout.att), //casts en number pour les champs concernés
-                def: Number(formDataAjout.att), 
-                prix: Number(formDataAjout.att), 
-                degatsBonus: Number(formDataAjout.att),
+                att: Number(formDataModifier.att), //casts en number pour les champs concernés
+                def: Number(formDataModifier.def), 
+                prix: Number(formDataModifier.prix), 
+                degatsBonus: Number(formDataModifier.degatsBonus),
             });
             setMessageModifier(reponse.data.message);
             setFormDataModifier({
@@ -255,13 +255,13 @@ export default function ObjetsAdmin() {
             nom: objet.nom,
             rarete: objet.rarete,
             type: objet.type,
-            att: String(objet.att),
-            def: String(objet.def),
+            att: ((objet.att === null) ? "" : String(objet.att)), // empêche null d'être affiché dans le formulaire
+            def: ((objet.def === null) ? "" : String(objet.def)),
             prix: String(objet.prix),
-            typeDegats: objet.typeDegats,
-            degatsBonus: String(objet.degatsBonus),
-            typeBonus: objet.typeBonus,
-            description: objet.description,
+            typeDegats: ((objet.typeDegats === null) ? "CONTONDANT" : objet.typeDegats),
+            degatsBonus: ((objet.degatsBonus === null) ? "" : String(objet.degatsBonus)),
+            typeBonus: ((objet.typeBonus === null ) ? "CONTONDANT" : objet.typeBonus),
+            description: ((objet.description === null) ? "" : String(objet.description)),
         })
     }
 
@@ -269,7 +269,7 @@ export default function ObjetsAdmin() {
         if (!objetSelection) return;
         try {
             setSuppressionEnCours(true);
-            await api.delete(`/quete/supprimer/${objetSelection.id}`)
+            await api.delete(`//supprimer/${objetSelection.id}`)
             setMessageModifier("L'objet a été supprimé avec succès!");
             recupererListeObjets();
             setFormDataModifier({
@@ -352,6 +352,28 @@ export default function ObjetsAdmin() {
         }
     }, [erreur]);
 
+    // si le type ne peut pas recevoir la stat ATT ou DEF dans la base de données, le champ est reset lors de sa sélection
+    // seul les armes ont du ATT et seul les vêtements/boucliers ont DEF
+    useEffect(() => {
+        if (["ARME", "ARME_2_MAINS"].includes(formDataAjout.type)) {
+            setFormDataAjout((prev) => ({
+                ...prev,
+                def : "",
+            }));
+        } else if (["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataAjout.type)) {
+            setFormDataAjout((prev) => ({
+                ...prev,
+                att : "",
+            }));
+        } else {
+            setFormDataAjout((prev) => ({
+                ...prev,
+                att : "",
+                def : "",
+            }));
+        }
+    }, [formDataAjout.type]);
+
     if (!estConnecte || !estAdmin) {
         return <Navigate to="/connexion" replace />;
     }
@@ -362,21 +384,42 @@ export default function ObjetsAdmin() {
         <div className="container-ajout-quete flex flex-col w-full container-style text-white">
 
             <form onSubmit={handleSubmitAjout} className="form-container">
-                <div className="container-ajout-champs flex justify-evenly space-x-8 shrink m-8">
+                <div className="container-ajout-champs grid grid-cols-5 gap-4 mx-8 mt-8">
 
-                    <div className="flex flex-col gap-1 flex-2">
+                    <div className="flex flex-col gap-1 flex-2 col-span-2">
                         <label htmlFor="nom" className="form-labels">Nom:</label>
-                        <input type="text" id="nom-ajout" name="nom" value={formDataAjout.nom} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" required placeholder="Ex: Lame de feu"/>
+                        <input type="text" id="nom-ajout" name="nom" value={formDataAjout.nom} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                        text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
+                        required placeholder="Ex: Lame de feu"/>
                     </div>
-                    
 
-                    <div className="flex flex-col gap-1">
-                        <label htmlFor="difficulte-ajout" className="form-labels">
-                            Difficulté:
+                    <div className="flex flex-col gap-1 flex-1">
+                        <label htmlFor="rarete-ajout" className="form-labels">
+                            Rareté:
                         </label>
 
                         <div className="relative">
-                            <Select id="difficulte-ajout" name="difficulte" value={formDataAjout.type} onChange={handleChangeAjout} className="inline-flex w-full appearance-none items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                            <Select id="rarete-ajout" name="rarete" value={formDataAjout.rarete} onChange={handleChangeAjout} className="inline-flex w-full appearance-none items-center justify-between 
+                            rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                {Object.entries(RARETE).map(([key, value]) => (
+                                    <option key={key} value={value} className="bg-gray-800 text-white">
+                                        {key.charAt(0) + key.slice(1).toLowerCase().replace(/_/g, " ")}
+                                    </option>
+                                ))}
+                            </Select>
+                            <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                        </div>
+                    </div>
+                    
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="type-ajout" className="form-labels truncate text-ellipsis">
+                            Type d'objet:
+                        </label>
+
+                        <div className="relative">
+                            <Select id="type-ajout" name="type" value={formDataAjout.type} onChange={handleChangeAjout} className="inline-flex w-full appearance-none items-center
+                            justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
                                 {Object.entries(TYPEOBJET).map(([key, value]) => (
                                     <option key={key} value={value} className="bg-gray-800 text-white">
                                         {key.charAt(0) + key.slice(1).toLowerCase()}
@@ -387,15 +430,90 @@ export default function ObjetsAdmin() {
                         </div>
                     </div>
 
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="typeDegats-ajout" className="form-labels truncate text-ellipsis">
+                            Type de dégâts:
+                        </label>
 
-                        <div className="flex flex-col gap-1">
-                            <label htmlFor="recompense" className="form-labels">Prix:</label>
-                            <input type="text" name="recompense" id="recompense-ajout" value={formDataAjout.prix} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" required placeholder="500" />
+                        <div className="relative">
+                            <Select id="typeDegats-ajout" name="typeDegats" value={formDataAjout.typeDegats} onChange={handleChangeAjout} className="inline-flex w-full appearance-none items-center 
+                            justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                    <option key={key} value={value} className="bg-gray-800 text-white">
+                                        {key.charAt(0) + key.slice(1).toLowerCase()}
+                                    </option>
+                                ))}
+                            </Select>
+                            <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
                         </div>
+                    </div>
+
+                    
+                </div>
+
+                <div className="container-ajout-champs-bas grid grid-cols-5 gap-4 mx-8 mt-8">
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="att" className="form-labels truncate text-ellipsis">
+                            Att:
+                        </label>
+                        <input type="text" name="att" id="att-ajout" value={formDataAjout.att} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                        text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
+                        disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" 
+                        placeholder="0"
+                        disabled={!["ARME", "ARME_2_MAINS"].includes(formDataAjout.type)}/>
+                    </div>
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="def" className="form-labels truncate text-ellipsis">
+                            Def:
+                        </label>
+                        <input type="text" name="def" id="def-ajout" value={formDataAjout.def} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5
+                        px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
+                        disabled:opacity-50disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                        placeholder="0"
+                        disabled={!["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataAjout.type)} />
+                    </div>
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="typeDegats-ajout" className="form-labels truncate text-ellipsis ">
+                            Type Bonus:
+                        </label>
+
+                        <div className="relative">
+                            <Select id="typeBonus-ajout" name="typeBonus" value={formDataAjout.typeBonus} onChange={handleChangeAjout} className="inline-flex flex-1 w-full appearance-none
+                            items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                    <option key={key} value={value} className="bg-gray-800 text-white">
+                                        {key.charAt(0) + key.slice(1).toLowerCase()}
+                                    </option>
+                                ))}
+                            </Select>
+                            <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="degatsBonus" className="form-labels truncate text-ellipsis">
+                            Dégâts Bonus:
+                        </label>
+                        <input type="text" name="degatsBonus" id="degatsBonus-ajout" value={formDataAjout.degatsBonus} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5
+                        px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" placeholder="0" />
+                    </div>
+
+                    <div className="flex flex-col gap-1 flex-1 ">
+                        <label htmlFor="prix" className="form-labels truncate text-ellipsis">
+                            Prix:
+                        </label>
+                        <input type="text" name="prix" id="prix-ajout" value={formDataAjout.prix} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5
+                        text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
+                        required
+                        placeholder="0" />
+                    </div>
                 </div>
 
 
-                <div className="container-ajout-description flex flex-col mb-8">
+                <div className="container-ajout-description flex flex-col gap-1 mb-8">
                     <label htmlFor="description" className="ml-8 mt-4 form-labels">Description:</label>
                     <textarea className="p-6 min-h-80 resize-none" name="description" id="description-ajout" value={formDataAjout.description} onChange={handleChangeAjout} placeholder="Cet objet ancestral..."/>
                 </div>
@@ -409,6 +527,8 @@ export default function ObjetsAdmin() {
         </div>
 
 
+{/* ==================== Portion de modification des objets ==================== */}
+
 
 
         <TitreBackground>Modifier un objet</TitreBackground>
@@ -416,40 +536,136 @@ export default function ObjetsAdmin() {
 
             <form className="modif-form-container" onSubmit={handleSubmitModifier}>
                 <div className="container-modif-champs-liste flex max-h-200">
-                    <div className="container-modif-gauche min-w-0 flex flex-2 flex-col">
-                        <div className="modif-nom flex flex-col mx-8">
-                            <label htmlFor="nom" className="text-2xl form-labels ml-8 mt-8 mb-4">Nom:</label>
-                            <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" required placeholder="Ex: Lame de feu"/>
-                        </div>
+                    <div className="container-champs-description flex flex-2 flex-col">
+                        <div className="container-modif-gauche min-w-0 grid grid-cols-2 gap-4 mx-8 mt-8 flex-2 flex-col">
 
-                            <div className="flex gap-1 flex-col max-w-50">
-                                <label htmlFor="difficulte-ajout" className="ml-8 mt-4 mb-4 form-labels">
-                                    Difficulté:
+                            <div className="modif-nom flex flex-col gap-1 col-span-2">
+                                <label htmlFor="nom" className="text-2xl form-labels truncate text-ellipsis">Nom:</label>
+                                <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                            text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
+                            required placeholder="Ex: Lame de feu"/>
+                            </div>
+
+                            <div className="flex flex-col gap-1 flex-1">
+                                <label htmlFor="rarete-Modifier" className="form-labels truncate text-ellipsis">
+                                    Rareté:
                                 </label>
 
                                 <div className="relative">
-                                    <Select id="difficulte-modifier" name="difficulte" value={formDataModifier.type} onChange={handleChangeModifier} className="ml-8 inline-flex w-full appearance-none items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                    
-                                        {Object.entries(TYPEOBJET).map(([key, value]) => (
-                                            <option key={key} value={value} className="block w-full text-left px-4 py-2 text-sm text-white data-focus:bg-white/10 data-focus:text-white data-focus:outline-hidden">
+                                    <Select id="rarete-Modifier" name="rarete" value={formDataModifier.rarete} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center justify-between 
+                                    rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                        {Object.entries(RARETE).map(([key, value]) => (
+                                            <option key={key} value={value} className="bg-gray-800 text-white">
+                                                {key.charAt(0) + key.slice(1).toLowerCase().replace(/_/g, " ")}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                </div>
+                            </div>
+
+                        <div className="flex flex-col gap-1 flex-1 ">
+                            <label htmlFor="type-Modifier" className="form-labels truncate text-ellipsis">
+                                Type d'objet:
+                            </label>
+
+                            <div className="relative">
+                                <Select id="type-modifier" name="type" value={formDataModifier.type} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center
+                                justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                    {Object.entries(TYPEOBJET).map(([key, value]) => (
+                                        <option key={key} value={value} className="bg-gray-800 text-white">
+                                            {key.charAt(0) + key.slice(1).toLowerCase()}
+                                        </option>
+                                    ))}
+                                </Select>
+                                <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                            </div>
+                        </div>
+
+
+
+                            <div className="flex flex-col gap-1 flex-1 ">
+                                <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis">
+                                    Type de dégâts:
+                                </label>
+
+                                <div className="relative">
+                                    <Select id="typeDegats-Modifier" name="typeDegats" value={formDataModifier.typeDegats} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center 
+                                    justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                        {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                            <option key={key} value={value} className="bg-gray-800 text-white">
                                                 {key.charAt(0) + key.slice(1).toLowerCase()}
                                             </option>
                                         ))}
                                     </Select>
-                                    <ChevronDownIcon className="group-pointer-events-none absolute top-3 -right-6 size-5 fill-white/60" aria-hidden="true"/>
+                                    <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
                                 </div>
                             </div>
 
-                       
-                        <div className="modif-nom flex flex-col max-w-50">
-                            <label htmlFor="recompense" className="form-labels ml-8 mt-4 mb-4">Prix:</label>
-                            <input type="text" id="recompense-modifier" name="recompense" value={formDataModifier.prix} onChange={handleChangeModifier} className=" ml-8 mr-8 flex-end font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"required placeholder="500"/>
+                            <div className="flex flex-col gap-1 flex-1 ">
+                                <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis ">
+                                    Type Bonus:
+                                </label>
+
+                                <div className="relative">
+                                    <Select id="typeBonus-Modifier" name="typeBonus" value={formDataModifier.typeBonus} onChange={handleChangeModifier} className="inline-flex flex-1 w-full appearance-none
+                                    items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                        {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                            <option key={key} value={value} className="bg-gray-800 text-white">
+                                                {key.charAt(0) + key.slice(1).toLowerCase()}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1 flex-1 ">
+                                <label htmlFor="att-modifier" className="form-labels truncate text-ellipsis">
+                                    Att:
+                                </label>
+                                <input type="text" name="att" id="att-modifier" value={formDataModifier.att} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                                text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
+                                disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" 
+                                placeholder="0"
+                                disabled={!["ARME", "ARME_2_MAINS"].includes(formDataModifier.type)}/>
+                            </div>
+
+                            <div className="flex flex-col gap-1 flex-1 ">
+                                <label htmlFor="def-modifier" className="form-labels truncate text-ellipsis">
+                                    Def:
+                                </label>
+                                <input type="text" name="def" id="def-ajout" value={formDataModifier.def} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
+                                px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm
+                                disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                                placeholder="0"
+                                disabled={!["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataModifier.type)} />
+                            </div>
+
+
+
+                            <div className="modif-nom flex flex-col gap-1">
+                                <label htmlFor="degatsBonus" className="form-labels truncate text-ellipsis">Dégâts bonus:</label>
+                                <input type="text" id="degatsBonus-modifier" name="degatsBonus" value={formDataModifier.degatsBonus} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
+                                px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" placeholder="0"/>
+                                
+                            </div>
+
+                            <div className="modif-nom flex flex-col gap-1">
+                                <label htmlFor="prix" className="form-labels truncate text-ellipsis">Prix:</label>
+                                <input type="text" id="prix-modifier" name="prix" value={formDataModifier.prix} onChange={handleChangeModifier} className="flex-end font-sans block w-full rounded-md
+                                bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500
+                                sm:text-sm"required placeholder="0"/>
+                            </div>
                         </div>
-                        <div className="modif-description flex flex-col flex-1 mb-8">
-                            <label htmlFor="description" className="form-labels ml-8 mt-4">Description:</label>
+
+                        <div className="modif-description flex flex-col flex-1  gap-1 mb-8 mt-6">
+                            <label htmlFor="description" className=" ml-8 form-labels">Description:</label>
                             <textarea className="flex-1 p-6 resize-none" name="description" id="description-modifier" value={formDataModifier.description} onChange={handleChangeModifier} placeholder="Cet objet ancestral..."/>
                         </div>
+
                     </div>
+
 
 
 
@@ -461,7 +677,7 @@ export default function ObjetsAdmin() {
                             )}
                             {listeObjetsTriee.map((objet) => {
                                 return (
-                            <li key={objet.id} className="quetes-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type}  ]</span></li>
+                            <li key={objet.id} className="quetes-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type.replace(/_/g, " ")}  ]</span></li>
                             )})}
                         </ul>
                     </div>
@@ -469,7 +685,8 @@ export default function ObjetsAdmin() {
 
                 <div className="container-modif-boutons flex flex-start m-8">
                     <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" disabled={!objetSelection}>Sauvegarder</button>
-                    <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" type="button" onClick={() => objetSelection && setPopupSuppressionOuvert(true)} disabled={!objetSelection}>Supprimer</button>
+                    <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                    type="button" onClick={() => objetSelection && setPopupSuppressionOuvert(true)} disabled={!objetSelection}>Supprimer</button>
 
                 </div>
             </form>
@@ -490,7 +707,8 @@ export default function ObjetsAdmin() {
                 <div className="popup-actions flex gap-4 justify-center mt-8">
                     <button
                         type="button"
-                        className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 "
+                        className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2
+                        focus-visible:outline-offset-2 focus-visible:outline-indigo-500 "
                         onClick={() => setPopupSuppressionOuvert(false)}
                         disabled={suppressionEnCours}
                     >
@@ -498,7 +716,8 @@ export default function ObjetsAdmin() {
                     </button>
                     <button
                         type="button"
-                        className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2
+                        focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                         onClick={supprimerObjet}
                         disabled={suppressionEnCours}
                     >
