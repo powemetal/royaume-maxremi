@@ -12,11 +12,11 @@
 }
 
 
-ul.liste-personnages > li:nth-of-type(odd) {
+.liste-personnages > li:nth-of-type(odd) {
     background-color: #aaa0a7;
 }
 
-ul.liste-personnages > li:nth-of-type(even) {
+.liste-personnages > li:nth-of-type(even) {
     background-color: #c2b3b5;
 }
 
@@ -118,7 +118,7 @@ h2 {
 
 .liste-col-nom:hover .perso-avatar img {
     transform: scale(1.08);
-    border-color: #ad4657; /* Ajustez la valeur de grossissement selon vos préférences */
+    border-color: #ad4657; 
 }
 
 .liste-col-nom:hover .perso-lvl {
