@@ -109,7 +109,7 @@ export default function Objets() {
       const reponse = await api.get(`/objet?${params.toString()}`);
 
       setListeObjets(reponse.data.objets);
-      
+
       if (reponse.data.objets.length == 0) {
         setTotalPages(1);
         setPageActuelle(1);
@@ -253,8 +253,12 @@ export default function Objets() {
                   className="card-objet grid grid-cols-7 text-center nom-quete items-center h-15 px-2"
                 >
                   <span className="truncate">{o.nom}</span>
-                  <span className="truncate">{o.type}</span>
-                  <span className="truncate">{o.rarete}</span>
+                  <span className="truncate">
+                    {o.type.replaceAll("_", " ")}
+                  </span>
+                  <span className="truncate">
+                    {o.rarete.replaceAll("_", " ")}
+                  </span>
                   <span className="truncate">{o.att}</span>
                   <span className="truncate">{o.def}</span>
                   <span className="truncate">{o.typeDegats}</span>
