@@ -113,3 +113,8 @@ select option:checked {
 textarea {
     scrollbar-color: #B29FA5 #93858F;
 }
+
+textarea {
+    margin: 0px 32px;
+    background-color: #c2b3b5;
+}
