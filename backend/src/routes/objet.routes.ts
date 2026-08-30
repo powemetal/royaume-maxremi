@@ -4,7 +4,7 @@ import { authentifier, exigerRole } from "../middlewares/auth.js";
 
 const routeurObjets = Router();
 const raretesValides = ["COMMUN", "PEU_COMMUN", "RARE", "LEGENDAIRE"];
-const tTypeValides = [
+const typeValides = [
   "ARME",
   "ARME_2_MAINS",
   "MUNITION",
@@ -43,7 +43,7 @@ const typeDegatsValides = [
 ];
 import { Rarete, TypeDegats, TypeObjet } from "../../generated/prisma/enums.js";
 
-interface Objet {
+interface ObjetInput {
   nom: string;
   rarete: Rarete;
   type: TypeObjet;
@@ -84,7 +84,7 @@ routeurObjets.post(
       return res
         .status(400)
         .json({ erreur: `Erreur: La rareté de l'objet est invalide` });
-    if (!tTypeValides.includes(type))
+    if (!typeValides.includes(type))
       return res
         .status(400)
         .json({ erreur: `Erreur: Le type de l'objet est invalide` });
@@ -93,7 +93,7 @@ routeurObjets.post(
         .status(400)
         .json({ erreur: `Erreur: Le prix doit être un nombre` });
 
-    const data: Objet = { nom, rarete, type, prix };
+    const data: ObjetInput = { nom, rarete, type, prix };
 
     if (
       req.body.att !== undefined &&
@@ -144,6 +144,7 @@ routeurObjets.post(
         .status(201)
         .json({ message: `Objet ${data.nom} créé avec succès !` });
     } catch (error) {
+      console.error("Erreur Prisma:", error);
       res.status(400).json({ erreur: "Erreur: L'objet n'a pas pu être créé." });
     }
   },
@@ -155,6 +156,7 @@ routeurObjets.patch(
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
+    const id = req.params.id as string;
     const nomObjet = req.params.nom as string;
     const body = req.body;
 
@@ -163,16 +165,12 @@ routeurObjets.patch(
     //mais je lai fait ainsi pour simplifier le test.rest, je le laisse comme ca pour le moment
     try {
       const objet = await prisma.objet.findUnique({
-        where: {
-          nom: nomObjet,
-        },
+        where: {id},
       });
       if (!objet)
-        return res
-          .status(404)
-          .json({
-            erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.`,
-          });
+        return res.status(404).json({
+          erreur: `Erreur: L'objet ${nomObjet} n'existe pas dans le jeu.`,
+        });
 
       const data: PatchObjet = {};
 
@@ -185,7 +183,7 @@ routeurObjets.patch(
         data.rarete = body.rarete;
       }
       if (body.type !== undefined) {
-        if (!tTypeValides.includes(body.type)) {
+        if (!typeValides.includes(body.type)) {
           return res.status(400).json({ erreur: "Type d'objet invalide" });
         }
         data.type = body.type;
@@ -252,45 +250,113 @@ routeurObjets.patch(
       });
       res.status(200).json(objetModifie);
     } catch (e) {
-      res
-        .status(500)
-        .json({
-          erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`,
-        });
+      res.status(500).json({
+        erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`,
+      });
     }
   },
 );
 
-//Supprimer objet de la table des objets
-routeurObjets.delete(
-  "/objet/supprimer/:nom",
-  authentifier,
-  exigerRole("MAITRE_DU_JEU"),
-  async (req: Request, res: Response) => {
-    const suppression = await prisma.objet.deleteMany({
-      where: {
-        nom: {
-          equals: req.params.nom as string,
-          mode: "insensitive",
-        },
-      },
-    });
-    if (suppression.count === 0) {
-      res
-        .status(404)
-        .json({ erreur: "Erreur: Cet objet n'est pas dans le jeu." });
-    } else {
-      res.status(200).json({ ok: "L'objet a été supprimé." });
+//Supprimer quete de la table des quetes avec id
+routeurObjets.delete("/objet/supprimer/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
+    const id = req.params.id as string
+    try {
+        const objetExiste = await prisma.objet.findUnique({ where: {id} });
+
+        if (!objetExiste) {
+            return res.status(404).json({erreur: "Erreur: L'objet n'a pas été retrouvé. Suppression impossible."})
+        }
+
+        await prisma.objet.delete({where: {id}});
+        return res.status(200).json({message: "L'objet a été supprimé avec succès."})
+    } catch {
+        return res.status(500).json({erreur: "Erreur du serveur"})
     }
-  },
-);
+})
+
+
+// routeurObjets.delete(
+//   "/objet/supprimer/:nom",
+//   authentifier,
+//   exigerRole("MAITRE_DU_JEU"),
+//   async (req: Request, res: Response) => {
+//     const suppression = await prisma.objet.deleteMany({
+//       where: {
+//         nom: {
+//           equals: req.params.nom as string,
+//           mode: "insensitive",
+//         },
+//       },
+//     });
+//     if (suppression.count === 0) {
+//       res
+//         .status(404)
+//         .json({ erreur: "Erreur: Cet objet n'est pas dans le jeu." });
+//     } else {
+//       res.status(200).json({ ok: "L'objet a été supprimé." });
+//     }
+//   },
+// );
 
 //Liste des objets dans la table
-routeurObjets.get("/objet/", async (req: Request, res: Response) => {
-  const objets = await prisma.objet.findMany({
-    orderBy: { id: "asc" },
-  });
-  res.json(objets);
+routeurObjets.get("/objet", async (req: Request, res: Response) => {
+  try {
+    const {
+      page = "1",
+      limit = "5",
+      type,
+      rarete,
+      valeur,
+      ordre = "asc",
+      recherche,
+    } = req.query;
+
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    if (isNaN(pageNum) || isNaN(limitNum) || pageNum < 1 || limitNum < 1) {
+      return res
+        .status(400)
+        .json({ message: "Paramètres page/limit invalides" });
+    }
+
+    const skip = (pageNum - 1) * limitNum;
+
+    const where: Record<string, unknown> = {};
+    if (type) where.type = type;
+    if (rarete) where.rarete = rarete;
+    if (recherche) {
+      where.nom = {
+        contains: recherche as string,
+        mode: "insensitive",
+      };
+    }
+
+    const direction = ordre === "desc" ? "desc" : "asc";
+
+    const orderBy = valeur
+  ? { [valeur as string]: direction }
+  : { nom: "asc" as const };
+
+    const [objets, total] = await Promise.all([
+      prisma.objet.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.objet.count({ where }),
+    ]);
+
+    return res.json({
+      objets,
+      totalPages: Math.ceil(total / limitNum),
+      currentPage: pageNum,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des objets :", error);
+    return res.status(500).json({ erreur: "Erreur serveur" });
+  }
 });
 
 //recuperer 1 objet dans la table
@@ -313,11 +379,9 @@ routeurObjets.get("/objet/:nom", async (req: Request, res: Response) => {
     }
     res.json(objet);
   } catch (e) {
-    res
-      .status(500)
-      .json({
-        erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'objet: ${e}`,
-      });
+    res.status(500).json({
+      erreur: `Erreur: Le serveur ne répond pas lors de la récupération de l'objet: ${e}`,
+    });
   }
 });
 

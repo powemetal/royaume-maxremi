@@ -6,3 +6,34 @@
   font-weight: 600;
   text-shadow: 2px 2px 2px #000000;
 }
+
+.container-card-objet {
+  width: 80vw;
+  align-self: center;
+}
+
+.card-objet {
+  background-color: #c2b3b5;
+  border: 3px solid #971622;
+}
+
+.cinzel {
+  font-family: "Cinzel Decorative", serif;
+}
+
+.texte-nb-pages {
+  font-family: "Cinzel Decorative", serif;
+  
+  font-weight: bold;
+  font-size: large;
+  font-weight: 600;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+.container-form-objets {
+  background-color: rgba(209, 207, 207, 0.5);
+  border: 3px solid #971622;
+  box-shadow: 0px 15px 30px 5px #2c04212d;
+  width: 80vw;
+  align-self: center;
+}
