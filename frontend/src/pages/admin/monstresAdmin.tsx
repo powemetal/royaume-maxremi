@@ -148,10 +148,11 @@ const Supprimer = async () => {
 
       <div className="container-modif-monstre container-style flex flex-col text-white">
         <form className="modif-form-container"
+        
           onSubmit={(e) => e.preventDefault()}
         >
           <div className="container-modif-champs-liste flex max-h-200">
-            <div className="container-modif-gauche min-w-0 flex flex-2 flex-col">
+            <div className={"container-modif-gauche min-w-0 flex flex-2 flex-col " + (!selectionMonstre ? "pointer-events-none opacity-50" : "")}>
               <div className="modif-nom flex flex-col mx-8">
                 <label className="form-labels ml-8 mt-8 mb-4">Nom:</label>
                 <input type="text" className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-white/20" 
@@ -237,12 +238,13 @@ const Supprimer = async () => {
                 </div>
                 <img className="modification-thumbnail max-w-20 max-h-20 object-contain rounded-md" src={selectionMonstre?.imageUrl ?? ""} alt="" />
               </div>
+
             </div>
 
             <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
               <ul className="w-full liste-monstres flex flex-col">
                 {listeMonstres.map((m) => (
-                  <li key={m.id} className={"monstre-modif-list" + (selectionMonstre?.id === m.id ? "selected" : "")} onClick={() => setSelectionMonstre(m)}>
+                  <li key={m.id} className={"monstre-modif-list" + (selectionMonstre?.id === m.id ? "selected" : "")} onClick={() => m.id === selectionMonstre?.id ? setSelectionMonstre(null): setSelectionMonstre(m)}>
                     {m.nom}
                   </li>
                 ))}
@@ -250,7 +252,7 @@ const Supprimer = async () => {
             </div>
           </div>
 
-          <div className="container-modif-boutons flex flex-start m-8">
+          <div className="container-modif-boutons flex flex-start m-8 mt-20">
             <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
               type="button"
               disabled={!selectionMonstre}
