@@ -1,6 +1,7 @@
 .img-perso {
   border: 3px solid #c7596b;
   border-radius: 50%;
+  aspect-ratio: 1;
 }
 
 .li-perso {

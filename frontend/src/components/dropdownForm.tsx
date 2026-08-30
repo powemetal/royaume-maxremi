@@ -3,10 +3,11 @@ interface DropdownFormProps {
     choix: string[];
     choixSelectionne: string;
     onSelect: (choix: string) => void;
-    formatLabel?: (choix: string) => string; // ajout
+    formatLabel?: (choix: string) => string; 
+    className?: string
 }
 
-export const DropdownForm = ({ choix, choixSelectionne, onSelect, formatLabel = (c) => c }: DropdownFormProps) => {
+export const DropdownForm = ({ choix, choixSelectionne, onSelect, formatLabel = (c) => c, className }: DropdownFormProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleSelect = (c: string) => {
@@ -15,7 +16,7 @@ export const DropdownForm = ({ choix, choixSelectionne, onSelect, formatLabel = 
     };
 
     return (
-        <div className="flex flex-col w-44 text-sm relative">
+        <div className={`${className} flex flex-col w-44 text-sm relative`}>
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
