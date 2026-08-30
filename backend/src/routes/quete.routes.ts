@@ -81,6 +81,10 @@ routeurQuetes.patch("/quete/:id", authentifier, exigerRole("MAITRE_DU_JEU"), asy
             return res.status(404).json({erreur: `Erreur: La quête avec l'ID ${id} n'existe pas dans le jeu.`})
         }
 
+        if (typeof req.body.recompense !== "number" || req.body.recompense < 0) {
+            return res.status(400).json({erreur: "La récompense doit être un nombre positif."})
+        }
+
         //Modifie la quête
         const queteModifie = await prisma.quete.update({
             where: { id : quete.id },

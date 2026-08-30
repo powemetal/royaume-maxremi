@@ -274,63 +274,65 @@ export default function QuetesAdmin() {
         <div className="container-modif-quete container-style flex flex-col text-white">
 
             <form className="modif-form-container" onSubmit={handleSubmitModifier}>
-                <div className="container-modif-champs-liste flex max-h-200">
-                    <div className="container-modif-gauche min-w-0 flex flex-2 flex-col">
-                        <div className="modif-nom flex flex-col mx-8">
-                            <label htmlFor="nom" className="text-2xl form-labels ml-8 mt-8 mb-4">Nom:</label>
-                            <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" required placeholder="Ex: Dératiser le champ"/>
-                        </div>
-
-                            <div className="flex gap-1 flex-col max-w-50">
-                                <label htmlFor="difficulte-ajout" className="ml-8 mt-4 mb-4 form-labels">
-                                    Difficulté:
-                                </label>
-
-                                <div className="relative">
-                                    <Select id="difficulte-modifier" name="difficulte" value={formDataModifier.difficulte} onChange={handleChangeModifier} className="ml-8 inline-flex w-full appearance-none items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                    
-                                        {Object.entries(DIFFICULTE).map(([key, value]) => (
-                                            <option key={key} value={value} className="block w-full text-left px-4 py-2 text-sm text-white data-focus:bg-white/10 data-focus:text-white data-focus:outline-hidden">
-                                                {key.charAt(0) + key.slice(1).toLowerCase()}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    <ChevronDownIcon className="group-pointer-events-none absolute top-3 -right-6 size-5 fill-white/60" aria-hidden="true"/>
-                                </div>
+                <fieldset className="contents" disabled={!queteSelection}>
+                    <div className="container-modif-champs-liste flex max-h-200">
+                        <div className="container-modif-gauche min-w-0 flex flex-2 flex-col">
+                            <div className="modif-nom flex flex-col mx-8">
+                                <label htmlFor="nom" className="text-2xl form-labels ml-8 mt-8 mb-4">Nom:</label>
+                                <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" required placeholder="Ex: Dératiser le champ"/>
                             </div>
 
-                       
-                        <div className="modif-nom flex flex-col max-w-50">
-                            <label htmlFor="recompense" className="form-labels ml-8 mt-4 mb-4">Récompense:</label>
-                            <input type="text" id="recompense-modifier" name="recompense" value={formDataModifier.recompense} onChange={handleChangeModifier} className=" ml-8 mr-8 flex-end font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"required placeholder="500"/>
+                                <div className="flex gap-1 flex-col max-w-50">
+                                    <label htmlFor="difficulte-ajout" className="ml-8 mt-4 mb-4 form-labels">
+                                        Difficulté:
+                                    </label>
+
+                                    <div className="relative">
+                                        <Select id="difficulte-modifier" name="difficulte" value={formDataModifier.difficulte} onChange={handleChangeModifier} className="ml-8 inline-flex w-full appearance-none items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                        
+                                            {Object.entries(DIFFICULTE).map(([key, value]) => (
+                                                <option key={key} value={value} className="block w-full text-left px-4 py-2 text-sm text-white data-focus:bg-white/10 data-focus:text-white data-focus:outline-hidden">
+                                                    {key.charAt(0) + key.slice(1).toLowerCase()}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <ChevronDownIcon className="group-pointer-events-none absolute top-3 -right-6 size-5 fill-white/60" aria-hidden="true"/>
+                                    </div>
+                                </div>
+
+                            
+                            <div className="modif-nom flex flex-col max-w-50">
+                                <label htmlFor="recompense" className="form-labels ml-8 mt-4 mb-4">Récompense:</label>
+                                <input type="text" id="recompense-modifier" name="recompense" value={formDataModifier.recompense} onChange={handleChangeModifier} className=" ml-8 mr-8 flex-end font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"required placeholder="500"/>
+                            </div>
+                            <div className="modif-description flex flex-col flex-1 mb-8">
+                                <label htmlFor="description" className="form-labels ml-8 mt-4">Description:</label>
+                                <textarea className="flex-1 p-6 resize-none" name="description" id="description-modifier" value={formDataModifier.description} onChange={handleChangeModifier} placeholder="Le fermier vous demande..."/>
+                            </div>
                         </div>
-                        <div className="modif-description flex flex-col flex-1 mb-8">
-                            <label htmlFor="description" className="form-labels ml-8 mt-4">Description:</label>
-                            <textarea className="flex-1 p-6 resize-none" name="description" id="description-modifier" value={formDataModifier.description} onChange={handleChangeModifier} placeholder="Le fermier vous demande..."/>
+
+
+
+                        <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
+                            <ul className="w-full liste-quetes flex flex-col">
+                                {erreur && (<span className={`msg flex justify-center transition-opacity duration-300 ${erreurVisible ? "opacity-100" : "opacity-0"}`}>{erreur}</span>)}
+                                {!chargement && listeQuetes.length === 0 && (
+                                    <span className="perso-nom">Aucune quête à afficher.</span>
+                                )}
+                                {listeQuetesTriee.map((quete) => {
+                                    return (
+                                <li key={quete.id} className="quetes-modif-list" onClick={() => handleSelectionnerQuete(quete)}>{quete.nom}<br /><span className="diff">[  {quete.difficulte}  ]</span></li>
+                                )})}
+                            </ul>
                         </div>
                     </div>
 
+                    <div className="container-modif-boutons flex flex-start m-8">
+                        <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" disabled={!queteSelection}>Sauvegarder</button>
+                        <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" type="button" onClick={() => queteSelection && setPopupSuppressionOuvert(true)} disabled={!queteSelection}>Supprimer</button>
 
-
-                    <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
-                        <ul className="w-full liste-quetes flex flex-col">
-                            {erreur && (<span className={`msg flex justify-center transition-opacity duration-300 ${erreurVisible ? "opacity-100" : "opacity-0"}`}>{erreur}</span>)}
-                            {!chargement && listeQuetes.length === 0 && (
-                                <span className="perso-nom">Aucune quête à afficher.</span>
-                            )}
-                            {listeQuetesTriee.map((quete) => {
-                                return (
-                            <li key={quete.id} className="quetes-modif-list" onClick={() => handleSelectionnerQuete(quete)}>{quete.nom}<br /><span className="diff">[  {quete.difficulte}  ]</span></li>
-                            )})}
-                        </ul>
                     </div>
-                </div>
-
-                <div className="container-modif-boutons flex flex-start m-8">
-                    <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" disabled={!queteSelection}>Sauvegarder</button>
-                    <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" type="button" onClick={() => queteSelection && setPopupSuppressionOuvert(true)} disabled={!queteSelection}>Supprimer</button>
-
-                </div>
+                </fieldset>
             </form>
                 <p className={`msg flex justify-center transition-opacity duration-300 ${messageModifierVisible ? "opacity-100" : "opacity-0"}`}>
                     {messageModifier}
