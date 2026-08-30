@@ -269,7 +269,7 @@ export default function ObjetsAdmin() {
         if (!objetSelection) return;
         try {
             setSuppressionEnCours(true);
-            await api.delete(`//supprimer/${objetSelection.id}`)
+            await api.delete(`/objet/supprimer/${objetSelection.id}`)
             setMessageModifier("L'objet a été supprimé avec succès!");
             recupererListeObjets();
             setFormDataModifier({
@@ -298,8 +298,8 @@ export default function ObjetsAdmin() {
     const recupererListeObjets = async () => {
         try {
             setChargement(true);
-            const reponse = await api.get<Objet[]>("/objet");
-            setListeObjets(reponse.data);
+            const reponse = await api.get("/objet?limit=1000"); //évite la pagination mais pourrait un jour nécessiter d'être changé manuellement si on a > 1000 objets.
+            setListeObjets(reponse.data.objets);
 
         } catch (err: any) {
             console.error("Erreur API", err);
@@ -354,6 +354,7 @@ export default function ObjetsAdmin() {
 
     // si le type ne peut pas recevoir la stat ATT ou DEF dans la base de données, le champ est reset lors de sa sélection
     // seul les armes ont du ATT et seul les vêtements/boucliers ont DEF
+    // form Ajout
     useEffect(() => {
         if (["ARME", "ARME_2_MAINS"].includes(formDataAjout.type)) {
             setFormDataAjout((prev) => ({
@@ -373,6 +374,29 @@ export default function ObjetsAdmin() {
             }));
         }
     }, [formDataAjout.type]);
+
+    // si le type ne peut pas recevoir la stat ATT ou DEF dans la base de données, le champ est reset lors de sa sélection
+    // seul les armes ont du ATT et seul les vêtements/boucliers ont DEF
+    // form Modifier
+    useEffect(() => {
+        if (["ARME", "ARME_2_MAINS"].includes(formDataModifier.type)) {
+            setFormDataModifier((prev) => ({
+                ...prev,
+                def : "",
+            }));
+        } else if (["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataModifier.type)) {
+            setFormDataModifier((prev) => ({
+                ...prev,
+                att : "",
+            }));
+        } else {
+            setFormDataModifier((prev) => ({
+                ...prev,
+                att : "",
+                def : "",
+            }));
+        }
+    }, [formDataModifier.type]);
 
     if (!estConnecte || !estAdmin) {
         return <Navigate to="/connexion" replace />;
@@ -470,7 +494,7 @@ export default function ObjetsAdmin() {
                         </label>
                         <input type="text" name="def" id="def-ajout" value={formDataAjout.def} onChange={handleChangeAjout} className="font-sans block w-full rounded-md bg-white/5
                         px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
-                        disabled:opacity-50disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                        disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
                         placeholder="0"
                         disabled={!["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataAjout.type)} />
                     </div>
@@ -534,65 +558,48 @@ export default function ObjetsAdmin() {
         <TitreBackground>Modifier un objet</TitreBackground>
         <div className="container-modif-quete container-style flex flex-col text-white">
 
-            <form className="modif-form-container" onSubmit={handleSubmitModifier}>
-                <div className="container-modif-champs-liste flex max-h-200">
-                    <div className="container-champs-description flex flex-2 flex-col">
-                        <div className="container-modif-gauche min-w-0 grid grid-cols-2 gap-4 mx-8 mt-8 flex-2 flex-col">
+            <form className="modif-form-container " onSubmit={handleSubmitModifier}>
+                <fieldset disabled={!objetSelection} className="contents">
 
-                            <div className="modif-nom flex flex-col gap-1 col-span-2">
-                                <label htmlFor="nom" className="text-2xl form-labels truncate text-ellipsis">Nom:</label>
-                                <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
-                            text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
-                            required placeholder="Ex: Lame de feu"/>
-                            </div>
 
-                            <div className="flex flex-col gap-1 flex-1">
-                                <label htmlFor="rarete-Modifier" className="form-labels truncate text-ellipsis">
-                                    Rareté:
-                                </label>
+                    <div className="container-modif-champs-liste flex max-h-200">
+                        <div className="container-champs-description flex flex-2 flex-col">
+                            <div className="container-modif-gauche min-w-0 grid grid-cols-2 gap-4 mx-8 mt-8 flex-2 flex-col">
 
-                                <div className="relative">
-                                    <Select id="rarete-Modifier" name="rarete" value={formDataModifier.rarete} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center justify-between 
-                                    rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                        {Object.entries(RARETE).map(([key, value]) => (
-                                            <option key={key} value={value} className="bg-gray-800 text-white">
-                                                {key.charAt(0) + key.slice(1).toLowerCase().replace(/_/g, " ")}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                <div className="modif-nom flex flex-col gap-1 col-span-2">
+                                    <label htmlFor="nom" className="text-2xl form-labels truncate text-ellipsis">Nom:</label>
+                                    <input type="text" id="nom-modifier" name="nom" value={formDataModifier.nom} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                                text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
+                                required placeholder="Ex: Lame de feu"/>
                                 </div>
-                            </div>
 
-                        <div className="flex flex-col gap-1 flex-1 ">
-                            <label htmlFor="type-Modifier" className="form-labels truncate text-ellipsis">
-                                Type d'objet:
-                            </label>
+                                <div className="flex flex-col gap-1 flex-1">
+                                    <label htmlFor="rarete-Modifier" className="form-labels truncate text-ellipsis">
+                                        Rareté:
+                                    </label>
 
-                            <div className="relative">
-                                <Select id="type-modifier" name="type" value={formDataModifier.type} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center
-                                justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                    {Object.entries(TYPEOBJET).map(([key, value]) => (
-                                        <option key={key} value={value} className="bg-gray-800 text-white">
-                                            {key.charAt(0) + key.slice(1).toLowerCase()}
-                                        </option>
-                                    ))}
-                                </Select>
-                                <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
-                            </div>
-                        </div>
-
-
+                                    <div className="relative">
+                                        <Select id="rarete-Modifier" name="rarete" value={formDataModifier.rarete} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center justify-between 
+                                        rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                            {Object.entries(RARETE).map(([key, value]) => (
+                                                <option key={key} value={value} className="bg-gray-800 text-white">
+                                                    {key.charAt(0) + key.slice(1).toLowerCase().replace(/_/g, " ")}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                    </div>
+                                </div>
 
                             <div className="flex flex-col gap-1 flex-1 ">
-                                <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis">
-                                    Type de dégâts:
+                                <label htmlFor="type-Modifier" className="form-labels truncate text-ellipsis">
+                                    Type d'objet:
                                 </label>
 
                                 <div className="relative">
-                                    <Select id="typeDegats-Modifier" name="typeDegats" value={formDataModifier.typeDegats} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center 
+                                    <Select id="type-modifier" name="type" value={formDataModifier.type} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center
                                     justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                        {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                        {Object.entries(TYPEOBJET).map(([key, value]) => (
                                             <option key={key} value={value} className="bg-gray-800 text-white">
                                                 {key.charAt(0) + key.slice(1).toLowerCase()}
                                             </option>
@@ -602,93 +609,114 @@ export default function ObjetsAdmin() {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-1 flex-1 ">
-                                <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis ">
-                                    Type Bonus:
-                                </label>
 
-                                <div className="relative">
-                                    <Select id="typeBonus-Modifier" name="typeBonus" value={formDataModifier.typeBonus} onChange={handleChangeModifier} className="inline-flex flex-1 w-full appearance-none
-                                    items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
-                                        {Object.entries(TYPEDEGATS).map(([key, value]) => (
-                                            <option key={key} value={value} className="bg-gray-800 text-white">
-                                                {key.charAt(0) + key.slice(1).toLowerCase()}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+
+                                <div className="flex flex-col gap-1 flex-1 ">
+                                    <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis">
+                                        Type de dégâts:
+                                    </label>
+
+                                    <div className="relative">
+                                        <Select id="typeDegats-Modifier" name="typeDegats" value={formDataModifier.typeDegats} onChange={handleChangeModifier} className="inline-flex w-full appearance-none items-center 
+                                        justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                            {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                                <option key={key} value={value} className="bg-gray-800 text-white">
+                                                    {key.charAt(0) + key.slice(1).toLowerCase()}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1 flex-1 ">
+                                    <label htmlFor="typeDegats-Modifier" className="form-labels truncate text-ellipsis ">
+                                        Type Bonus:
+                                    </label>
+
+                                    <div className="relative">
+                                        <Select id="typeBonus-Modifier" name="typeBonus" value={formDataModifier.typeBonus} onChange={handleChangeModifier} className="inline-flex flex-1 w-full appearance-none
+                                        items-center justify-between rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs outline-1 -outline-offset-1 outline-white/20 focus:outline-2 focus:outline-indigo-500">
+                                            {Object.entries(TYPEDEGATS).map(([key, value]) => (
+                                                <option key={key} value={value} className="bg-gray-800 text-white">
+                                                    {key.charAt(0) + key.slice(1).toLowerCase()}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <ChevronDownIcon className="group-pointer-events-none absolute top-2.5 right-2.5 size-5 fill-white/60" aria-hidden="true"/>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1 flex-1 ">
+                                    <label htmlFor="att-modifier" className="form-labels truncate text-ellipsis">
+                                        Att:
+                                    </label>
+                                    <input type="text" name="att" id="att-modifier" value={formDataModifier.att} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
+                                    text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
+                                    disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" 
+                                    placeholder="0"
+                                    disabled={!["ARME", "ARME_2_MAINS"].includes(formDataModifier.type)}/>
+                                </div>
+
+                                <div className="flex flex-col gap-1 flex-1 ">
+                                    <label htmlFor="def-modifier" className="form-labels truncate text-ellipsis">
+                                        Def:
+                                    </label>
+                                    <input type="text" name="def" id="def-ajout" value={formDataModifier.def} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
+                                    px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm
+                                    disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                                    placeholder="0"
+                                    disabled={!["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataModifier.type)} />
+                                </div>
+
+
+
+                                <div className="modif-nom flex flex-col gap-1">
+                                    <label htmlFor="degatsBonus" className="form-labels truncate text-ellipsis">Dégâts bonus:</label>
+                                    <input type="text" id="degatsBonus-modifier" name="degatsBonus" value={formDataModifier.degatsBonus} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
+                                    px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" placeholder="0"/>
+                                    
+                                </div>
+
+                                <div className="modif-nom flex flex-col gap-1">
+                                    <label htmlFor="prix" className="form-labels truncate text-ellipsis">Prix:</label>
+                                    <input type="text" id="prix-modifier" name="prix" value={formDataModifier.prix} onChange={handleChangeModifier} className="flex-end font-sans block w-full rounded-md
+                                    bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500
+                                    sm:text-sm"required placeholder="0"/>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-1 flex-1 ">
-                                <label htmlFor="att-modifier" className="form-labels truncate text-ellipsis">
-                                    Att:
-                                </label>
-                                <input type="text" name="att" id="att-modifier" value={formDataModifier.att} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5 px-3 py-1.5 text-base 
-                                text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm 
-                                disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" 
-                                placeholder="0"
-                                disabled={!["ARME", "ARME_2_MAINS"].includes(formDataModifier.type)}/>
+                            <div className="modif-description flex flex-col flex-1  gap-1 mb-8 mt-6">
+                                <label htmlFor="description" className=" ml-8 form-labels">Description:</label>
+                                <textarea className="flex-1 p-6 resize-none" name="description" id="description-modifier" value={formDataModifier.description} onChange={handleChangeModifier} placeholder="Cet objet ancestral..."/>
                             </div>
 
-                            <div className="flex flex-col gap-1 flex-1 ">
-                                <label htmlFor="def-modifier" className="form-labels truncate text-ellipsis">
-                                    Def:
-                                </label>
-                                <input type="text" name="def" id="def-ajout" value={formDataModifier.def} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
-                                px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm
-                                disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
-                                placeholder="0"
-                                disabled={!["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(formDataModifier.type)} />
-                            </div>
-
-
-
-                            <div className="modif-nom flex flex-col gap-1">
-                                <label htmlFor="degatsBonus" className="form-labels truncate text-ellipsis">Dégâts bonus:</label>
-                                <input type="text" id="degatsBonus-modifier" name="degatsBonus" value={formDataModifier.degatsBonus} onChange={handleChangeModifier} className="font-sans block w-full rounded-md bg-white/5
-                                px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm" placeholder="0"/>
-                                
-                            </div>
-
-                            <div className="modif-nom flex flex-col gap-1">
-                                <label htmlFor="prix" className="form-labels truncate text-ellipsis">Prix:</label>
-                                <input type="text" id="prix-modifier" name="prix" value={formDataModifier.prix} onChange={handleChangeModifier} className="flex-end font-sans block w-full rounded-md
-                                bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/20 placeholder:text-white/60 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500
-                                sm:text-sm"required placeholder="0"/>
-                            </div>
                         </div>
 
-                        <div className="modif-description flex flex-col flex-1  gap-1 mb-8 mt-6">
-                            <label htmlFor="description" className=" ml-8 form-labels">Description:</label>
-                            <textarea className="flex-1 p-6 resize-none" name="description" id="description-modifier" value={formDataModifier.description} onChange={handleChangeModifier} placeholder="Cet objet ancestral..."/>
+
+
+
+                        <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
+                            <ul className="w-full liste-quetes flex flex-col">
+                                {erreur && (<span className={`msg flex justify-center transition-opacity duration-300 ${erreurVisible ? "opacity-100" : "opacity-0"}`}>{erreur}</span>)}
+                                {!chargement && listeObjets.length === 0 && (
+                                    <span className="perso-nom">Aucun objet à afficher.</span>
+                                )}
+                                {listeObjetsTriee.map((objet) => {
+                                    return (
+                                <li key={objet.id} className="quetes-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type.replace(/_/g, " ")}  ]</span></li>
+                                )})}
+                            </ul>
                         </div>
-
                     </div>
 
+                    <div className="container-modif-boutons flex flex-start m-8">
+                        <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" disabled={!objetSelection}>Sauvegarder</button>
+                        <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
+                        type="button" onClick={() => objetSelection && setPopupSuppressionOuvert(true)} disabled={!objetSelection}>Supprimer</button>
 
-
-
-                    <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
-                        <ul className="w-full liste-quetes flex flex-col">
-                            {erreur && (<span className={`msg flex justify-center transition-opacity duration-300 ${erreurVisible ? "opacity-100" : "opacity-0"}`}>{erreur}</span>)}
-                            {!chargement && listeObjets.length === 0 && (
-                                <span className="perso-nom">Aucun objet à afficher.</span>
-                            )}
-                            {listeObjetsTriee.map((objet) => {
-                                return (
-                            <li key={objet.id} className="quetes-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type.replace(/_/g, " ")}  ]</span></li>
-                            )})}
-                        </ul>
                     </div>
-                </div>
-
-                <div className="container-modif-boutons flex flex-start m-8">
-                    <button className="btn-nav create disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale" disabled={!objetSelection}>Sauvegarder</button>
-                    <button className="btn-nav delete disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:grayscale"
-                    type="button" onClick={() => objetSelection && setPopupSuppressionOuvert(true)} disabled={!objetSelection}>Supprimer</button>
-
-                </div>
+                </fieldset>
             </form>
                 <p className={`msg flex justify-center transition-opacity duration-300 ${messageModifierVisible ? "opacity-100" : "opacity-0"}`}>
                     {messageModifier}

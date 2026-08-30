@@ -196,8 +196,8 @@ routeurObjets.patch(
         body.att !== undefined &&
         ["ARME", "ARME_2_MAINS"].includes(typeObjet)
       ) {
-        if (typeof body.att !== "number")
-          return res.status(400).json({ erreur: "L'attaque est invalide" });
+        if (typeof body.att !== "number" || body.att < 0)
+          return res.status(400).json({ erreur: "L'attaque doit être un nombre positif" });
         data.att = body.att;
       }
 
@@ -205,15 +205,15 @@ routeurObjets.patch(
         body.def !== undefined &&
         ["ARMURE", "BOTTES", "CASQUE", "BOUCLIER", "GANT"].includes(typeObjet)
       ) {
-        if (typeof body.def !== "number")
-          return res.status(400).json({ erreur: "La defense est invalide" });
+        if (typeof body.def !== "number" || body.def < 0)
+          return res.status(400).json({ erreur: "La defense doit être un nombre positif" });
         data.def = body.def;
       }
       if (body.prix !== undefined) {
-        if (typeof body.prix !== "number")
+        if (typeof body.prix !== "number" || body.prix < 0)
           return res
             .status(400)
-            .json({ erreur: "Le prix doit être un nombre" });
+            .json({ erreur: "Le prix doit être un nombre positif" });
         data.prix = body.prix;
       }
 
@@ -225,10 +225,10 @@ routeurObjets.patch(
       }
 
       if (body.degatsBonus !== undefined) {
-        if (typeof body.degatsBonus !== "number")
+        if (typeof body.degatsBonus !== "number" || body.degatsBonus < 0)
           return res
             .status(400)
-            .json({ erreur: "Type de dégats bonus invalide" });
+            .json({ erreur: "Les dégats bonus doivent être un nombre positif" });
         data.degatsBonus = body.degatsBonus;
       }
       if (body.typeBonus !== undefined) {
@@ -248,7 +248,9 @@ routeurObjets.patch(
         where: { id: objet.id },
         data: data,
       });
-      res.status(200).json(objetModifie);
+
+      return res.status(200).json({message: "Objet modifié avec succès!", objet: objetModifie});
+
     } catch (e) {
       res.status(500).json({
         erreur: `Erreur: Le serveur ne répond pas lors de la modification de l'objet : ${e}`,
@@ -350,6 +352,7 @@ routeurObjets.get("/objet", async (req: Request, res: Response) => {
 
     return res.json({
       objets,
+      total,
       totalPages: Math.ceil(total / limitNum),
       currentPage: pageNum,
     });

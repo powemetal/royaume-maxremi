@@ -5,6 +5,7 @@ import OverlayChargement from "../components/overlayChargement";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "../api/backendApi";
 import axios from "axios";
+import defaultAvatar from "../assets/images/avatars/default-avatar-dnd.png";
 interface PersoQuete {
   id: string;
   statut: string;
@@ -54,6 +55,7 @@ export default function Personnage() {
   const navigate = useNavigate();
   const [chargement, setChargement] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
+  const [imgError, setImgError] = useState(false);
   const [popupData, setPopupData] = useState<PopupData>({
     estOuvert: false,
     estAnnulable: false,
@@ -191,14 +193,14 @@ export default function Personnage() {
       >
         <div className="flex justify-center h-[200px] degrade-rouge gap-5 container-utilisateur text-white">
           <img
-            src={dataPerso.avatarUrl || "https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png"}
+            src={
+              imgError || !dataPerso.avatarUrl
+                ? defaultAvatar
+                : dataPerso.avatarUrl
+            }
             alt="Avatar du personnage"
             className="img-perso"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src =
-                "https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png";
-            }}
+            onError={() => setImgError(true)}
           />
           <div className="flex flex-col justify-center gap-2">
             <p className="text-shadow-lg/50 text-xl">{dataPerso.nom}</p>
@@ -281,7 +283,7 @@ export default function Personnage() {
           </ul>
         </div>
         <TitreBackground>Inventaire</TitreBackground>
-        <div className="container-personnages container-perso flex flex-col overflow-y-auto flex-1 min-h-0">
+        <div className="container-personnages container-perso flex flex-col overflow-y-auto min-h-0">
           <div className="liste-personnages grid grid-cols-3 gap-4 text-center en-tete degrade-rouge">
             <span>Nom</span>
             <span>Type</span>
@@ -331,18 +333,20 @@ export default function Personnage() {
             <h2 className="mb-8">{popupData.titre}</h2>
             <p className="text-white">{popupData.message}</p>
             <div className="popup-actions flex gap-4 justify-center mt-8">
-              {popupData.estAnnulable && <button
-                type="button"
-                className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 "
-                onClick={() =>
-                  setPopupData((prev) => ({
-                    ...prev,
-                    estOuvert: false,
-                  }))
-                }
-              >
-                Annuler
-              </button>}
+              {popupData.estAnnulable && (
+                <button
+                  type="button"
+                  className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 "
+                  onClick={() =>
+                    setPopupData((prev) => ({
+                      ...prev,
+                      estOuvert: false,
+                    }))
+                  }
+                >
+                  Annuler
+                </button>
+              )}
               <button
                 type="button"
                 className="flex w-full justify-center items-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
