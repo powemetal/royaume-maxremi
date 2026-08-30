@@ -31,7 +31,7 @@
   transition: all 0.25s ease;
 }
 
-.btn-ajouter:hover {
+.btn-ajouter::not(:disabled):hover {
   background: linear-gradient(135deg, #5b9aff, #2a6af0);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
@@ -42,3 +42,107 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 }
 
+.btn-ajouter:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: gray;
+}
+
+
+.container-recherche-api {
+  margin-bottom: 0 !important;
+}
+
+.container-ajout-monstre {
+  border: none !important;
+  max-height: 500px;
+}
+
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
+
+.container-admin-monstres {
+  font-family: "Cinzel Decorative", serif;
+}
+
+.container-modif-monstre {
+  background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+}
+
+.container-modif-droite {
+  overflow-y: auto;
+  text-overflow: ellipsis;
+}
+
+.monstre-modif-list {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px 8px;
+  box-shadow:
+    inset 0 4px 24px -20px #2c0421b4,
+    inset 0 -4px 24px -4px #2c0421b4;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+.monstre-modif-list:hover {
+  background: linear-gradient(to left, #3f052e 0%, #ad4657 100%);
+}
+
+.monstre-modif-list:hover .diff {
+  color: white;
+}
+
+ul.liste-monstres > li:nth-of-type(odd) {
+  background-color: #aaa0a7;
+}
+
+ul.liste-monstres > li:nth-of-type(even) {
+  background-color: #c2b3b5;
+}
+
+.diff {
+  opacity: 80%;
+  color: rgb(72, 52, 85);
+  font-size: medium;
+  text-shadow: none;
+}
+
+.msg {
+  color: rgb(222, 200, 233);
+  font-weight: bold;
+  font-size: medium;
+  min-height: 1.5rem;
+}
+
+.form-labels {
+  color: white;
+  font-weight: bold;
+  font-size: x-large;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+
+
+.container-modif-monstre {
+  background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+
+
+.monstre-modif-list.selected {
+  background: linear-gradient(to left, #ad4657 0%, #3f052e 100%) !important;
+  background-color: transparent !important;
+  color: white;
+  border: 2px solid white;
+}
+
+/* .modification-thumbnail {
+  max-width: 100px;
+  max-height: 100px;
+  
+} */
