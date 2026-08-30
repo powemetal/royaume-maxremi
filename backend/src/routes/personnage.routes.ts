@@ -10,16 +10,18 @@ routerPersonnage.post(
   "/creer",
   authentifier,
   async (req: Request, res: Response) => {
-    const { nom, classe, idUtilisateur } = req.body;
+    const { nom, classe, avatarUrl } = req.body;
+    const idUtilisateur = (req as any).utilisateur.sub;
+    console.log(nom, classe, avatarUrl, idUtilisateur);
     if (!nom || !classe || !idUtilisateur) {
       return res.status(400).json({
         erreur:
-          "Erreur: Une information requise est manquante. (nom, classe, idUtilisateur)",
+          "Erreur: Une information requise est manquante. (nom, classe, avatarUrl)",
       });
     }
     try {
       const personnage = await prisma.personnage.create({
-        data: { nom, classe, idUtilisateur },
+        data: { nom, classe, idUtilisateur, avatarUrl },
       });
       return res.status(201).json({
         message: `Personnage créé avec succès ! Nom : ${nom}, classe : ${classe}, idUtilisateur : ${idUtilisateur}`,

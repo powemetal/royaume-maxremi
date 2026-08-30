@@ -13,6 +13,7 @@ import QuetesAdmin from "./pages/admin/quetesAdmin";
 import MonstresAdmin from "./pages/admin/monstresAdmin";
 import ObjetsAdmin from "./pages/admin/objetsAdmin";
 import { AuthProvider } from "./context/AuthContext";
+import CreerPerso from "./pages/creerPerso";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/inscription" element={<Inscription />} />
             <Route path="/personnage/recuperer" element={<Personnage />} />
             <Route path="/compte" element={<Compte />} />
+            <Route path="/creerperso" element={<CreerPerso />} />
             <Route path="/monstres" element={<Monstres />} />
             <Route path="/objets" element={<Objets />} />
             <Route path="/admin/utilisateurs" element={<UtilisateursAdmin />} />
