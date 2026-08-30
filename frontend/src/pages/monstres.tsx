@@ -5,17 +5,15 @@ import "../css/monstres.css";
 
 import OverlayChargement from "../components/overlayChargement";
 import { formatAlignement, formatTypeMonstre, formatGrosseur } from "../utils/formatMonstres";
-import type { Monstre, ReponseListeMonstres, ReponseUtilisateur } from "../utils/interfaces";
-import { valeursGrosseur, valeursTypeMonstre, valeursAlignement, type TypeGrosseur, type TypeMonstre, type Alignement } from "../utils/types";
+import type { Monstre, ReponseListeMonstres, } from "../utils/interfaces";
+import { valeursGrosseur, valeursTypeMonstre, valeursAlignement, type Grandeur, type TypeMonstre, type Alignement } from "../utils/types";
 
 export default function Monstres() {
   const [listeMonstres, setListeMonstres] = useState<Monstre[]>([]);
   const [erreur, setErreur] = useState<string>("");
   const [chargement, setChargement] = useState<boolean>(true);
-
-  
   const [filtreNom, setFiltreNom] = useState<string>("");
-  const [filtreGrandeur, setFiltreGrandeur] = useState<TypeGrosseur | null>(null);
+  const [filtreGrandeur, setFiltreGrandeur] = useState<Grandeur | null>(null);
   const [filtreType, setFiltreType] = useState<TypeMonstre | null>(null);
   const [filtreAlignement, setFiltreAlignement] = useState<Alignement | null>(null);
 
@@ -32,17 +30,19 @@ export default function Monstres() {
     }
   };
 
-  useEffect(() => {
-    recupererListeMonstres();
-  }, []);
-
-  const monstresFiltres = listeMonstres.filter((m) => {
+    const monstresFiltres = listeMonstres.filter((m) => {
     if (filtreNom && !m.nom.toLowerCase().includes(filtreNom.toLowerCase())) return false;
     if (filtreGrandeur && m.grandeur !== filtreGrandeur) return false;
     if (filtreType && m.typeMonstre !== filtreType) return false;
     if (filtreAlignement && m.alignement !== filtreAlignement) return false;
     return true;
   });
+
+  useEffect(() => {
+    recupererListeMonstres();
+  }, []);
+
+
 
   return (
     <div className="container-compte flex flex-col grow">
@@ -76,7 +76,7 @@ export default function Monstres() {
 
                 <div className="flex flex-col gap-2">
                   <label className="en-tete-objets">Filtrer par taille</label>
-                  <select className="select-recherche p-3 rounded-md bg-white/10 border border-white/20 text-white" value={filtreGrandeur ?? ""} onChange={(e) => setFiltreGrandeur(e.target.value ? (e.target.value as TypeGrosseur) : null)}>
+                  <select className="select-recherche p-3 rounded-md bg-white/10 border border-white/20 text-white" value={filtreGrandeur ?? ""} onChange={(e) => setFiltreGrandeur(e.target.value ? (e.target.value as Grandeur) : null)}>
                     <option value="">Toutes</option>
                     {valeursGrosseur.map((g) => (
                       <option key={g} value={g}>

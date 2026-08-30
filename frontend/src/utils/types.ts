@@ -27,7 +27,7 @@ export const valeursGrosseur = [
   "GIGANTESQUE",
 ] as const;
 
-export type TypeGrosseur = typeof valeursGrosseur[number];
+export type Grandeur = typeof valeursGrosseur[number];
 
 
 export const valeursAlignement = [
