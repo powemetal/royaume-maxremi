@@ -5,10 +5,14 @@
 ## 🚀 Technologies utilisées
 
     - Node
+    - Typescript
     - Express
     - Prisma + Neon
     - Axios
     - JWT + bcrypt
+    - Cors
+    - React
+    - TailwindCSS
 
 ## 🛠️ Prérequis
 
@@ -44,6 +48,19 @@ Lancer le serveur:
 
     npm run dev
 
+Installer les dependances du frontend
+
+    ouvrir un nouveau terminal au dossier: royaume-maxremi/backend
+    npm install
+
+Lancer le serveur frontend
+
+    npm run dev
+
+Ouvrir une fenêtre du navigateur
+
+    http://localhost:5173/
+
 ## 🌐 Services externes
 
     DND 5e SRD API : https://www.dnd5eapi.co/
@@ -73,8 +90,9 @@ Routes
 | `GET`    | `/monstre/`               | Liste tous les monstres         | Public |
 | `GET`    | `/monstre/:nom`           | Détail d'un monstre par son nom | Public |
 | `POST`   | `/monstre/ajouter/:nom`   | Ajoute un nouveau monstre       | MDJ    |
-| `PATCH`  | `/monstre/:nom`           | Modifie un monstre existant     | MDJ    |
-| `DELETE` | `/monstre/supprimer/:nom` | Supprime un monstre             | MDJ    |
+| `PATCH`  | `/monstre/:id`           | Modifie un monstre existant     | MDJ    |
+| `DELETE` | `/monstre/supprimer/:id` | Supprime un monstre             | MDJ    |
+| `GET`    | `/recherche/:nom`        | Recherche un monstre dans l'api | MDJ    |
 
 ---
 
@@ -85,8 +103,8 @@ Routes
 | `GET`    | `/objet/`               | Liste tous les objets         | Public |
 | `GET`    | `/objet/:nom`           | Détail d'un objet par son nom | Public |
 | `POST`   | `/objet/creer`          | Crée un nouvel objet          | MDJ    |
-| `PATCH`  | `/objet/:nom`           | Modifie un objet existant     | MDJ    |
-| `DELETE` | `/objet/supprimer/:nom` | Supprime un objet             | MDJ    |
+| `PATCH`  | `/objet/:id`           | Modifie un objet existant     | MDJ    |
+| `DELETE` | `/objet/supprimer/:id` | Supprime un objet             | MDJ    |
 
 ---
 
@@ -164,4 +182,4 @@ Pour lancer des tests à partir de test.rest:
     Clément Laflamme
     Francis Boisvert
     Mathieu Gosselin
-    Pascale Mercier
+    Pascale Mercier (TP1)
