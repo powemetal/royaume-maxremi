@@ -403,9 +403,9 @@ export default function ObjetsAdmin() {
     }
 
     return (<>
-    <div className="container-admin-quetes flex flex-col grow">
+    <div className="container-admin-objets flex flex-col grow">
         <TitreBackground>Ajouter un objet</TitreBackground>
-        <div className="container-ajout-quete flex flex-col w-full container-style text-white">
+        <div className="container-ajout-objet flex flex-col w-full container-style text-white">
 
             <form onSubmit={handleSubmitAjout} className="form-container">
                 <div className="container-ajout-champs grid grid-cols-5 gap-4 mx-8 mt-8">
@@ -556,7 +556,7 @@ export default function ObjetsAdmin() {
 
 
         <TitreBackground>Modifier un objet</TitreBackground>
-        <div className="container-modif-quete container-style flex flex-col text-white">
+        <div className="container-modif-objet container-style flex flex-col text-white">
 
             <form className="modif-form-container " onSubmit={handleSubmitModifier}>
                 <fieldset disabled={!objetSelection} className="contents">
@@ -697,14 +697,14 @@ export default function ObjetsAdmin() {
 
 
                         <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
-                            <ul className="w-full liste-quetes flex flex-col">
+                            <ul className="w-full liste-objets flex flex-col">
                                 {erreur && (<span className={`msg flex justify-center transition-opacity duration-300 ${erreurVisible ? "opacity-100" : "opacity-0"}`}>{erreur}</span>)}
                                 {!chargement && listeObjets.length === 0 && (
                                     <span className="perso-nom">Aucun objet à afficher.</span>
                                 )}
                                 {listeObjetsTriee.map((objet) => {
                                     return (
-                                <li key={objet.id} className="quetes-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type.replace(/_/g, " ")}  ]</span></li>
+                                <li key={objet.id} className="objets-modif-list" onClick={() => handleSelectionnerObjet(objet)}>{objet.nom}<br /><span className="diff">[  {objet.type.replace(/_/g, " ")}  ]</span></li>
                                 )})}
                             </ul>
                         </div>

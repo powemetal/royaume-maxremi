@@ -4,7 +4,7 @@
     margin: 0px 0px;
 }
 
-.container-admin-quetes {
+.container-admin-objets {
   font-family: "Cinzel Decorative", serif; 
 }
 
@@ -14,7 +14,7 @@
     text-overflow: ellipsis;
 }
 
-.quetes-modif-list {
+.objets-modif-list {
     display: grid;
     align-items: center;
     justify-content: center;
@@ -42,11 +42,11 @@
     min-height: 1.5rem;
 }
 
-.container-ajout-quete {
+.container-ajout-objet {
     background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
 }
 
-.container-modif-quete {
+.container-modif-objet {
     background: linear-gradient(to right, #3f052e 0%, #ad4657 100%);
 }
 
@@ -61,18 +61,18 @@
     text-shadow: 2px 2px 2px #000000;
 }
 
-.quetes-modif-list:hover {
+.objets-modif-list:hover {
     background: linear-gradient(to left, #3f052e 0%, #ad4657 100%);
 }
 
-.quetes-modif-list:hover .diff {
+.objets-modif-list:hover .diff {
     color: white;
 }
 
-ul.liste-quetes > li:nth-of-type(odd) {
+ul.liste-objets > li:nth-of-type(odd) {
     background-color: #aaa0a7;
 }
 
-ul.liste-quetes > li:nth-of-type(even) {
+ul.liste-objets > li:nth-of-type(even) {
     background-color: #c2b3b5;
 }
