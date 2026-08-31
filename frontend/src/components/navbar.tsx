@@ -24,7 +24,7 @@ export default function Navbar() {
           />
         </Link>
       </div>
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-3">
         <div className="flex justify-end gap-3">
           {estAdmin && <DropdownAdmin />}
           {!estConnecte ? (
@@ -51,7 +51,7 @@ export default function Navbar() {
             </button>
           )}
         </div>
-        <div className="flex flex-1 items-end justify-evenly gap-5">
+        <div className="flex flex-1 flex-wrap items-end justify-evenly gap-5">
           <Link to={"/compte"} className="btn-nav degrade-rouge">
             Mon compte
           </Link>
