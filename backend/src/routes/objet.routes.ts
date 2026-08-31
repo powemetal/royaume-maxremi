@@ -259,7 +259,7 @@ routeurObjets.patch(
   },
 );
 
-//Supprimer quete de la table des quetes avec id
+//Supprimer objet de la table des objets avec id
 routeurObjets.delete("/objet/supprimer/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
     const id = req.params.id as string
     try {
@@ -276,29 +276,6 @@ routeurObjets.delete("/objet/supprimer/:id", authentifier, exigerRole("MAITRE_DU
     }
 })
 
-
-// routeurObjets.delete(
-//   "/objet/supprimer/:nom",
-//   authentifier,
-//   exigerRole("MAITRE_DU_JEU"),
-//   async (req: Request, res: Response) => {
-//     const suppression = await prisma.objet.deleteMany({
-//       where: {
-//         nom: {
-//           equals: req.params.nom as string,
-//           mode: "insensitive",
-//         },
-//       },
-//     });
-//     if (suppression.count === 0) {
-//       res
-//         .status(404)
-//         .json({ erreur: "Erreur: Cet objet n'est pas dans le jeu." });
-//     } else {
-//       res.status(200).json({ ok: "L'objet a été supprimé." });
-//     }
-//   },
-// );
 
 //Liste des objets dans la table
 routeurObjets.get("/objet", async (req: Request, res: Response) => {

@@ -3,10 +3,6 @@ import prisma from "../utils/prisma.js"
 import { Statut, Difficulte } from "../../generated/prisma/client.js"
 import { authentifier, exigerRole } from "../middlewares/auth.js"
 
-
-
-
-
 const routeurQuetes = Router ()
 
 routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), async (req: Request, res: Response) => {
@@ -34,36 +30,6 @@ routeurQuetes.post("/quete/creer", authentifier, exigerRole("MAITRE_DU_JEU"), as
         res.status(400).json({ erreur: "Erreur: La création de la quête a échouée." })
     }
 })
-
-// //Modifier une quete avec le nom ( Math : j'ai changé la route pour utiliser l'ID lors de la sélection d'une quête dans la liste dans la section admin )
-// routeurQuetes.patch("/quete/:nom", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{
-//     const nom = req.params.nom as string
-//         //Trouver l'quete
-//     try{
-//         const quete = await prisma.quete.findFirst({
-//             where : {
-//                 nom: {
-//                     equals: nom,
-//                     mode: "insensitive",    
-//                 }
-//             }, 
-//         })
-//         if (!quete){
-//             return res.status(404).json({erreur: `Erreur: La quête ${nom} n'existe pas dans le jeu.`})
-//         }
-
-//         //Modifie la quête
-//         const queteModifie = await prisma.quete.update({
-//             where: { id : quete.id },
-//             data: req.body
-//         })
-
-//         res.status(200).json(queteModifie)
-
-//     } catch(e){
-//         res.status(500).json({erreur: `Erreur: Le serveur ne répond pas lors de la modification de la quête: ${e}`})
-//     }
-// })
 
 //Modifier une quete avec l'id
 routeurQuetes.patch("/quete/:id", authentifier, exigerRole("MAITRE_DU_JEU"), async(req: Request, res: Response)=>{

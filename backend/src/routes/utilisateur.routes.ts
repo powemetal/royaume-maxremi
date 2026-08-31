@@ -37,36 +37,41 @@ routerUtilisateur.post(
 
 // Récupérer l'information d'un utilisateur en tant que MDJ
 routerUtilisateur.get(
-  "/recuperer/:id",
+  "/recuperer/",
   authentifier,
   exigerRole("MAITRE_DU_JEU"),
   async (req: Request, res: Response) => {
-    const id = req.params.id as string;
-    if (!estUuidValide(id)) {
-      return res.status(400).json({ erreur: "Erreur: L'ID est invalide." });
+    const {recherche} = req.query;
+    const conditions: any[] = [
+      {pseudo: {contains: recherche as string, mode: "insensitive"}},
+      {email: {contains: recherche as string, mode: "insensitive"}},
+    ];
+
+    if (estUuidValide(recherche as string)) {
+      conditions.push({id: recherche as string});
     }
+
     try {
-      const utilisateur = await prisma.utilisateur.findUnique({
-        where: { id },
+
+      const utilisateur = await prisma.utilisateur.findFirst({
+        where: {
+          OR: conditions
+        },
       });
 
       if (!utilisateur) {
-        return res.status(404).json({
-          erreur: `Erreur : Aucun utilisateur ne correspond à l'UUID ${id}`,
-        });
+        return res.status(404).json({erreur: "Erreur: Aucun utilisateur trouvé."});
       }
 
-      return res.status(200).json({
-        message: `Utilisateur trouvé.`,
-        data: { utilisateur },
-      });
+      return res.status(200).json({utilisateur, message: "Utilisateur trouvé!"});
+      
     } catch (error) {
-      return res.status(404).json({
-        erreur: `Erreur: Aucun utilisateur ne correspond à l'ID ${id}`,
-      });
+
+      return res.status(500).json({erreur: "Erreur interne du serveur"})
+
     }
-  },
-);
+  });
+
 
 // Mettre à jour un utilisateur en tant que MDJ
 routerUtilisateur.patch(
