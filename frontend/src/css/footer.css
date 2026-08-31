@@ -22,7 +22,7 @@
     margin: 6px 12px;
 }
 
-.container-footer p {
+.container-footer > p {
     color: #a94e5b;
 }
 
