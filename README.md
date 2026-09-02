@@ -177,6 +177,88 @@ Pour lancer des tests à partir de test.rest:
     - Assurez-vous d'avoir lancé le serveur backend
     - Exécutez des requêtes à partir du fichier test.rest en cliquant
 
+# Demo
+
+## Page d'accueil
+![alt text](documentation/images/image.png)
+
+## Inscription
+![alt text](documentation/images/image-1.png)
+
+## Connexion
+![alt text](documentation/images/image-2.png)
+![alt text](documentation/images/image-3.png)
+
+## Creation de personnage
+![alt text](documentation/images/image-5.png)
+![alt text](documentation/images/image-6.png)
+![alt text](documentation/images/image-7.png)
+
+## Suppression de personnage
+![alt text](documentation/images/image-8.png)
+![alt text](documentation/images/image-9.png)
+
+## Affichage publique des Monstres
+![alt text](documentation/images/image-11.png)
+
+## Filtres:
+### Dragon
+![alt text](documentation/images/image-10.png)
+### Très Petit
+![alt text](documentation/images/image-12.png)
+### Orc
+![alt text](documentation/images/image-13.png)
+### Alignement
+![alt text](documentation/images/image-14.png)
+
+### Affichage publique des objets:
+![alt text](documentation/images/image-15.png)
+
+## Filtres:
+### Arme
+![alt text](documentation/images/image-16.png)
+### Rarete
+![alt text](documentation/images/image-17.png)
+### Prix decroissant
+![alt text](documentation/images/image-18.png)
+
+
+## Administration:
+### Connexion:
+![alt text](documentation/images/image-19.png)
+![alt text](documentation/images/image-20.png)
+
+## Admin utilisateurs:
+![alt text](documentation/images/image-21.png)
+### Recherche
+![alt text](documentation/images/image-22.png)
+### Suppression du compte
+![alt text](documentation/images/image-23.png)
+![alt text](documentation/images/image-24.png)
+
+
+## Admin quetes:
+### Ajouter une quete
+![alt text](documentation/images/image-25.png)
+![alt text](documentation/images/image-26.png)
+![alt text](documentation/images/image-27.png)
+![alt text](documentation/images/image-28.png)
+
+### Mofidier une quete:
+![alt text](documentation/images/image-29.png)
+![alt text](documentation/images/image-30.png)
+![alt text](documentation/images/image-31.png)
+
+
+## Admin Monstres:
+### Recherche de monstres dans l'api DND pour les ajouter
+![alt text](documentation/images/image-32.png)
+![alt text](documentation/images/image-33.png)
+### Modifier un monstre:
+![alt text](documentation/images/image-34.png)
+![alt text](documentation/images/image-35.png)
+![alt text](documentation/images/image-36.png)
+![alt text](documentation/images/image-37.png)
 ## 👤 Auteurs
 
     Clément Laflamme

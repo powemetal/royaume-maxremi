@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.routes.js";
 import routerInventaire from "./routes/inventaire.routes.js";
 import routerPersoQuete from "./routes/persoquete.routes.js";
 import routerPersonnage from "./routes/personnage.routes.js";
+import routeurHealthCheck from "./routes/healthCheck.routes.js"
 import cors from "cors";
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use("/personnage", routerPersonnage);
 app.use("/inventaire", routerInventaire);
 app.use("/persoQuete", routerPersoQuete);
 app.use("/auth", authRoutes);
+app.use("/api/status", routeurHealthCheck)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));
