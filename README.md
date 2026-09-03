@@ -50,7 +50,7 @@ Lancer le serveur:
 
 Installer les dependances du frontend
 
-    ouvrir un nouveau terminal au dossier: royaume-maxremi/backend
+    ouvrir un nouveau terminal au dossier: royaume-maxremi/frontend
     npm install
 
 Lancer le serveur frontend
@@ -115,8 +115,8 @@ Routes
 | `GET`    | `/quete`                | Liste les quêtes (filtre par `?difficulte=X` possible) | Public |
 | `GET`    | `/quete/:nom`           | Détail d'une quête par son nom                         | Public |
 | `POST`   | `/quete/creer`          | Crée une nouvelle quête                                | MDJ    |
-| `PATCH`  | `/quete/:nom`           | Modifie une quête existante                            | MDJ    |
-| `DELETE` | `/quete/supprimer/:nom` | Supprime une quête                                     | MDJ    |
+| `PATCH`  | `/quete/:id`           | Modifie une quête existante                            | MDJ    |
+| `DELETE` | `/quete/supprimer/:id` | Supprime une quête                                     | MDJ    |
 
 ---
 
@@ -150,25 +150,7 @@ Routes
 
 ## Collection de tests
 
-Pour faire des tests sur les routes il y a deux options:
-
-### 1. Utiliser le fichier tests.ts
-
-Le fichier tests.ts lance une série de tests couvrant toutes les fonctionnalités de l'application. Pour utiliser cette méthode, il est idéal d'avoir une base de données vierge afin d'éviter de possibles doublons qui feraient
-échouer certains tests. Si votre base de données contient déjà des éléments, certains tests pourraient échouer.
-
-Pour lancer les tests:
-
-    - Assurez-vous d'avoir lancé le serveur backend
-    - Déplacez-vous dans le dossier backend/src où se trouve tests.ts
-
-        cd src
-
-    - Exécutez le fichier avec la commande :
-
-        npx tsx tests.ts
-
-### 2. Utiliser le fichier tests.rest
+### Utiliser le fichier tests.rest
 
 Il est possible de tester les routes individuellement à partir du fichier test.rest. Notez que certains tests nécessitent d'affecter des UUID aux variables `@uuidPerso`, `@uuidQuete`, `@uuidPersoQuete`, `@uuidUser`. Ces UUID doivent être valides dans votre base de données.
 
