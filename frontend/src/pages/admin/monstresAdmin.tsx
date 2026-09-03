@@ -30,7 +30,7 @@ export default function MonstresAdmin() {
 
   const ajouterMonstre = async (index: string) => {
     try {
-      const ajout = await api.post(`/monstre/ajouter/${index}`);
+      await api.post(`/monstre/ajouter/${index}`);
       const res = await api.get("/monstres/");
       setListeMonstres(res.data.resultats);
     } catch (err: any) {
@@ -77,7 +77,7 @@ const Supprimer = async () => {
   if (!selectionMonstre) return;
 
   try {
-    const { data } = await api.delete(`/monstre/supprimer/${selectionMonstre.id}`)
+    await api.delete(`/monstre/supprimer/${selectionMonstre.id}`)
     alert(`Monstre ${selectionMonstre.nom} Supprimé`)
     setListeMonstres(prev => prev.filter(m => m.id !== selectionMonstre.id))
     setSelectionMonstre(null);
