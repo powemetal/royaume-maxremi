@@ -1,30 +1,30 @@
 import TitreBackground from "../../components/titreBackground";
 import { api } from "../../api/backendApi";
 import { useEffect, useState } from "react";
-import { formatAlignement, formatTypeMonstre, formatGrosseur } from "../../utils/formatMonstres";
-import type { Monstre, ReponseListeMonstres, ReponseUtilisateur, MonstreApi, ReponseListeMonstresApi } from "../../utils/interfaces";
+
+import type { Monstre, ReponseListeMonstres, MonstreApi, ReponseListeMonstresApi } from "../../utils/interfaces";
 import "../../css/monstresAdmin.css";
 import { valeursGrosseur, valeursTypeMonstre, valeursAlignement, type Grandeur, type TypeMonstre, type Alignement } from "../../utils/types";
 
 export default function MonstresAdmin() {
   const [rechercheMonstre, setRechercheMonstre] = useState("");
   const [resultatRecherche, setResultatRecherche] = useState<MonstreApi[]>([]);
-  const [erreur, setErreur] = useState<string>("");
-  const [chargement, setChargement] = useState<boolean>(true);
+  // const [erreur, setErreur] = useState<string>("");
+  // const [chargement, setChargement] = useState<boolean>(true);
   const [listeMonstres, setListeMonstres] = useState<Monstre[]>([]);
   const [nomsMonstresBDD, setNomsMonstresBDD] = useState<Set<string>>(new Set());
   const [selectionMonstre, setSelectionMonstre] = useState<Monstre | null>(null);
 
   const recupererListeMonstres = async () => {
     try {
-      setChargement(true);
-      setErreur("");
+      // setChargement(true);
+      // setErreur("");
       const reponse = await api.get<ReponseListeMonstres>("/monstres/");
       setListeMonstres(reponse.data.resultats);
     } catch {
-      setErreur("Erreur lors du chargement de la liste de monstres");
+      // setErreur("Erreur lors du chargement de la liste de monstres");
     } finally {
-      setChargement(false);
+      // setChargement(false);
     }
   };
 
