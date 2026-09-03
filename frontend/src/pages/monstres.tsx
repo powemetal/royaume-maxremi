@@ -10,7 +10,7 @@ import { valeursGrosseur, valeursTypeMonstre, valeursAlignement, type Grandeur, 
 
 export default function Monstres() {
   const [listeMonstres, setListeMonstres] = useState<Monstre[]>([]);
-  const [erreur, setErreur] = useState<string>("");
+  
   const [chargement, setChargement] = useState<boolean>(true);
   const [filtreNom, setFiltreNom] = useState<string>("");
   const [filtreGrandeur, setFiltreGrandeur] = useState<Grandeur | null>(null);
@@ -20,11 +20,11 @@ export default function Monstres() {
   const recupererListeMonstres = async () => {
     try {
       setChargement(true);
-      setErreur("");
+  
       const reponse = await api.get<ReponseListeMonstres>("/monstres/");
       setListeMonstres(reponse.data.resultats);
     } catch {
-      setErreur("Erreur lors du chargement de la liste de monstres");
+  
     } finally {
       setChargement(false);
     }
