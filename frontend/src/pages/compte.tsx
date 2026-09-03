@@ -37,7 +37,7 @@ export default function Compte() {
     const { estConnecte, seDeconnecter } = useAuth();
     const [nomUtilisateur, setNomUtilisateur] = useState<string>("");
     const [listePerso, setListePerso] = useState<Personnage[]>([]);
-    const [erreur, setErreur] = useState<string>("");
+    // const [erreur, setErreur] = useState<string>("");
     const [chargement, setChargement] = useState<boolean>(true)
     const [avatarUtilisateur, setAvatarUtilisateur] = useState<string>("https://www.dndbeyond.com/Content/Skins/Waterdeep/images/characters/default-avatar-builder.png")
     const navigate = useNavigate();
@@ -47,25 +47,25 @@ export default function Compte() {
 
     const recupererInfosUtilisateur = async () => {
         try{
-            setErreur("");
+            // setErreur("");
             const reponse = await api.get<ReponseUtilisateur>("/auth/me");
             setNomUtilisateur(reponse.data.pseudo);
             setAvatarUtilisateur(reponse.data.avatarUrl);
         } catch (err: any) {
             console.error("Erreur API", err);
-            setErreur("Erreur lors du chargement du compte")
+            // setErreur("Erreur lors du chargement du compte")
         }
     }
 
     const recupererListePerso = async () => {
         try{
             setChargement(true);
-            setErreur("");
+            // setErreur("");
             const reponse = await api.get<ReponseListePersonnages>("/personnage/recuperer/liste-personnages");
             setListePerso(reponse.data.data.listePersonnages);
         } catch (err: any) {
             console.error("Erreur API", err);
-            setErreur("Erreur lors du chargement de la liste de personnages");
+            // setErreur("Erreur lors du chargement de la liste de personnages");
         } finally {
             setChargement(false);
         }
@@ -78,7 +78,7 @@ export default function Compte() {
             seDeconnecter();
         } catch (err:any) {
             console.error("Erreur API", err);
-            setErreur("Erreur lors de la suppression du compte");
+            // setErreur("Erreur lors de la suppression du compte");
             setPopupSuppressionOuvert(false);
         } finally {
             setSuppressionEnCours(false);
