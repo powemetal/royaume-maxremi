@@ -65,7 +65,7 @@ export default function FormulaireConnexion() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             alt="Logo MaxRemi"
-            src="/src/assets/images/MaxRemiLogoBlanc.png"
+            src="https://github.com/powemetal/royaume-maxremi/blob/main/frontend/src/assets/images/MaxRemiLogoBlanc.png"
             className="mx-auto h-20 w-auto"
           />
           <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-white">
