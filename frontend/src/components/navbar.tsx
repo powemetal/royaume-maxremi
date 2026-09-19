@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="container-logo">
         <Link to={"/"}>
           <img
-            src="/src/assets/images/MaxRemiLogoBlanc.png"
+            src="https://github.com/powemetal/royaume-maxremi/blob/main/frontend/src/assets/images/MaxRemiLogoBlanc.png"
             alt="Logo Maxremi"
             id="logo-maxremi"
           />
