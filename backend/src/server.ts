@@ -8,14 +8,14 @@ import authRoutes from "./routes/auth.routes.js";
 import routerInventaire from "./routes/inventaire.routes.js";
 import routerPersoQuete from "./routes/persoquete.routes.js";
 import routerPersonnage from "./routes/personnage.routes.js";
-import routeurHealthCheck from "./routes/healthCheck.routes.js"
+import routeurHealthCheck from "./routes/healthCheck.routes.js";
 import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: ["https://royaume-maxremi.vercel.app","http://localhost:5173", /\.vercel\.app$/] }));
+app.use(cors({ origin: ["https://royaume-maxremi.vercel.app", "http://localhost:5173", /\.vercel\.app$/] }));
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "API du Royaume de Maxremi!" });
@@ -29,7 +29,14 @@ app.use("/personnage", routerPersonnage);
 app.use("/inventaire", routerInventaire);
 app.use("/persoQuete", routerPersoQuete);
 app.use("/auth", authRoutes);
-app.use("/api/status", routeurHealthCheck)
+app.use("/api/status", routeurHealthCheck);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));
+
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));
+}
+
+
+export default app;
