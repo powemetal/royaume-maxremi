@@ -3,11 +3,11 @@
 
 ## 👥 Équipe
 
-| Nom complet | rôle |
-|-------------|------------------|
-| Clément Laflamme  | Full-stack       |
-| Mathieu Gosselin  | Full-stack       |
-| Francis Boisvert  | Full-stack       |
+|   Nom complet  |   rôle   |matricule|  
+|----------------|----------|-------|  
+|Clément Laflamme|Full-stack|2595952|  
+|Mathieu Gosselin|Full-stack|2596321|  
+|Francis Boisvert|Full-stack|2595782|  
 
 ## 🎯 Sujet (choisi au Laboratoire 1)
 
