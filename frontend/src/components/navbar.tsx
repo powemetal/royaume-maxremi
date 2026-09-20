@@ -17,11 +17,7 @@ export default function Navbar() {
     <nav className="container-nav">
       <div className="container-logo">
         <Link to={"/"}>
-          <img
-            src="https://github.com/powemetal/royaume-maxremi/blob/main/frontend/src/assets/images/MaxRemiLogoBlanc.png"
-            alt="Logo Maxremi"
-            id="logo-maxremi"
-          />
+          <img src="https://raw.githubusercontent.com/powemetal/royaume-maxremi/refs/heads/main/frontend/src/assets/images/MaxRemiLogoBlanc.png" alt="Logo Maxremi" id="logo-maxremi" />
         </Link>
       </div>
       <div className="flex flex-1 flex-col gap-3">
@@ -29,24 +25,15 @@ export default function Navbar() {
           {estAdmin && <DropdownAdmin />}
           {!estConnecte ? (
             <>
-              <Link
-                to={"/inscription"}
-                className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
-              >
+              <Link to={"/inscription"} className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
                 S'inscrire
               </Link>
-              <Link
-                to={"/connexion"}
-                className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
-              >
+              <Link to={"/connexion"} className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
                 Se connecter
               </Link>
             </>
           ) : (
-            <button
-              onClick={deconnexion}
-              className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
-            >
+            <button onClick={deconnexion} className="justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
               Se déconnecter
             </button>
           )}
