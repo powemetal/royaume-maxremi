@@ -32,6 +32,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setChargement(false);
   }, []);
 
+  useEffect(() => {
+  const gererTokenInvalide = () => {
+    setToken(null);
+    setEstAdmin(false);
+  };
+  window.addEventListener("token-invalide", gererTokenInvalide);
+  return () => window.removeEventListener("token-invalide", gererTokenInvalide);
+}, []);
+
   function seConnecter(nouveauToken: string, estAdmin: boolean = false) {
     localStorage.setItem("token", nouveauToken);
     localStorage.setItem("estAdmin", String(estAdmin));
