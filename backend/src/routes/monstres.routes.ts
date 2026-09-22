@@ -167,7 +167,7 @@ routeurMonstres.patch(
     if (body.nom !== undefined) data.nom = body.nom
 
     if (body.pointsDeVie !== undefined) {
-      if (typeof body.pointsDeVie !== "number"){
+      if (typeof body.pointsDeVie !== "number" || body.pointsDeVie < 0){
         return res.status(400).json({erreur: "Les points de vie sont invalide"})
       }
       data.pointsDeVie = body.pointsDeVie
@@ -175,14 +175,14 @@ routeurMonstres.patch(
       
 
     if (body.attaque !== undefined) {
-      if (typeof body.attaque !== "number") {
+      if (typeof body.attaque !== "number" || body.attaque < 0) {
         return res.status(400).json({erreur: "L'attaque est invalide"})
       }
       data.attaque = body.attaque
     } 
 
     if (body.defense !== undefined) {
-      if (typeof body.defense !== "number") {
+      if (typeof body.defense !== "number" || body.defense < 0) {
         return res.status(400).json({erreur: "La defense est invalide"})
       }
       data.defense = body.defense
