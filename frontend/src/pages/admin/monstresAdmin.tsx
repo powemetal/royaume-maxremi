@@ -242,9 +242,9 @@ const Supprimer = async () => {
             </div>
 
             <div className="container-modif-droite flex flex-1 inner-container m-8 min-w-0">
-              <ul className="w-full liste-monstres flex flex-col">
+              <ul className="w-full liste-objets flex flex-col">
                 {listeMonstres.map((m) => (
-                  <li key={m.id} className={"monstre-modif-list" + (selectionMonstre?.id === m.id ? "selected" : "")} onClick={() => m.id === selectionMonstre?.id ? setSelectionMonstre(null): setSelectionMonstre(m)}>
+                  <li key={m.id} className={"monstre-modif-list " + (selectionMonstre?.id === m.id ? "selected" : "")} onClick={() => m.id === selectionMonstre?.id ? setSelectionMonstre(null): setSelectionMonstre(m)}>
                     {m.nom}
                   </li>
                 ))}
