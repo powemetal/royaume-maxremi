@@ -290,11 +290,6 @@ export default function Personnage() {
             <span>Rareté</span>
           </div>
           <ul className="liste-personnages flex flex-col">
-            <li className="li-perso grid grid-cols-3 gap-4 text-center">
-              <span className="nom-quete">Épée</span>
-              <span className="nom-quete">Combat</span>
-              <span className="nom-quete">Légendaire</span>
-            </li>
             {dataPerso.inventaire.length > 0 ? (
               dataPerso.inventaire.map((o) => (
                 <li
